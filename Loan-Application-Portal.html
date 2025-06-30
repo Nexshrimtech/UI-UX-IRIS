@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Application</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#9333EA'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f0f1a 100%);
+  min-height: 100vh;
+  color: white;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4F46E5;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(79, 70, 229, 0.5);
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4F46E5;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(79, 70, 229, 0.5);
+}
+.loan-card {
+  transition: all 0.3s ease;
+}
+.loan-card.active {
+  border-color: #4F46E5;
+  background: rgba(79, 70, 229, 0.1);
+}
+.loan-card:hover:not(.active) {
+  transform: translateY(-2px);
+}
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.accordion-content.open {
+  max-height: 500px;
+}
+</style>
+</head>
+<body class="relative">
+<div class="min-h-screen pb-20">
+  <!-- Header -->
+  <header class="fixed w-full top-0 z-10 bg-[#1e1b4b] pt-4 pb-2 px-4 shadow-lg">
+    <div class="flex items-center">
+      <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/38dd8703-bf56-4de2-b480-1332f0c36989" data-readdy="true" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer">
+        <i class="ri-arrow-left-line ri-lg"></i>
+      </a>
+      <h1 class="text-lg font-semibold ml-3">Loan Application</h1>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="pt-20 px-4 pb-4">
+    <!-- Loan Type Selection -->
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold mb-3">Select Loan Type</h2>
+      <div class="flex overflow-x-auto pb-2 space-x-3">
+        <div class="loan-card active flex-shrink-0 w-36 bg-white/5 rounded-xl p-4 border border-transparent cursor-pointer" data-loan-type="personal" data-interest="10.5">
+          <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mb-3">
+            <i class="ri-user-3-line ri-lg text-indigo-400"></i>
+          </div>
+          <div class="text-sm font-medium">Personal Loan</div>
+          <div class="text-xs text-gray-400 mt-1">10.5% interest</div>
+        </div>
+        <div class="loan-card flex-shrink-0 w-36 bg-white/5 rounded-xl p-4 border border-transparent cursor-pointer" data-loan-type="home" data-interest="8.5">
+          <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-3">
+            <i class="ri-home-4-line ri-lg text-blue-400"></i>
+          </div>
+          <div class="text-sm font-medium">Home Loan</div>
+          <div class="text-xs text-gray-400 mt-1">8.5% interest</div>
+        </div>
+        <div class="loan-card flex-shrink-0 w-36 bg-white/5 rounded-xl p-4 border border-transparent cursor-pointer" data-loan-type="vehicle" data-interest="9.5">
+          <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
+            <i class="ri-car-line ri-lg text-green-400"></i>
+          </div>
+          <div class="text-sm font-medium">Vehicle Loan</div>
+          <div class="text-xs text-gray-400 mt-1">9.5% interest</div>
+        </div>
+        <div class="loan-card flex-shrink-0 w-36 bg-white/5 rounded-xl p-4 border border-transparent cursor-pointer" data-loan-type="education" data-interest="7.5">
+          <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center mb-3">
+            <i class="ri-book-open-line ri-lg text-yellow-400"></i>
+          </div>
+          <div class="text-sm font-medium">Education Loan</div>
+          <div class="text-xs text-gray-400 mt-1">7.5% interest</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loan Calculator -->
+    <div class="bg-white/5 rounded-xl p-5 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Loan Calculator</h2>
+      
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-sm text-gray-300">Loan Amount</label>
+          <span class="text-sm font-medium" id="loanAmountDisplay">₹5,00,000</span>
+        </div>
+        <input type="range" min="10000" max="5000000" step="10000" value="500000" class="mb-2" id="loanAmountSlider">
+        <div class="flex justify-between text-xs text-gray-400">
+          <span>₹10,000</span>
+          <span>₹50,00,000</span>
+        </div>
+      </div>
+      
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-sm text-gray-300">Loan Tenure</label>
+          <span class="text-sm font-medium" id="loanTenureDisplay">3 years</span>
+        </div>
+        <input type="range" min="6" max="60" step="6" value="36" class="mb-2" id="loanTenureSlider">
+        <div class="flex justify-between text-xs text-gray-400">
+          <span>6 months</span>
+          <span>5 years</span>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="bg-white/5 rounded-lg p-3 text-center">
+          <div class="text-xs text-gray-400 mb-1">Monthly EMI</div>
+          <div class="text-lg font-semibold" id="emiAmount">₹16,133</div>
+        </div>
+        <div class="bg-white/5 rounded-lg p-3 text-center">
+          <div class="text-xs text-gray-400 mb-1">Interest Rate</div>
+          <div class="text-lg font-semibold" id="interestRate">10.5%</div>
+        </div>
+        <div class="bg-white/5 rounded-lg p-3 text-center">
+          <div class="text-xs text-gray-400 mb-1">Total Amount</div>
+          <div class="text-lg font-semibold" id="totalAmount">₹5,80,788</div>
+        </div>
+      </div>
+      
+      <div class="h-40 w-full" id="loanChart"></div>
+    </div>
+
+    <!-- Eligibility Checker -->
+    <div class="bg-white/5 rounded-xl p-5 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Check Eligibility</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Monthly Income</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">₹</span>
+            <input type="text" id="monthlyIncome" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter your monthly income">
+          </div>
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Existing EMIs (if any)</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">₹</span>
+            <input type="text" id="existingEMIs" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter your existing EMIs">
+          </div>
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Credit Score</label>
+          <select id="creditScore" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500 appearance-none">
+            <option value="">Select your credit score range</option>
+            <option value="excellent">Excellent (750+)</option>
+            <option value="good">Good (700-749)</option>
+            <option value="fair">Fair (650-699)</option>
+            <option value="poor">Poor (below 650)</option>
+          </select>
+          <div class="absolute right-7 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+        </div>
+        
+        <button id="checkEligibilityBtn" class="w-full bg-primary hover:bg-indigo-600 text-white py-3 rounded-button font-medium cursor-pointer">Check Eligibility</button>
+        
+        <div id="eligibilityResult" class="hidden mt-4">
+          <div class="bg-white/5 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <div id="eligibilityIcon" class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                <i class="ri-check-line ri-lg text-green-400"></i>
+              </div>
+              <div>
+                <div id="eligibilityStatus" class="text-sm font-medium text-green-400">You are eligible!</div>
+                <div id="eligibilityMessage" class="text-xs text-gray-300">Based on your details, you qualify for a loan.</div>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="text-sm">Maximum eligible amount:</div>
+              <div id="maxEligibleAmount" class="text-sm font-medium">₹15,00,000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Required Documents -->
+    <div class="bg-white/5 rounded-xl p-5 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Required Documents</h2>
+      
+      <div class="space-y-3">
+        <div class="border border-white/10 rounded-lg overflow-hidden">
+          <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+                <i class="ri-user-3-line text-indigo-400"></i>
+              </div>
+              <span class="text-sm font-medium">Identity Proof</span>
+            </div>
+            <i class="ri-arrow-down-s-line transition-transform duration-300 accordion-icon"></i>
+          </div>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-300 mb-3">
+              <p>Please upload any one of the following:</p>
+              <ul class="list-disc pl-5 mt-1 text-xs text-gray-400">
+                <li>Aadhaar Card</li>
+                <li>PAN Card</li>
+                <li>Passport</li>
+                <li>Voter ID</li>
+              </ul>
+            </div>
+            <div class="flex items-center">
+              <button class="upload-btn flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button mr-3">
+                <i class="ri-upload-2-line mr-2"></i>Upload
+              </button>
+              <div class="text-xs text-gray-400">JPG, PNG or PDF (Max: 5MB)</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="border border-white/10 rounded-lg overflow-hidden">
+          <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                <i class="ri-home-4-line text-blue-400"></i>
+              </div>
+              <span class="text-sm font-medium">Address Proof</span>
+            </div>
+            <i class="ri-arrow-down-s-line transition-transform duration-300 accordion-icon"></i>
+          </div>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-300 mb-3">
+              <p>Please upload any one of the following:</p>
+              <ul class="list-disc pl-5 mt-1 text-xs text-gray-400">
+                <li>Utility Bill (not older than 3 months)</li>
+                <li>Aadhaar Card</li>
+                <li>Passport</li>
+                <li>Rental Agreement</li>
+              </ul>
+            </div>
+            <div class="flex items-center">
+              <button class="upload-btn flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button mr-3">
+                <i class="ri-upload-2-line mr-2"></i>Upload
+              </button>
+              <div class="text-xs text-gray-400">JPG, PNG or PDF (Max: 5MB)</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="border border-white/10 rounded-lg overflow-hidden">
+          <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                <i class="ri-money-dollar-circle-line text-green-400"></i>
+              </div>
+              <span class="text-sm font-medium">Income Proof</span>
+            </div>
+            <i class="ri-arrow-down-s-line transition-transform duration-300 accordion-icon"></i>
+          </div>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-300 mb-3">
+              <p>Please upload any one of the following:</p>
+              <ul class="list-disc pl-5 mt-1 text-xs text-gray-400">
+                <li>Salary Slips (last 3 months)</li>
+                <li>Form 16</li>
+                <li>Income Tax Returns (last 2 years)</li>
+                <li>Bank Statement (last 6 months)</li>
+              </ul>
+            </div>
+            <div class="flex items-center">
+              <button class="upload-btn flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button mr-3">
+                <i class="ri-upload-2-line mr-2"></i>Upload
+              </button>
+              <div class="text-xs text-gray-400">JPG, PNG or PDF (Max: 5MB)</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="border border-white/10 rounded-lg overflow-hidden">
+          <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+                <i class="ri-bank-line text-yellow-400"></i>
+              </div>
+              <span class="text-sm font-medium">Bank Statements</span>
+            </div>
+            <i class="ri-arrow-down-s-line transition-transform duration-300 accordion-icon"></i>
+          </div>
+          <div class="accordion-content px-4 pb-4">
+            <div class="pl-11 text-sm text-gray-300 mb-3">
+              <p>Please upload the following:</p>
+              <ul class="list-disc pl-5 mt-1 text-xs text-gray-400">
+                <li>Bank Statement for the last 6 months</li>
+                <li>Must show regular income credits</li>
+                <li>Should be from your primary salary account</li>
+              </ul>
+            </div>
+            <div class="flex items-center">
+              <button class="upload-btn flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button mr-3">
+                <i class="ri-upload-2-line mr-2"></i>Upload
+              </button>
+              <div class="text-xs text-gray-400">JPG, PNG or PDF (Max: 5MB)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Form -->
+    <div class="bg-white/5 rounded-xl p-5 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Personal Details</h2>
+      
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm text-gray-300 mb-1 block">First Name</label>
+            <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter first name">
+          </div>
+          <div>
+            <label class="text-sm text-gray-300 mb-1 block">Last Name</label>
+            <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter last name">
+          </div>
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Date of Birth</label>
+          <input type="date" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500">
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Email Address</label>
+          <input type="email" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter your email">
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Mobile Number</label>
+          <input type="tel" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter your mobile number">
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Residential Address</label>
+          <textarea class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500 resize-none" rows="3" placeholder="Enter your complete address"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white/5 rounded-xl p-5 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Employment Details</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Employment Type</label>
+          <select class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500 appearance-none">
+            <option value="">Select employment type</option>
+            <option value="salaried">Salaried</option>
+            <option value="self-employed">Self-Employed</option>
+            <option value="business-owner">Business Owner</option>
+            <option value="freelancer">Freelancer</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Company/Business Name</label>
+          <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter company name">
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm text-gray-300 mb-1 block">Monthly Income</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">₹</span>
+              <input type="text" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+            </div>
+          </div>
+          <div>
+            <label class="text-sm text-gray-300 mb-1 block">Work Experience</label>
+            <div class="relative">
+              <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Years">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white/5 rounded-xl p-5 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Bank Details</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Bank Name</label>
+          <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter bank name">
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">Account Number</label>
+          <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter account number">
+        </div>
+        
+        <div>
+          <label class="text-sm text-gray-300 mb-1 block">IFSC Code</label>
+          <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter IFSC code">
+        </div>
+      </div>
+    </div>
+
+    <!-- Loan Summary -->
+    <div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-5 mb-6 border border-indigo-500/20">
+      <h2 class="text-lg font-semibold mb-4">Loan Summary</h2>
+      
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Loan Type</span>
+          <span class="text-sm font-medium" id="summaryLoanType">Personal Loan</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Loan Amount</span>
+          <span class="text-sm font-medium" id="summaryLoanAmount">₹5,00,000</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Loan Tenure</span>
+          <span class="text-sm font-medium" id="summaryLoanTenure">3 years</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Interest Rate</span>
+          <span class="text-sm font-medium" id="summaryInterestRate">10.5%</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Processing Fee</span>
+          <span class="text-sm font-medium">₹5,000</span>
+        </div>
+        <div class="border-t border-white/10 my-2 pt-2"></div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Monthly EMI</span>
+          <span class="text-sm font-medium" id="summaryEMI">₹16,133</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Total Interest</span>
+          <span class="text-sm font-medium" id="summaryTotalInterest">₹80,788</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-300">Total Repayment</span>
+          <span class="text-sm font-medium" id="summaryTotalRepayment">₹5,80,788</span>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <label class="flex items-start cursor-pointer">
+          <input type="checkbox" class="mt-1 mr-3">
+          <span class="text-xs text-gray-300">I agree to the <a href="#" class="text-indigo-300">Terms & Conditions</a> and <a href="#" class="text-indigo-300">Privacy Policy</a>. I confirm that all information provided is accurate and complete.</span>
+        </label>
+      </div>
+    </div>
+    
+    <button id="submitApplicationBtn" class="w-full bg-primary hover:bg-indigo-600 text-white py-3 rounded-button font-medium cursor-pointer mb-4">Submit Application</button>
+  </main>
+</div>
+
+<!-- Application Submitted Dialog -->
+<div id="applicationSubmittedDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+  <div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="applicationSubmittedContent">
+    <div class="text-center mb-4">
+      <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+        <i class="ri-check-line ri-2x text-green-400"></i>
+      </div>
+      <h3 class="text-lg font-semibold">Application Submitted!</h3>
+      <p class="text-sm text-indigo-300 mt-2">Your loan application has been successfully submitted. We'll review your application and get back to you soon.</p>
+    </div>
+    <div class="bg-white/5 rounded-lg p-4 mb-4">
+      <div class="text-sm text-center">Application Reference ID</div>
+      <div class="text-lg font-medium text-center mt-1">LOAN-29062025-7854</div>
+    </div>
+    <div class="space-y-3">
+      <button id="trackApplicationBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+        Track Application
+      </button>
+      <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/38dd8703-bf56-4de2-b480-1332f0c36989" data-readdy="true" class="block w-full bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button text-center">
+        Back to Home
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Dialog -->
+<div id="uploadDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+  <div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="uploadDialogContent">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold" id="uploadDialogTitle">Upload Document</h3>
+      <button id="closeUploadDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+        <i class="ri-close-line ri-lg"></i>
+      </button>
+    </div>
+    <div class="border-2 border-dashed border-indigo-500/20 rounded-lg p-6 text-center mb-4">
+      <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-3">
+        <i class="ri-upload-cloud-line ri-lg text-indigo-400"></i>
+      </div>
+      <div class="text-sm font-medium mb-1">Drag & Drop File</div>
+      <div class="text-xs text-gray-400 mb-3">or click to browse</div>
+      <input type="file" id="fileInput" class="hidden">
+      <button id="browseFilesBtn" class="bg-indigo-600 hover:bg-indigo-700 text-xs px-4 py-2 rounded-button">
+        Browse Files
+      </button>
+    </div>
+    <div class="text-xs text-gray-400 mb-4">
+      <div class="flex items-center mb-1">
+        <i class="ri-information-line mr-1"></i>
+        <span>Accepted formats: JPG, PNG, PDF</span>
+      </div>
+      <div class="flex items-center">
+        <i class="ri-information-line mr-1"></i>
+        <span>Maximum file size: 5MB</span>
+      </div>
+    </div>
+    <div id="uploadProgress" class="hidden">
+      <div class="text-xs flex justify-between mb-1">
+        <span>Uploading...</span>
+        <span id="uploadPercentage">0%</span>
+      </div>
+      <div class="bg-white/10 h-2 rounded-full overflow-hidden">
+        <div id="uploadProgressBar" class="bg-indigo-600 h-full rounded-full" style="width: 0%"></div>
+      </div>
+    </div>
+    <div class="flex space-x-3 mt-4">
+      <button id="cancelUpload" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+      <button id="confirmUpload" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Upload</button>
+    </div>
+  </div>
+</div>
+
+<script id="loan-calculator">
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize chart
+  const chartDom = document.getElementById('loanChart');
+  const myChart = echarts.init(chartDom);
+  
+  // Loan calculator variables
+  const loanAmountSlider = document.getElementById('loanAmountSlider');
+  const loanTenureSlider = document.getElementById('loanTenureSlider');
+  const loanAmountDisplay = document.getElementById('loanAmountDisplay');
+  const loanTenureDisplay = document.getElementById('loanTenureDisplay');
+  const emiAmount = document.getElementById('emiAmount');
+  const interestRate = document.getElementById('interestRate');
+  const totalAmount = document.getElementById('totalAmount');
+  
+  // Summary elements
+  const summaryLoanType = document.getElementById('summaryLoanType');
+  const summaryLoanAmount = document.getElementById('summaryLoanAmount');
+  const summaryLoanTenure = document.getElementById('summaryLoanTenure');
+  const summaryInterestRate = document.getElementById('summaryInterestRate');
+  const summaryEMI = document.getElementById('summaryEMI');
+  const summaryTotalInterest = document.getElementById('summaryTotalInterest');
+  const summaryTotalRepayment = document.getElementById('summaryTotalRepayment');
+  
+  // Format currency
+  function formatCurrency(amount) {
+    return '₹' + amount.toLocaleString('en-IN');
+  }
+  
+  // Format tenure
+  function formatTenure(months) {
+    if (months < 12) {
+      return months + ' months';
+    } else if (months % 12 === 0) {
+      return (months / 12) + ' years';
+    } else {
+      return Math.floor(months / 12) + ' years ' + (months % 12) + ' months';
+    }
+  }
+  
+  // Calculate EMI
+  function calculateEMI(principal, rate, tenure) {
+    const monthlyRate = rate / 12 / 100;
+    const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, tenure) / (Math.pow(1 + monthlyRate, tenure) - 1);
+    return Math.round(emi);
+  }
+  
+  // Update chart
+  function updateChart(principal, interest) {
+    const option = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      color: ['#4F46E5', '#9333EA'],
+      series: [
+        {
+          name: 'Loan Breakdown',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#1e1b4b',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '14',
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: principal, name: 'Principal' },
+            { value: interest, name: 'Interest' }
+          ]
+        }
+      ]
+    };
+    myChart.setOption(option);
+  }
+  
+  // Update loan details
+  function updateLoanDetails() {
+    const principal = parseInt(loanAmountSlider.value);
+    const tenure = parseInt(loanTenureSlider.value);
+    const rate = parseFloat(document.querySelector('.loan-card.active').getAttribute('data-interest'));
+    
+    const emi = calculateEMI(principal, rate, tenure);
+    const totalPayment = emi * tenure;
+    const totalInterest = totalPayment - principal;
+    
+    // Update displays
+    loanAmountDisplay.textContent = formatCurrency(principal);
+    loanTenureDisplay.textContent = formatTenure(tenure);
+    emiAmount.textContent = formatCurrency(emi);
+    interestRate.textContent = rate + '%';
+    totalAmount.textContent = formatCurrency(totalPayment);
+    
+    // Update summary
+    summaryLoanAmount.textContent = formatCurrency(principal);
+    summaryLoanTenure.textContent = formatTenure(tenure);
+    summaryInterestRate.textContent = rate + '%';
+    summaryEMI.textContent = formatCurrency(emi);
+    summaryTotalInterest.textContent = formatCurrency(totalInterest);
+    summaryTotalRepayment.textContent = formatCurrency(totalPayment);
+    
+    // Update chart
+    updateChart(principal, totalInterest);
+  }
+  
+  // Initialize with default values
+  updateLoanDetails();
+  
+  // Event listeners for sliders
+  loanAmountSlider.addEventListener('input', updateLoanDetails);
+  loanTenureSlider.addEventListener('input', updateLoanDetails);
+  
+  // Loan type selection
+  const loanCards = document.querySelectorAll('.loan-card');
+  loanCards.forEach(card => {
+    card.addEventListener('click', () => {
+      // Remove active class from all cards
+      loanCards.forEach(c => c.classList.remove('active'));
+      // Add active class to clicked card
+      card.classList.add('active');
+      // Update loan type in summary
+      summaryLoanType.textContent = card.querySelector('.text-sm.font-medium').textContent;
+      // Update interest rate
+      updateLoanDetails();
+    });
+  });
+  
+  // Handle window resize for chart
+  window.addEventListener('resize', function() {
+    myChart.resize();
+  });
+});
+</script>
+
+<script id="eligibility-checker">
+document.addEventListener('DOMContentLoaded', function() {
+  const monthlyIncome = document.getElementById('monthlyIncome');
+  const existingEMIs = document.getElementById('existingEMIs');
+  const creditScore = document.getElementById('creditScore');
+  const checkEligibilityBtn = document.getElementById('checkEligibilityBtn');
+  const eligibilityResult = document.getElementById('eligibilityResult');
+  const eligibilityStatus = document.getElementById('eligibilityStatus');
+  const eligibilityMessage = document.getElementById('eligibilityMessage');
+  const eligibilityIcon = document.getElementById('eligibilityIcon');
+  const maxEligibleAmount = document.getElementById('maxEligibleAmount');
+  
+  // Format input as currency
+  function formatAsCurrency(input) {
+    input.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/[^\d]/g, '');
+      if (value) {
+        value = parseInt(value).toLocaleString('en-IN');
+      }
+      e.target.value = value;
+    });
+  }
+  
+  formatAsCurrency(monthlyIncome);
+  formatAsCurrency(existingEMIs);
+  
+  checkEligibilityBtn.addEventListener('click', function() {
+    // Get values
+    const income = parseInt(monthlyIncome.value.replace(/,/g, '') || 0);
+    const emis = parseInt(existingEMIs.value.replace(/,/g, '') || 0);
+    const score = creditScore.value;
+    
+    // Validate inputs
+    if (!income) {
+      showError(monthlyIncome, 'Please enter your monthly income');
+      return;
+    }
+    
+    if (!score) {
+      showError(creditScore, 'Please select your credit score');
+      return;
+    }
+    
+    // Calculate eligibility
+    const availableIncome = income - emis;
+    const eligibleEMI = availableIncome * 0.5; // 50% of available income
+    
+    let maxLoan = 0;
+    let isEligible = false;
+    let message = '';
+    
+    // Calculate max loan amount based on credit score and income
+    if (score === 'excellent') {
+      maxLoan = eligibleEMI * 60; // 5 years at excellent credit
+      isEligible = availableIncome > 30000;
+      message = isEligible ? 'Your excellent credit score qualifies you for our best rates!' : 'Your income is insufficient for the requested loan amount.';
+    } else if (score === 'good') {
+      maxLoan = eligibleEMI * 48; // 4 years at good credit
+      isEligible = availableIncome > 40000;
+      message = isEligible ? 'Your good credit score qualifies you for competitive rates.' : 'Your income is insufficient for the requested loan amount.';
+    } else if (score === 'fair') {
+      maxLoan = eligibleEMI * 36; // 3 years at fair credit
+      isEligible = availableIncome > 50000;
+      message = isEligible ? 'You qualify for a loan with standard rates.' : 'Your income or credit score needs improvement.';
+    } else {
+      maxLoan = eligibleEMI * 24; // 2 years at poor credit
+      isEligible = availableIncome > 60000;
+      message = isEligible ? 'You qualify for a limited loan amount.' : 'Your credit score is too low for approval.';
+    }
+    
+    // Round to nearest 10,000
+    maxLoan = Math.floor(maxLoan / 10000) * 10000;
+    
+    // Update UI
+    eligibilityStatus.textContent = isEligible ? 'You are eligible!' : 'Not eligible';
+    eligibilityStatus.className = isEligible ? 'text-sm font-medium text-green-400' : 'text-sm font-medium text-red-400';
+    
+    eligibilityMessage.textContent = message;
+    
+    eligibilityIcon.innerHTML = isEligible ? 
+      '<i class="ri-check-line ri-lg text-green-400"></i>' : 
+      '<i class="ri-close-line ri-lg text-red-400"></i>';
+    
+    eligibilityIcon.className = isEligible ? 
+      'w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3' : 
+      'w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3';
+    
+    maxEligibleAmount.textContent = isEligible ? 
+      '₹' + maxLoan.toLocaleString('en-IN') : 
+      'N/A';
+    
+    // Show result
+    eligibilityResult.classList.remove('hidden');
+  });
+  
+  function showError(element, message) {
+    // Remove any existing error
+    const existingError = element.nextElementSibling;
+    if (existingError && existingError.classList.contains('text-red-400')) {
+      existingError.remove();
+    }
+    
+    // Add error message
+    const errorElement = document.createElement('div');
+    errorElement.className = 'text-red-400 text-xs mt-1';
+    errorElement.textContent = message;
+    element.parentNode.insertBefore(errorElement, element.nextSibling);
+    
+    // Add error styling
+    element.classList.add('border-red-500');
+    
+    // Remove error on input
+    element.addEventListener('input', function() {
+      element.classList.remove('border-red-500');
+      if (errorElement.parentNode) {
+        errorElement.remove();
+      }
+    }, { once: true });
+  }
+});
+</script>
+
+<script id="document-upload">
+document.addEventListener('DOMContentLoaded', function() {
+  // Accordion functionality
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+  
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.accordion-icon');
+      
+      // Toggle content
+      content.classList.toggle('open');
+      
+      // Rotate icon
+      if (content.classList.contains('open')) {
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        icon.style.transform = 'rotate(0)';
+      }
+    });
+  });
+  
+  // Upload dialog
+  const uploadBtns = document.querySelectorAll('.upload-btn');
+  const uploadDialog = document.getElementById('uploadDialog');
+  const uploadDialogContent = document.getElementById('uploadDialogContent');
+  const closeUploadDialog = document.getElementById('closeUploadDialog');
+  const cancelUpload = document.getElementById('cancelUpload');
+  const confirmUpload = document.getElementById('confirmUpload');
+  const browseFilesBtn = document.getElementById('browseFilesBtn');
+  const fileInput = document.getElementById('fileInput');
+  const uploadProgress = document.getElementById('uploadProgress');
+  const uploadProgressBar = document.getElementById('uploadProgressBar');
+  const uploadPercentage = document.getElementById('uploadPercentage');
+  const uploadDialogTitle = document.getElementById('uploadDialogTitle');
+  
+  let currentDocumentType = '';
+  
+  function showUploadDialog(documentType) {
+    currentDocumentType = documentType;
+    uploadDialogTitle.textContent = `Upload ${documentType}`;
+    uploadDialog.classList.remove('hidden');
+    setTimeout(() => {
+      uploadDialogContent.classList.remove('opacity-0', 'translate-y-4');
+    }, 50);
+  }
+  
+  function hideUploadDialog() {
+    uploadDialogContent.classList.add('opacity-0', 'translate-y-4');
+    setTimeout(() => {
+      uploadDialog.classList.add('hidden');
+      // Reset upload progress
+      uploadProgress.classList.add('hidden');
+      uploadProgressBar.style.width = '0%';
+      uploadPercentage.textContent = '0%';
+    }, 300);
+  }
+  
+  uploadBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const documentType = btn.closest('.accordion-content').previousElementSibling.querySelector('.text-sm.font-medium').textContent;
+      showUploadDialog(documentType);
+    });
+  });
+  
+  closeUploadDialog.addEventListener('click', hideUploadDialog);
+  cancelUpload.addEventListener('click', hideUploadDialog);
+  
+  browseFilesBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+  
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      const fileName = e.target.files[0].name;
+      browseFilesBtn.textContent = fileName;
+    }
+  });
+  
+  confirmUpload.addEventListener('click', () => {
+    if (!fileInput.files.length) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'text-red-400 text-xs mt-2 text-center';
+      errorDiv.textContent = 'Please select a file to upload';
+      uploadDialogContent.insertBefore(errorDiv, uploadDialogContent.querySelector('.flex.space-x-3'));
+      setTimeout(() => errorDiv.remove(), 3000);
+      return;
+    }
+    
+    // Show upload progress
+    uploadProgress.classList.remove('hidden');
+    
+    // Simulate upload progress
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      uploadProgressBar.style.width = `${progress}%`;
+      uploadPercentage.textContent = `${progress}%`;
+      
+      if (progress >= 100) {
+        clearInterval(interval);
+        
+        // Show success message
+        const successDiv = document.createElement('div');
+        successDiv.className = 'text-green-400 text-xs mt-2 text-center';
+        successDiv.textContent = `${currentDocumentType} uploaded successfully!`;
+        uploadDialogContent.insertBefore(successDiv, uploadDialogContent.querySelector('.flex.space-x-3'));
+        
+        // Update the upload button text
+        const documentTypeText = currentDocumentType.toLowerCase();
+        const uploadBtn = document.querySelector(`.accordion-content:has(.text-sm:contains('${documentTypeText}')) .upload-btn`);
+        if (uploadBtn) {
+          uploadBtn.innerHTML = '<i class="ri-check-line mr-2"></i>Uploaded';
+          uploadBtn.classList.remove('bg-white/10', 'hover:bg-white/15');
+          uploadBtn.classList.add('bg-green-500/20', 'text-green-400');
+        }
+        
+        // Close dialog after a delay
+        setTimeout(() => {
+          hideUploadDialog();
+        }, 1500);
+      }
+    }, 100);
+  });
+  
+  uploadDialog.addEventListener('click', (e) => {
+    if (e.target === uploadDialog) {
+      hideUploadDialog();
+    }
+  });
+});
+</script>
+
+<script id="application-submission">
+document.addEventListener('DOMContentLoaded', function() {
+  const submitApplicationBtn = document.getElementById('submitApplicationBtn');
+  const applicationSubmittedDialog = document.getElementById('applicationSubmittedDialog');
+  const applicationSubmittedContent = document.getElementById('applicationSubmittedContent');
+  const trackApplicationBtn = document.getElementById('trackApplicationBtn');
+  
+  function showSubmittedDialog() {
+    applicationSubmittedDialog.classList.remove('hidden');
+    setTimeout(() => {
+      applicationSubmittedContent.classList.remove('opacity-0', 'translate-y-4');
+    }, 50);
+  }
+  
+  function hideSubmittedDialog() {
+    applicationSubmittedContent.classList.add('opacity-0', 'translate-y-4');
+    setTimeout(() => {
+      applicationSubmittedDialog.classList.add('hidden');
+    }, 300);
+  }
+  
+  submitApplicationBtn.addEventListener('click', () => {
+    // Simulate form validation and submission
+    const requiredFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea, select');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+      if (!field.value && !field.hasAttribute('id', 'existingEMIs')) {
+        isValid = false;
+        field.classList.add('border-red-500');
+        
+        // Add error message if not already present
+        if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('text-red-400')) {
+          const errorElement = document.createElement('div');
+          errorElement.className = 'text-red-400 text-xs mt-1';
+          errorElement.textContent = 'This field is required';
+          field.parentNode.insertBefore(errorElement, field.nextSibling);
+        }
+        
+        // Remove error on input
+        field.addEventListener('input', function() {
+          field.classList.remove('border-red-500');
+          if (field.nextElementSibling && field.nextElementSibling.classList.contains('text-red-400')) {
+            field.nextElementSibling.remove();
+          }
+        }, { once: true });
+      }
+    });
+    
+    // Check terms and conditions
+    const termsCheckbox = document.querySelector('input[type="checkbox"]');
+    if (!termsCheckbox.checked) {
+      isValid = false;
+      const errorElement = document.createElement('div');
+      errorElement.className = 'text-red-400 text-xs mt-1';
+      errorElement.textContent = 'You must agree to the terms and conditions';
+      termsCheckbox.parentNode.appendChild(errorElement);
+      
+      termsCheckbox.addEventListener('change', function() {
+        if (this.checked && errorElement.parentNode) {
+          errorElement.remove();
+        }
+      }, { once: true });
+    }
+    
+    if (isValid) {
+      // Show loading state
+      submitApplicationBtn.disabled = true;
+      submitApplicationBtn.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Processing...';
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        submitApplicationBtn.disabled = false;
+        submitApplicationBtn.innerHTML = 'Submit Application';
+        showSubmittedDialog();
+      }, 2000);
+    } else {
+      // Scroll to the first error
+      const firstError = document.querySelector('.border-red-500');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+  
+  trackApplicationBtn.addEventListener('click', () => {
+    hideSubmittedDialog();
+    
+    // Show tracking notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm z-50';
+    notification.innerHTML = '<i class="ri-eye-line mr-2"></i>Tracking your application...';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  });
+  
+  applicationSubmittedDialog.addEventListener('click', (e) => {
+    if (e.target === applicationSubmittedDialog) {
+      hideSubmittedDialog();
+    }
+  });
+});
+</script>
+</body>
+</html>

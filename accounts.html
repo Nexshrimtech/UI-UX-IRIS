@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accounts & Cards</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#9333EA'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #1e1b4b 0%, #0f0f1a 100%);
+min-height: 100vh;
+color: white;
+}
+.card {
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+transition: all 0.3s ease;
+}
+.card:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.card-stack {
+perspective: 1000px;
+}
+.card-stack-item {
+transition: all 0.4s ease;
+position: absolute;
+width: 100%;
+backface-visibility: hidden;
+}
+.card-stack-item.active {
+transform: translateZ(0) translateY(0) rotateY(0);
+z-index: 10;
+}
+.card-stack-item.prev {
+transform: translateZ(-50px) translateY(20px) rotateY(-5deg);
+opacity: 0.7;
+z-index: 5;
+}
+.card-stack-item.next {
+transform: translateZ(-100px) translateY(40px) rotateY(-10deg);
+opacity: 0.4;
+z-index: 0;
+}
+.badge {
+position: absolute;
+top: -5px;
+right: -5px;
+background: #4F46E5;
+color: white;
+border-radius: 50%;
+width: 20px;
+height: 20px;
+font-size: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.action-button {
+transition: all 0.2s ease;
+}
+.action-button:active {
+transform: scale(0.97);
+}
+.nav-item {
+transition: all 0.3s ease;
+}
+.nav-item.active {
+color: #4F46E5;
+}
+.nav-item.active i {
+filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.6));
+}
+.transaction-item {
+transition: all 0.2s ease;
+}
+.transaction-item:hover {
+background: rgba(255, 255, 255, 0.1);
+}
+.spending-chart {
+height: 200px;
+width: 100%;
+}
+</style>
+</head>
+<body>
+<!-- Fixed Header -->
+<header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-2">
+<i class="ri-user-3-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-xs text-gray-400">Hi,</div>
+<div class="text-sm font-medium">Abhishek</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<div class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-notification-3-line ri-lg"></i>
+</div>
+<div id="settingsButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-settings-3-line ri-lg"></i>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div id="settingsModalContent" class="bg-[#1e1b4b] rounded-xl w-[320px] max-h-[80vh] overflow-y-auto p-5 opacity-0 translate-y-4 transition-all duration-300">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Settings</h3>
+<button id="closeSettingsModal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+
+<div class="space-y-3">
+<!-- Profile Settings -->
+<div class="setting-section">
+<button class="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 rounded-lg p-4 transition-colors">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-line ri-lg text-indigo-400"></i>
+</div>
+<span class="text-sm">Profile Settings</span>
+</div>
+<i class="ri-arrow-right-s-line ri-lg"></i>
+</button>
+</div>
+
+<!-- Security & Privacy -->
+<div class="setting-section">
+<button class="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 rounded-lg p-4 transition-colors">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-shield-line ri-lg text-green-400"></i>
+</div>
+<span class="text-sm">Security & Privacy</span>
+</div>
+<i class="ri-arrow-right-s-line ri-lg"></i>
+</button>
+</div>
+
+<!-- Notification Preferences -->
+<div class="setting-section">
+<button class="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 rounded-lg p-4 transition-colors">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-notification-line ri-lg text-blue-400"></i>
+</div>
+<span class="text-sm">Notification Preferences</span>
+</div>
+<i class="ri-arrow-right-s-line ri-lg"></i>
+</button>
+</div>
+
+<!-- App Appearance -->
+<div class="setting-section">
+<div class="w-full bg-white/5 rounded-lg p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-contrast-line ri-lg text-purple-400"></i>
+</div>
+<span class="text-sm">App Appearance</span>
+</div>
+</div>
+<div class="flex items-center justify-between bg-white/5 rounded-lg p-2">
+<span class="text-xs ml-2">Light Mode</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" id="themeToggle" class="sr-only peer">
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+<span class="text-xs ml-2">Dark Mode</span>
+</label>
+</div>
+</div>
+</div>
+
+<!-- Language Selection -->
+<div class="setting-section">
+<div class="w-full bg-white/5 rounded-lg p-4">
+<div class="flex items-center mb-3">
+<div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center mr-3">
+<i class="ri-global-line ri-lg text-amber-400"></i>
+</div>
+<span class="text-sm">Language</span>
+</div>
+<select class="w-full bg-white/5 rounded-lg p-2 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500">
+<option value="en">English</option>
+<option value="es">Español</option>
+<option value="fr">Français</option>
+<option value="de">Deutsch</option>
+<option value="zh">中文</option>
+</select>
+</div>
+</div>
+
+<!-- Help & Support -->
+<div class="setting-section">
+<button class="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 rounded-lg p-4 transition-colors">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-question-line ri-lg text-red-400"></i>
+</div>
+<span class="text-sm">Help & Support</span>
+</div>
+<i class="ri-arrow-right-s-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-20 px-4 pb-20">
+<!-- Card Stack Carousel -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<h2 class="text-lg font-semibold">My Cards</h2>
+<button class="text-xs text-indigo-300 flex items-center cursor-pointer">
+<i class="ri-add-line ri-sm mr-1"></i>Add New
+</button>
+</div>
+<div class="card-stack relative h-[200px]" id="cardStack">
+<!-- Credit Card 1 -->
+<div class="card-stack-item active rounded-xl p-5 h-[180px] w-full bg-gradient-to-r from-indigo-600 to-purple-600">
+<div class="flex justify-between items-start mb-4">
+<div class="font-['Pacifico']">logo</div>
+<i class="ri-visa-fill text-2xl text-white/80"></i>
+</div>
+<div class="mb-4">
+<div class="text-xs text-white/70 mb-1">Card Number</div>
+<div class="font-mono text-sm">•••• •••• •••• 4521</div>
+</div>
+<div class="flex justify-between">
+<div>
+<div class="text-xs text-white/70 mb-1">Card Holder</div>
+<div class="text-sm">Abhishek Singh</div>
+</div>
+<div>
+<div class="text-xs text-white/70 mb-1">Expires</div>
+<div class="text-sm">09/28</div>
+</div>
+</div>
+</div>
+<!-- Credit Card 2 -->
+<div class="card-stack-item prev rounded-xl p-5 h-[180px] w-full bg-gradient-to-r from-blue-600 to-cyan-500">
+<div class="flex justify-between items-start mb-4">
+<div class="font-['Pacifico']">logo</div>
+<i class="ri-mastercard-fill text-2xl text-white/80"></i>
+</div>
+<div class="mb-4">
+<div class="text-xs text-white/70 mb-1">Card Number</div>
+<div class="font-mono text-sm">•••• •••• •••• 8914</div>
+</div>
+<div class="flex justify-between">
+<div>
+<div class="text-xs text-white/70 mb-1">Card Holder</div>
+<div class="text-sm">Abhishek Singh</div>
+</div>
+<div>
+<div class="text-xs text-white/70 mb-1">Expires</div>
+<div class="text-sm">11/27</div>
+</div>
+</div>
+</div>
+<!-- Debit Card -->
+<div class="card-stack-item next rounded-xl p-5 h-[180px] w-full bg-gradient-to-r from-amber-500 to-orange-600">
+<div class="flex justify-between items-start mb-4">
+<div class="font-['Pacifico']">logo</div>
+<i class="ri-bank-card-fill text-2xl text-white/80"></i>
+</div>
+<div class="mb-4">
+<div class="text-xs text-white/70 mb-1">Card Number</div>
+<div class="font-mono text-sm">•••• •••• •••• 6732</div>
+</div>
+<div class="flex justify-between">
+<div>
+<div class="text-xs text-white/70 mb-1">Card Holder</div>
+<div class="text-sm">Abhishek Singh</div>
+</div>
+<div>
+<div class="text-xs text-white/70 mb-1">Expires</div>
+<div class="text-sm">04/26</div>
+</div>
+</div>
+</div>
+<!-- Card Navigation Dots -->
+<div class="absolute -bottom-4 left-0 right-0 flex justify-center space-x-2">
+<div class="w-2 h-2 rounded-full bg-indigo-500" id="dot0"></div>
+<div class="w-2 h-2 rounded-full bg-white/30" id="dot1"></div>
+<div class="w-2 h-2 rounded-full bg-white/30" id="dot2"></div>
+</div>
+</div>
+</div>
+<!-- Card Details -->
+<div class="card rounded-xl p-4 mb-6">
+<div class="flex justify-between items-center mb-3">
+<div class="text-sm font-medium">Card Balance</div>
+<div class="text-xs text-indigo-300">Available Credit</div>
+</div>
+<div class="flex justify-between items-center mb-3">
+<div class="text-2xl font-bold">$12,458.90</div>
+<div class="text-sm text-green-400">$87,541.10</div>
+</div>
+<div class="h-2 bg-white/10 rounded-full mb-2">
+<div class="h-full bg-indigo-600 rounded-full" style="width: 12%"></div>
+</div>
+<div class="flex justify-between text-xs text-gray-400">
+<span>Credit Limit: $100,000</span>
+<span>12% used</span>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="action-button card rounded-xl p-4 flex flex-col items-center cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mb-2">
+<i class="ri-lock-line ri-lg text-indigo-400"></i>
+</div>
+<span class="text-xs text-center">Freeze Card</span>
+</div>
+<div class="action-button card rounded-xl p-4 flex flex-col items-center cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+<i class="ri-bank-card-line ri-lg text-green-400"></i>
+</div>
+<span class="text-xs text-center">Set Limits</span>
+</div>
+<div class="action-button card rounded-xl p-4 flex flex-col items-center cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-2">
+<i class="ri-restart-line ri-lg text-purple-400"></i>
+</div>
+<span class="text-xs text-center">Auto Pay</span>
+</div>
+</div>
+<!-- Spending Analysis -->
+<div class="card rounded-xl p-4 mb-6">
+<div class="flex justify-between items-center mb-4">
+<div class="text-sm font-medium">Spending Analysis</div>
+<select class="bg-white/10 text-xs rounded-lg px-2 py-1 border-none outline-none">
+<option>This Month</option>
+<option>Last Month</option>
+<option>Last 3 Months</option>
+</select>
+</div>
+<div class="spending-chart mb-4" id="spendingChart"></div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white/5 rounded-lg p-3">
+<div class="flex items-center mb-2">
+<div class="w-3 h-3 rounded-full bg-indigo-500 mr-2"></div>
+<div class="text-xs">Business</div>
+</div>
+<div class="text-lg font-medium">$3,245.80</div>
+<div class="text-xs text-gray-400">42% of total</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="flex items-center mb-2">
+<div class="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
+<div class="text-xs">Personal</div>
+</div>
+<div class="text-lg font-medium">$4,487.65</div>
+<div class="text-xs text-gray-400">58% of total</div>
+</div>
+</div>
+</div>
+<!-- Recent Transactions -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Recent Transactions</h2>
+<button class="text-xs text-indigo-300 cursor-pointer">View All</button>
+</div>
+<div class="space-y-3">
+<div class="transaction-item card rounded-xl p-4 flex justify-between items-center cursor-pointer">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon</div>
+<div class="text-xs text-gray-400">June 28, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-$129.99</div>
+<div class="text-xs text-indigo-300">Business</div>
+</div>
+</div>
+<div class="transaction-item card rounded-xl p-4 flex justify-between items-center cursor-pointer">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-restaurant-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Starbucks</div>
+<div class="text-xs text-gray-400">June 27, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-$8.75</div>
+<div class="text-xs text-purple-300">Personal</div>
+</div>
+</div>
+<div class="transaction-item card rounded-xl p-4 flex justify-between items-center cursor-pointer">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-netflix-fill ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Netflix</div>
+<div class="text-xs text-gray-400">June 26, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-$14.99</div>
+<div class="text-xs text-purple-300">Personal</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Connected Accounts -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Connected Accounts</h2>
+<button id="manageAccountsBtn" class="text-xs text-indigo-300 cursor-pointer">Manage</button>
+</div>
+<div class="space-y-3">
+<div class="card rounded-xl p-4 flex justify-between items-center cursor-pointer bank-account" data-bank="hdfc" data-account="4521">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">HDFC Bank</div>
+<div class="text-xs text-gray-400">Savings •••• 4521</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">$32,450.65</div>
+<div class="text-xs text-green-400">Primary</div>
+</div>
+</div>
+<div class="card rounded-xl p-4 flex justify-between items-center cursor-pointer bank-account" data-bank="citi" data-account="7845" id="citibankAccount">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Citibank</div>
+<div class="text-xs text-gray-400">Checking •••• 7845</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">$15,780.25</div>
+<div class="text-xs text-gray-400">Secondary</div>
+</div>
+</div>
+<div class="card rounded-xl p-4 flex justify-between items-center cursor-pointer bank-account" data-bank="chase" data-account="9632">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-amber-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Chase Bank</div>
+<div class="text-xs text-gray-400">Savings •••• 9632</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">$8,921.40</div>
+<div class="text-xs text-gray-400">Secondary</div>
+</div>
+</div>
+</div>
+<!-- MPIN Verification Modal -->
+<div id="mpinModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="mpinModalContent">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-semibold">Enter MPIN</h3>
+<button id="closeMpinModal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="selected-bank-info flex items-center mb-6">
+<div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="bank-name text-sm font-medium">HDFC Bank</div>
+<div class="account-number text-xs text-gray-400">Savings •••• 4521</div>
+</div>
+</div>
+<div class="mb-6">
+<div class="flex justify-between mb-2">
+<div class="text-sm">Enter 4-digit MPIN</div>
+<button id="forgotMpin" class="text-xs text-indigo-300">Forgot MPIN?</button>
+</div>
+<div class="flex justify-center space-x-3 mb-3">
+<input type="password" maxlength="1" class="w-12 h-12 bg-white/5 rounded-lg text-center text-xl border border-indigo-500/20 focus:outline-none focus:border-indigo-500 mpin-input" inputmode="numeric">
+<input type="password" maxlength="1" class="w-12 h-12 bg-white/5 rounded-lg text-center text-xl border border-indigo-500/20 focus:outline-none focus:border-indigo-500 mpin-input" inputmode="numeric">
+<input type="password" maxlength="1" class="w-12 h-12 bg-white/5 rounded-lg text-center text-xl border border-indigo-500/20 focus:outline-none focus:border-indigo-500 mpin-input" inputmode="numeric">
+<input type="password" maxlength="1" class="w-12 h-12 bg-white/5 rounded-lg text-center text-xl border border-indigo-500/20 focus:outline-none focus:border-indigo-500 mpin-input" inputmode="numeric">
+</div>
+<div id="mpinError" class="text-red-400 text-xs text-center hidden">Invalid MPIN. Please try again.</div>
+</div>
+<button id="verifyMpin" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 !rounded-button">Verify</button>
+</div>
+</div>
+<!-- Bank Account Details Modal -->
+<div id="accountDetailsModal" class="fixed inset-0 bg-[#1e1b4b] z-50 hidden overflow-y-auto">
+<div class="min-h-screen p-4">
+<div class="flex items-center mb-6">
+<button id="backToAccounts" class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-full mr-3">
+<i class="ri-arrow-left-line ri-lg"></i>
+</button>
+<div>
+<h1 class="text-xl font-semibold bank-name">HDFC Bank</h1>
+<div class="text-sm text-gray-400 account-number">Savings •••• 4521</div>
+</div>
+</div>
+<div class="card rounded-xl p-4 mb-6">
+<div class="flex justify-between items-center mb-3">
+<div class="text-sm font-medium">Available Balance</div>
+<div class="text-xs text-indigo-300">Last updated: Just now</div>
+</div>
+<div class="text-3xl font-bold mb-3 balance-amount">$32,450.65</div>
+<div class="flex space-x-3">
+<button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 !rounded-button">
+<i class="ri-bank-card-line ri-lg mr-1"></i> Send Money
+</button>
+<button class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 !rounded-button">
+<i class="ri-download-line ri-lg mr-1"></i> Statement
+</button>
+</div>
+</div>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Recent Transactions</h2>
+<select class="bg-white/10 text-xs rounded-lg px-2 py-1 border-none outline-none">
+<option>This Week</option>
+<option>Last Week</option>
+<option>This Month</option>
+</select>
+</div>
+<div class="space-y-3">
+<div class="card rounded-xl p-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-down-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Salary Credit</div>
+<div class="text-xs text-gray-400">June 28, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+$5,250.00</div>
+<div class="text-xs text-gray-400">Credited</div>
+</div>
+</div>
+<div class="card rounded-xl p-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-up-line ri-lg text-red-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Rent Payment</div>
+<div class="text-xs text-gray-400">June 27, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-$1,800.00</div>
+<div class="text-xs text-gray-400">Debited</div>
+</div>
+</div>
+<div class="card rounded-xl p-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-up-line ri-lg text-red-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Grocery Shopping</div>
+<div class="text-xs text-gray-400">June 26, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-$245.50</div>
+<div class="text-xs text-gray-400">Debited</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-[#1C1B3B]/90 backdrop-blur-md px-2 py-2 z-10">
+<div class="grid grid-cols-5 gap-1">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/38dd8703-bf56-4de2-b480-1332f0c36989" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-home-5-line ri-lg mb-1"></i>
+<span class="text-[10px]">Home</span>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/122882b5-86f7-49b9-a828-a43382eceeed" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-file-list-3-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">Bills & Payments</span>
+</a>
+<div class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-[#4E43DA] flex items-center justify-center -mt-7 mb-1 shadow-lg shadow-[#4E43DA]/30">
+<i class="ri-qr-scan-line ri-xl"></i>
+</div>
+<span class="text-[10px]">Pay</span>
+</div>
+<div class="nav-item active flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-bank-card-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">Accounts & Cards</span>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/260ece7a-39c0-4fdf-b6f8-f37579ca4cb8" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-gift-line ri-lg mb-1"></i>
+<span class="text-[10px]">Rewards</span>
+</a>
+</div>
+</nav>
+<!-- Business vs Personal Splitter Modal -->
+<div id="splitterModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="splitterModalContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Categorize Transaction</h3>
+<button id="closeSplitterModal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon</div>
+<div class="text-xs text-indigo-300">June 28, 2025 • $129.99</div>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Transaction Type</div>
+<div class="flex space-x-3">
+<div class="flex-1 bg-white/5 hover:bg-white/10 rounded-lg p-3 cursor-pointer" id="businessBtn">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-2">
+<i class="ri-briefcase-line ri-lg text-indigo-400"></i>
+</div>
+<span class="text-sm">Business</span>
+</div>
+</div>
+<div class="flex-1 bg-white/5 hover:bg-white/10 rounded-lg p-3 cursor-pointer" id="personalBtn">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-2">
+<i class="ri-user-line ri-lg text-purple-400"></i>
+</div>
+<span class="text-sm">Personal</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Category</div>
+<select class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500">
+<option>Shopping</option>
+<option>Office Supplies</option>
+<option>Software & Services</option>
+<option>Travel</option>
+<option>Entertainment</option>
+<option>Food & Dining</option>
+</select>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Note (Optional)</div>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Add a note">
+</div>
+<div class="flex space-x-3">
+<button id="cancelSplitter" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 !rounded-button cursor-pointer">Cancel</button>
+<button id="saveSplitter" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 !rounded-button cursor-pointer">Save</button>
+</div>
+</div>
+</div>
+<!-- Card Controls Modal -->
+<div id="cardControlsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="cardControlsModalContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Card Controls</h3>
+<button id="closeCardControlsModal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-visa-fill text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Credit Card</div>
+<div class="text-xs text-indigo-300">•••• 4521</div>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2">
+<i class="ri-lock-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm">Freeze Card</div>
+<div class="text-xs text-gray-400">Temporarily block transactions</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" class="sr-only peer" id="freezeToggle">
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+</label>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2">
+<i class="ri-global-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm">International Transactions</div>
+<div class="text-xs text-gray-400">Allow foreign transactions</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" class="sr-only peer" id="internationalToggle" checked>
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+</label>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2">
+<i class="ri-shopping-cart-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm">Online Purchases</div>
+<div class="text-xs text-gray-400">Allow online transactions</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" class="sr-only peer" id="onlineToggle" checked>
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+</label>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2">
+<i class="ri-contactless-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm">Contactless Payments</div>
+<div class="text-xs text-gray-400">Allow tap to pay</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" class="sr-only peer" id="contactlessToggle" checked>
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+</label>
+</div>
+</div>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-sm py-2.5 !rounded-button cursor-pointer">
+<i class="ri-shield-keyhole-line ri-lg mr-2"></i>
+Change PIN
+</button>
+<button class="w-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-sm py-2.5 !rounded-button cursor-pointer">
+<i class="ri-file-list-3-line ri-lg mr-2"></i>
+View Statements
+</button>
+<button class="w-full flex items-center justify-center bg-red-500/20 hover:bg-red-500/30 text-sm py-2.5 !rounded-button cursor-pointer">
+<i class="ri-delete-bin-line ri-lg mr-2 text-red-400"></i>
+<span class="text-red-400">Report Lost or Stolen</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Set Spending Limit Modal -->
+<div id="spendingLimitModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="spendingLimitModalContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Set Spending Limit</h3>
+<button id="closeSpendingLimitModal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-visa-fill text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Credit Card</div>
+<div class="text-xs text-indigo-300">•••• 4521</div>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Limit Type</div>
+<div class="flex space-x-3 mb-4">
+<button class="flex-1 bg-indigo-600 text-sm py-2 !rounded-button cursor-pointer" id="monthlyLimitBtn">Monthly</button>
+<button class="flex-1 bg-white/5 text-sm py-2 !rounded-button cursor-pointer" id="dailyLimitBtn">Daily</button>
+<button class="flex-1 bg-white/5 text-sm py-2 !rounded-button cursor-pointer" id="transactionLimitBtn">Per Transaction</button>
+</div>
+<div class="text-sm font-medium mb-2">Limit Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">$</span>
+<input type="text" id="limitAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount" value="5,000">
+</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Category Limits (Optional)</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center bg-white/5 rounded-lg p-3">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-2">
+<i class="ri-shopping-bag-line text-blue-400"></i>
+</div>
+<span class="text-sm">Shopping</span>
+</div>
+<input type="text" class="w-24 bg-white/10 rounded-lg px-3 py-1 text-sm border-none focus:outline-none" placeholder="$ Limit">
+</div>
+<div class="flex justify-between items-center bg-white/5 rounded-lg p-3">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
+<i class="ri-restaurant-line text-green-400"></i>
+</div>
+<span class="text-sm">Dining</span>
+</div>
+<input type="text" class="w-24 bg-white/10 rounded-lg px-3 py-1 text-sm border-none focus:outline-none" placeholder="$ Limit">
+</div>
+<button class="flex items-center text-sm text-indigo-300 hover:text-indigo-200 py-2 cursor-pointer">
+<i class="ri-add-line ri-lg mr-1"></i>
+Add Category Limit
+</button>
+</div>
+</div>
+<div class="flex space-x-3">
+<button id="cancelSpendingLimit" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 !rounded-button cursor-pointer">Cancel</button>
+<button id="saveSpendingLimit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 !rounded-button cursor-pointer">Save Limits</button>
+</div>
+</div>
+</div>
+<script id="card-stack-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const cardStack = document.getElementById('cardStack');
+const cards = cardStack.querySelectorAll('.card-stack-item');
+const dots = [
+document.getElementById('dot0'),
+document.getElementById('dot1'),
+document.getElementById('dot2')
+];
+let currentIndex = 0;
+let startX, moveX;
+let isDragging = false;
+function updateCardPositions() {
+cards.forEach((card, index) => {
+card.classList.remove('active', 'prev', 'next');
+if (index === currentIndex) {
+card.classList.add('active');
+} else if (index === (currentIndex + 1) % cards.length) {
+card.classList.add('next');
+} else {
+card.classList.add('prev');
+}
+});
+// Update dots
+dots.forEach((dot, index) => {
+if (index === currentIndex) {
+dot.classList.remove('bg-white/30');
+dot.classList.add('bg-indigo-500');
+} else {
+dot.classList.remove('bg-indigo-500');
+dot.classList.add('bg-white/30');
+}
+});
+}
+function nextCard() {
+currentIndex = (currentIndex + 1) % cards.length;
+updateCardPositions();
+}
+function prevCard() {
+currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+updateCardPositions();
+}
+// Touch events for swipe
+cardStack.addEventListener('touchstart', (e) => {
+startX = e.touches[0].clientX;
+isDragging = true;
+});
+cardStack.addEventListener('touchmove', (e) => {
+if (!isDragging) return;
+moveX = e.touches[0].clientX;
+});
+cardStack.addEventListener('touchend', () => {
+if (!isDragging) return;
+if (startX - moveX > 50) {
+nextCard();
+} else if (moveX - startX > 50) {
+prevCard();
+}
+isDragging = false;
+});
+// Mouse events for desktop
+cardStack.addEventListener('mousedown', (e) => {
+startX = e.clientX;
+isDragging = true;
+});
+cardStack.addEventListener('mousemove', (e) => {
+if (!isDragging) return;
+moveX = e.clientX;
+});
+cardStack.addEventListener('mouseup', () => {
+if (!isDragging) return;
+if (startX - moveX > 50) {
+nextCard();
+} else if (moveX - startX > 50) {
+prevCard();
+}
+isDragging = false;
+});
+// Click on dots to navigate
+dots.forEach((dot, index) => {
+dot.addEventListener('click', () => {
+currentIndex = index;
+updateCardPositions();
+});
+});
+// Auto rotate cards every 5 seconds
+setInterval(nextCard, 5000);
+});
+</script>
+<script id="spending-chart">
+document.addEventListener('DOMContentLoaded', function() {
+const chartDom = document.getElementById('spendingChart');
+const myChart = echarts.init(chartDom);
+// Add click handler for the chart
+chartDom.addEventListener('click', function() {
+// Hide main content
+document.querySelector('main').style.display = 'none';
+// Create and show detailed analysis page
+const analysisPage = document.createElement('div');
+analysisPage.className = 'pt-20 px-4 pb-20';
+analysisPage.innerHTML = `
+<div class="flex items-center mb-6">
+<button id="backToMain" class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-full mr-3">
+<i class="ri-arrow-left-line ri-lg"></i>
+</button>
+<h1 class="text-xl font-semibold">Spending Analysis</h1>
+</div>
+<div class="card rounded-xl p-4 mb-6">
+<div class="flex justify-between items-center mb-4">
+<div class="text-sm font-medium">Total Overview</div>
+<select class="bg-white/10 text-xs rounded-lg px-2 py-1 border-none outline-none">
+<option>This Month</option>
+<option>Last Month</option>
+<option>Last 3 Months</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="bg-white/5 rounded-lg p-3">
+<div class="text-xs text-gray-400 mb-1">Total Spent</div>
+<div class="text-lg font-medium">$7,733.45</div>
+<div class="text-xs text-red-400">+12.5% vs last month</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="text-xs text-gray-400 mb-1">Total Income</div>
+<div class="text-lg font-medium">$12,150.00</div>
+<div class="text-xs text-green-400">+5.3% vs last month</div>
+</div>
+</div>
+<div id="overviewChart" class="h-[200px] w-full"></div>
+</div>
+<div class="card rounded-xl p-4 mb-6">
+<div class="flex justify-between items-center mb-4">
+<div class="text-sm font-medium">Spending by Category</div>
+<button class="text-xs text-indigo-300">View Details</button>
+</div>
+<div id="categoryChart" class="h-[250px] w-full"></div>
+</div>
+<div class="card rounded-xl p-4 mb-6">
+<div class="flex justify-between items-center mb-4">
+<div class="text-sm font-medium">Daily Spending Pattern</div>
+<button class="text-xs text-indigo-300">View Details</button>
+</div>
+<div id="dailyChart" class="h-[200px] w-full"></div>
+</div>
+<div class="card rounded-xl p-4">
+<div class="flex justify-between items-center mb-4">
+<div class="text-sm font-medium">Business vs Personal</div>
+<button class="text-xs text-indigo-300">View Details</button>
+</div>
+<div id="splitChart" class="h-[200px] w-full"></div>
+</div>
+`;
+document.body.appendChild(analysisPage);
+// Initialize all charts
+const overviewChart = echarts.init(document.getElementById('overviewChart'));
+const categoryChart = echarts.init(document.getElementById('categoryChart'));
+const dailyChart = echarts.init(document.getElementById('dailyChart'));
+const splitChart = echarts.init(document.getElementById('splitChart'));
+// Overview Chart
+overviewChart.setOption({
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(30, 27, 75, 0.8)',
+borderColor: 'rgba(255, 255, 255, 0.1)',
+textStyle: { color: '#fff' }
+},
+legend: {
+data: ['Income', 'Expenses'],
+textStyle: { color: '#9ca3af' },
+right: 0,
+top: 0
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+top: '15%',
+containLabel: true
+},
+xAxis: {
+type: 'category',
+data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } },
+axisLabel: { color: '#9ca3af' }
+},
+yAxis: {
+type: 'value',
+axisLine: { show: false },
+axisLabel: { color: '#9ca3af' },
+splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.05)' } }
+},
+series: [
+{
+name: 'Income',
+type: 'line',
+data: [1200, 1350, 1450, 1600, 1580, 1720, 1850],
+lineStyle: { width: 2 },
+itemStyle: { color: '#4F46E5' },
+smooth: true
+},
+{
+name: 'Expenses',
+type: 'line',
+data: [820, 932, 901, 934, 1290, 1330, 1520],
+lineStyle: { width: 2 },
+itemStyle: { color: '#9333EA' },
+smooth: true
+}
+]
+});
+// Category Chart
+categoryChart.setOption({
+tooltip: {
+trigger: 'item',
+backgroundColor: 'rgba(30, 27, 75, 0.8)',
+borderColor: 'rgba(255, 255, 255, 0.1)',
+textStyle: { color: '#fff' }
+},
+legend: {
+orient: 'vertical',
+right: 0,
+top: 'center',
+textStyle: { color: '#9ca3af' }
+},
+series: [
+{
+type: 'pie',
+radius: ['40%', '70%'],
+center: ['35%', '50%'],
+avoidLabelOverlap: false,
+itemStyle: {
+borderColor: '#1e1b4b',
+borderWidth: 2
+},
+label: {
+show: false
+},
+emphasis: {
+label: {
+show: true,
+fontSize: '12',
+fontWeight: 'bold'
+}
+},
+labelLine: {
+show: false
+},
+data: [
+{ value: 1048, name: 'Shopping', itemStyle: { color: '#4F46E5' } },
+{ value: 735, name: 'Food & Dining', itemStyle: { color: '#9333EA' } },
+{ value: 580, name: 'Travel', itemStyle: { color: '#3B82F6' } },
+{ value: 484, name: 'Entertainment', itemStyle: { color: '#EC4899' } },
+{ value: 300, name: 'Others', itemStyle: { color: '#8B5CF6' } }
+]
+}
+]
+});
+// Daily Chart
+dailyChart.setOption({
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(30, 27, 75, 0.8)',
+borderColor: 'rgba(255, 255, 255, 0.1)',
+textStyle: { color: '#fff' }
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+top: '3%',
+containLabel: true
+},
+xAxis: {
+type: 'category',
+data: ['12am', '4am', '8am', '12pm', '4pm', '8pm'],
+axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } },
+axisLabel: { color: '#9ca3af' }
+},
+yAxis: {
+type: 'value',
+axisLine: { show: false },
+axisLabel: { color: '#9ca3af' },
+splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.05)' } }
+},
+series: [{
+data: [120, 80, 150, 280, 470, 380],
+type: 'bar',
+itemStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{ offset: 0, color: '#4F46E5' },
+{ offset: 1, color: '#9333EA' }
+])
+},
+barWidth: '60%'
+}]
+});
+// Split Chart
+splitChart.setOption({
+tooltip: {
+trigger: 'item',
+backgroundColor: 'rgba(30, 27, 75, 0.8)',
+borderColor: 'rgba(255, 255, 255, 0.1)',
+textStyle: { color: '#fff' }
+},
+legend: {
+orient: 'vertical',
+right: 0,
+top: 'center',
+textStyle: { color: '#9ca3af' }
+},
+series: [
+{
+type: 'pie',
+radius: ['50%', '70%'],
+center: ['35%', '50%'],
+avoidLabelOverlap: false,
+itemStyle: {
+borderColor: '#1e1b4b',
+borderWidth: 2
+},
+label: {
+show: false
+},
+emphasis: {
+label: {
+show: true,
+fontSize: '12',
+fontWeight: 'bold'
+}
+},
+labelLine: {
+show: false
+},
+data: [
+{ value: 4487.65, name: 'Personal', itemStyle: { color: '#9333EA' } },
+{ value: 3245.80, name: 'Business', itemStyle: { color: '#4F46E5' } }
+]
+}
+]
+});
+// Handle back button
+document.getElementById('backToMain').addEventListener('click', function() {
+analysisPage.remove();
+document.querySelector('main').style.display = 'block';
+});
+// Handle window resize for all charts
+window.addEventListener('resize', function() {
+overviewChart.resize();
+categoryChart.resize();
+dailyChart.resize();
+splitChart.resize();
+});
+});
+const option = {
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(30, 27, 75, 0.8)',
+borderColor: 'rgba(255, 255, 255, 0.1)',
+textStyle: { color: '#fff' },
+formatter: function(params) {
+const business = params[0].data;
+const personal = params[1].data;
+const total = business + personal;
+return `${params[0].axisValue}<br/>
+<span style="display:inline-block;margin-right:4px;border-radius:50%;width:10px;height:10px;background-color:#4F46E5;"></span> Business: $${business.toFixed(2)}<br/>
+<span style="display:inline-block;margin-right:4px;border-radius:50%;width:10px;height:10px;background-color:#9333EA;"></span> Personal: $${personal.toFixed(2)}<br/>
+<span style="display:inline-block;margin-right:4px;border-radius:50%;width:10px;height:10px;background-color:#fff;"></span> Total: $${total.toFixed(2)}`;
+}
+},
+legend: {
+data: ['Business', 'Personal'],
+textStyle: { color: '#9ca3af' },
+right: 0,
+top: 0
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+top: '15%',
+containLabel: true
+},
+xAxis: {
+type: 'category',
+boundaryGap: false,
+data: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } },
+axisLabel: { color: '#9ca3af' }
+},
+yAxis: {
+type: 'value',
+axisLine: { show: false },
+axisLabel: { color: '#9ca3af' },
+splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.05)' } }
+},
+series: [
+{
+name: 'Business',
+type: 'line',
+stack: 'Total',
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{ offset: 0, color: 'rgba(79, 70, 229, 0.5)' },
+{ offset: 1, color: 'rgba(79, 70, 229, 0.1)' }
+])
+},
+emphasis: { focus: 'series' },
+data: [820, 932, 901, 934],
+lineStyle: { width: 2 },
+itemStyle: { color: '#4F46E5' },
+smooth: true
+},
+{
+name: 'Personal',
+type: 'line',
+stack: 'Total',
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{ offset: 0, color: 'rgba(147, 51, 234, 0.5)' },
+{ offset: 1, color: 'rgba(147, 51, 234, 0.1)' }
+])
+},
+emphasis: { focus: 'series' },
+data: [720, 832, 1201, 1034],
+lineStyle: { width: 2 },
+itemStyle: { color: '#9333EA' },
+smooth: true
+}
+]
+};
+myChart.setOption(option);
+// Resize chart when window is resized
+window.addEventListener('resize', function() {
+myChart.resize();
+});
+});
+</script>
+<script id="modal-interactions">
+document.addEventListener('DOMContentLoaded', function() {
+// Settings Modal Functionality
+const settingsButton = document.getElementById('settingsButton');
+const settingsModal = document.getElementById('settingsModal');
+const settingsModalContent = document.getElementById('settingsModalContent');
+const closeSettingsModal = document.getElementById('closeSettingsModal');
+const themeToggle = document.getElementById('themeToggle');
+
+function showSettingsModal() {
+settingsModal.classList.remove('hidden');
+setTimeout(() => {
+settingsModalContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+
+function hideSettingsModal() {
+settingsModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+settingsModal.classList.add('hidden');
+}, 300);
+}
+
+settingsButton.addEventListener('click', showSettingsModal);
+closeSettingsModal.addEventListener('click', hideSettingsModal);
+settingsModal.addEventListener('click', (e) => {
+if (e.target === settingsModal) {
+hideSettingsModal();
+}
+});
+
+// Theme Toggle Functionality
+themeToggle.addEventListener('change', function() {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-indigo-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Theme preference saved`;
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+});
+
+// Section Button Click Handlers
+const sectionButtons = document.querySelectorAll('.setting-section button');
+sectionButtons.forEach(button => {
+button.addEventListener('click', function() {
+const section = this.textContent.trim();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-indigo-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `${section} settings coming soon`;
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+});
+});
+// MPIN Verification for Citibank Account
+const citibankAccount = document.getElementById('citibankAccount');
+const mpinModal = document.getElementById('mpinModal');
+const mpinModalContent = document.getElementById('mpinModalContent');
+const closeMpinModal = document.getElementById('closeMpinModal');
+const mpinInputs = document.querySelectorAll('.mpin-input');
+const mpinError = document.getElementById('mpinError');
+const verifyMpin = document.getElementById('verifyMpin');
+const accountDetailsModal = document.getElementById('accountDetailsModal');
+// Show/hide MPIN modal
+function showMpinModal() {
+mpinModal.classList.remove('hidden');
+setTimeout(() => {
+mpinModalContent.classList.remove('opacity-0', 'translate-y-4');
+mpinInputs[0].focus();
+}, 50);
+// Update bank info in MPIN modal
+document.querySelector('.selected-bank-info .bank-name').textContent = 'Citibank';
+document.querySelector('.selected-bank-info .account-number').textContent = 'Checking •••• 7845';
+document.querySelector('.selected-bank-info i').className = 'ri-bank-line ri-lg text-purple-400';
+document.querySelector('.selected-bank-info > div').className = 'w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mr-3';
+}
+function hideMpinModal() {
+mpinModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+mpinModal.classList.add('hidden');
+// Reset MPIN inputs
+mpinInputs.forEach(input => input.value = '');
+mpinError.classList.add('hidden');
+}, 300);
+}
+// Show account details after successful MPIN verification
+function showAccountDetails() {
+// Update account details modal with Citibank info
+document.querySelector('#accountDetailsModal .bank-name').textContent = 'Citibank';
+document.querySelector('#accountDetailsModal .account-number').textContent = 'Checking •••• 7845';
+document.querySelector('#accountDetailsModal .balance-amount').textContent = '$15,780.25';
+accountDetailsModal.classList.remove('hidden');
+hideMpinModal();
+}
+// MPIN input handling
+mpinInputs.forEach((input, index) => {
+input.addEventListener('input', (e) => {
+if (e.target.value) {
+if (index < mpinInputs.length - 1) {
+mpinInputs[index + 1].focus();
+}
+}
+});
+input.addEventListener('keydown', (e) => {
+if (e.key === 'Backspace' && !e.target.value && index > 0) {
+mpinInputs[index - 1].focus();
+}
+});
+});
+// Verify MPIN
+verifyMpin.addEventListener('click', () => {
+const mpin = Array.from(mpinInputs).map(input => input.value).join('');
+if (mpin === '1234') { // Demo MPIN
+showAccountDetails();
+} else {
+mpinError.classList.remove('hidden');
+}
+});
+// Event listeners
+citibankAccount.addEventListener('click', showMpinModal);
+closeMpinModal.addEventListener('click', hideMpinModal);
+mpinModal.addEventListener('click', (e) => {
+if (e.target === mpinModal) {
+hideMpinModal();
+}
+});
+// Back button in account details
+document.getElementById('backToAccounts').addEventListener('click', () => {
+accountDetailsModal.classList.add('hidden');
+});
+// Connected Accounts Management Modal
+const accountsManagementModal = document.getElementById('accountsManagementModal');
+const accountsManagementModalContent = document.getElementById('accountsManagementModalContent');
+const manageAccountsBtn = document.getElementById('manageAccountsBtn');
+const closeAccountsManagementModal = document.getElementById('closeAccountsManagementModal');
+const addNewAccountBtn = document.getElementById('addNewAccountBtn');
+// Delete Confirmation Modal
+const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+const deleteConfirmationModalContent = document.getElementById('deleteConfirmationModalContent');
+const cancelDeleteAccount = document.getElementById('cancelDeleteAccount');
+const confirmDeleteAccount = document.getElementById('confirmDeleteAccount');
+let accountToDelete = null;
+// Show/hide accounts management modal
+function showAccountsManagementModal() {
+accountsManagementModal.classList.remove('hidden');
+setTimeout(() => {
+accountsManagementModalContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideAccountsManagementModal() {
+accountsManagementModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+accountsManagementModal.classList.add('hidden');
+}, 300);
+}
+// Show/hide delete confirmation modal
+function showDeleteConfirmationModal() {
+deleteConfirmationModal.classList.remove('hidden');
+setTimeout(() => {
+deleteConfirmationModalContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideDeleteConfirmationModal() {
+deleteConfirmationModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+deleteConfirmationModal.classList.add('hidden');
+}, 300);
+}
+// Event listeners for accounts management modal
+manageAccountsBtn.addEventListener('click', showAccountsManagementModal);
+closeAccountsManagementModal.addEventListener('click', hideAccountsManagementModal);
+accountsManagementModal.addEventListener('click', (e) => {
+if (e.target === accountsManagementModal) {
+hideAccountsManagementModal();
+}
+});
+// Event listeners for delete confirmation modal
+deleteConfirmationModal.addEventListener('click', (e) => {
+if (e.target === deleteConfirmationModal) {
+hideDeleteConfirmationModal();
+}
+});
+cancelDeleteAccount.addEventListener('click', hideDeleteConfirmationModal);
+confirmDeleteAccount.addEventListener('click', () => {
+if (accountToDelete) {
+hideDeleteConfirmationModal();
+// Show success notification
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Account removed successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+}
+});
+// Add new account button click handler
+addNewAccountBtn.addEventListener('click', () => {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-indigo-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Add new account feature coming soon';
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+});
+// Account management functions
+window.editAccount = function(accountId) {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-indigo-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Edit account feature coming soon';
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+};
+window.deleteAccount = function(accountId) {
+accountToDelete = accountId;
+showDeleteConfirmationModal();
+};
+// Business vs Personal Splitter Modal
+const splitterModal = document.getElementById('splitterModal');
+const splitterModalContent = document.getElementById('splitterModalContent');
+const closeSplitterModal = document.getElementById('closeSplitterModal');
+const businessBtn = document.getElementById('businessBtn');
+const personalBtn = document.getElementById('personalBtn');
+const cancelSplitter = document.getElementById('cancelSplitter');
+const saveSplitter = document.getElementById('saveSplitter');
+// Card Controls Modal
+const cardControlsModal = document.getElementById('cardControlsModal');
+const cardControlsModalContent = document.getElementById('cardControlsModalContent');
+const closeCardControlsModal = document.getElementById('closeCardControlsModal');
+const freezeToggle = document.getElementById('freezeToggle');
+// Spending Limit Modal
+const spendingLimitModal = document.getElementById('spendingLimitModal');
+const spendingLimitModalContent = document.getElementById('spendingLimitModalContent');
+const closeSpendingLimitModal = document.getElementById('closeSpendingLimitModal');
+const monthlyLimitBtn = document.getElementById('monthlyLimitBtn');
+const dailyLimitBtn = document.getElementById('dailyLimitBtn');
+const transactionLimitBtn = document.getElementById('transactionLimitBtn');
+const cancelSpendingLimit = document.getElementById('cancelSpendingLimit');
+const saveSpendingLimit = document.getElementById('saveSpendingLimit');
+// Transaction items to open splitter modal
+const transactionItems = document.querySelectorAll('.transaction-item');
+// Card action buttons
+const actionButtons = document.querySelectorAll('.action-button');
+// Show/hide splitter modal
+function showSplitterModal() {
+splitterModal.classList.remove('hidden');
+setTimeout(() => {
+splitterModalContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideSplitterModal() {
+splitterModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+splitterModal.classList.add('hidden');
+}, 300);
+}
+// Show/hide card controls modal
+function showCardControlsModal() {
+cardControlsModal.classList.remove('hidden');
+setTimeout(() => {
+cardControlsModalContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideCardControlsModal() {
+cardControlsModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+cardControlsModal.classList.add('hidden');
+}, 300);
+}
+// Show/hide spending limit modal
+function showSpendingLimitModal() {
+spendingLimitModal.classList.remove('hidden');
+setTimeout(() => {
+spendingLimitModalContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideSpendingLimitModal() {
+spendingLimitModalContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+spendingLimitModal.classList.add('hidden');
+}, 300);
+}
+// Event listeners for transaction items
+transactionItems.forEach(item => {
+item.addEventListener('click', showSplitterModal);
+});
+// Event listeners for splitter modal
+closeSplitterModal.addEventListener('click', hideSplitterModal);
+cancelSplitter.addEventListener('click', hideSplitterModal);
+businessBtn.addEventListener('click', () => {
+businessBtn.classList.add('bg-indigo-600', 'text-white');
+businessBtn.classList.remove('bg-white/5');
+personalBtn.classList.remove('bg-purple-600', 'text-white');
+personalBtn.classList.add('bg-white/5');
+});
+personalBtn.addEventListener('click', () => {
+personalBtn.classList.add('bg-purple-600', 'text-white');
+personalBtn.classList.remove('bg-white/5');
+businessBtn.classList.remove('bg-indigo-600', 'text-white');
+businessBtn.classList.add('bg-white/5');
+});
+saveSplitter.addEventListener('click', () => {
+hideSplitterModal();
+// Show success notification
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Transaction categorized successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+});
+// Event listeners for card controls modal
+closeCardControlsModal.addEventListener('click', hideCardControlsModal);
+freezeToggle.addEventListener('change', function() {
+const status = this.checked ? 'frozen' : 'unfrozen';
+const statusDiv = document.createElement('div');
+statusDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-indigo-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+statusDiv.textContent = `Card ${status} successfully`;
+document.body.appendChild(statusDiv);
+setTimeout(() => {
+statusDiv.remove();
+}, 3000);
+});
+// Event listeners for spending limit modal
+closeSpendingLimitModal.addEventListener('click', hideSpendingLimitModal);
+cancelSpendingLimit.addEventListener('click', hideSpendingLimitModal);
+monthlyLimitBtn.addEventListener('click', () => {
+monthlyLimitBtn.classList.add('bg-indigo-600');
+monthlyLimitBtn.classList.remove('bg-white/5');
+dailyLimitBtn.classList.remove('bg-indigo-600');
+dailyLimitBtn.classList.add('bg-white/5');
+transactionLimitBtn.classList.remove('bg-indigo-600');
+transactionLimitBtn.classList.add('bg-white/5');
+});
+dailyLimitBtn.addEventListener('click', () => {
+dailyLimitBtn.classList.add('bg-indigo-600');
+dailyLimitBtn.classList.remove('bg-white/5');
+monthlyLimitBtn.classList.remove('bg-indigo-600');
+monthlyLimitBtn.classList.add('bg-white/5');
+transactionLimitBtn.classList.remove('bg-indigo-600');
+transactionLimitBtn.classList.add('bg-white/5');
+});
+transactionLimitBtn.addEventListener('click', () => {
+transactionLimitBtn.classList.add('bg-indigo-600');
+transactionLimitBtn.classList.remove('bg-white/5');
+monthlyLimitBtn.classList.remove('bg-indigo-600');
+monthlyLimitBtn.classList.add('bg-white/5');
+dailyLimitBtn.classList.remove('bg-indigo-600');
+dailyLimitBtn.classList.add('bg-white/5');
+});
+saveSpendingLimit.addEventListener('click', () => {
+hideSpendingLimitModal();
+// Show success notification
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Spending limits updated successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+});
+// Action buttons functionality
+actionButtons.forEach((button, index) => {
+button.addEventListener('click', () => {
+// First button is Freeze Card
+if (index === 0) {
+showCardControlsModal();
+}
+// Second button is Set Limits
+else if (index === 1) {
+showSpendingLimitModal();
+}
+// Third button is Auto Pay
+else if (index === 2) {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Auto Pay enabled successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => {
+successDiv.remove();
+}, 3000);
+}
+});
+});
+// Close modals when clicking outside
+splitterModal.addEventListener('click', (e) => {
+if (e.target === splitterModal) {
+hideSplitterModal();
+}
+});
+cardControlsModal.addEventListener('click', (e) => {
+if (e.target === cardControlsModal) {
+hideCardControlsModal();
+}
+});
+spendingLimitModal.addEventListener('click', (e) => {
+if (e.target === spendingLimitModal) {
+hideSpendingLimitModal();
+}
+});
+});
+</script>
+<!-- Connected Accounts Management Modal -->
+<div id="accountsManagementModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] max-h-[80vh] overflow-y-auto p-5 opacity-0 translate-y-4 transition-all duration-300" id="accountsManagementModalContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Manage Accounts</h3>
+<button id="closeAccountsManagementModal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4 mb-6">
+<div class="card rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">HDFC Bank</div>
+<div class="text-xs text-gray-400">Savings •••• 4521</div>
+</div>
+</div>
+<div class="flex space-x-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10" onclick="editAccount('hdfc')">
+<i class="ri-pencil-line text-indigo-300"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10" onclick="deleteAccount('hdfc')">
+<i class="ri-delete-bin-line text-red-400"></i>
+</button>
+</div>
+</div>
+<div class="text-xs text-gray-400">Primary Account</div>
+</div>
+<div class="card rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Citibank</div>
+<div class="text-xs text-gray-400">Checking •••• 7845</div>
+</div>
+</div>
+<div class="flex space-x-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10" onclick="editAccount('citi')">
+<i class="ri-pencil-line text-indigo-300"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10" onclick="deleteAccount('citi')">
+<i class="ri-delete-bin-line text-red-400"></i>
+</button>
+</div>
+</div>
+<div class="text-xs text-gray-400">Secondary Account</div>
+</div>
+<div class="card rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line ri-lg text-amber-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Chase Bank</div>
+<div class="text-xs text-gray-400">Savings •••• 9632</div>
+</div>
+</div>
+<div class="flex space-x-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10" onclick="editAccount('chase')">
+<i class="ri-pencil-line text-indigo-300"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10" onclick="deleteAccount('chase')">
+<i class="ri-delete-bin-line text-red-400"></i>
+</button>
+</div>
+</div>
+<div class="text-xs text-gray-400">Secondary Account</div>
+</div>
+</div>
+<button id="addNewAccountBtn" class="w-full flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-sm py-3 !rounded-button cursor-pointer">
+<i class="ri-add-line ri-lg mr-2"></i>
+Add New Account
+</button>
+</div>
+</div>
+<!-- Delete Account Confirmation Modal -->
+<div id="deleteConfirmationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[300px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="deleteConfirmationModalContent">
+<div class="text-center mb-4">
+<div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-3">
+<i class="ri-delete-bin-line ri-2x text-red-400"></i>
+</div>
+<h3 class="text-lg font-semibold mb-2">Delete Account</h3>
+<p class="text-sm text-gray-400">Are you sure you want to remove this account? This action cannot be undone.</p>
+</div>
+<div class="flex space-x-3">
+<button id="cancelDeleteAccount" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 !rounded-button cursor-pointer">Cancel</button>
+<button id="confirmDeleteAccount" class="flex-1 bg-red-500 hover:bg-red-600 text-sm py-2.5 !rounded-button cursor-pointer">Delete</button>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add EMI</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#5046e5',secondary:'#8a7bff'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  background-color: #1a1a3a;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+.gradient-card {
+  background: linear-gradient(135deg, #2a2a5a 0%, #1a1a3a 100%);
+}
+.nav-gradient {
+  background: linear-gradient(180deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+.tab-gradient {
+  background: linear-gradient(0deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.file-input {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+</style>
+</head>
+<body class="bg-[#1a1a3a] text-white">
+<!-- Nav Bar -->
+<nav class="nav-gradient fixed w-full top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+  <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex items-center cursor-pointer">
+    <div class="w-8 h-8 flex items-center justify-center rounded-full bg-opacity-20 bg-white">
+      <i class="ri-arrow-left-s-line text-white"></i>
+    </div>
+    <span class="ml-2 text-sm font-medium">Back</span>
+  </a>
+  <div class="flex space-x-3">
+    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+      <i class="ri-notification-3-line text-white"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-20 px-4">
+  <h1 class="text-xl font-bold mb-6">Add EMI</h1>
+  
+  <form id="emiForm">
+    <!-- Loan/Purchase Name -->
+    <div class="mb-5">
+      <label for="loanName" class="block text-sm text-gray-300 mb-1">Loan/Purchase Name*</label>
+      <div class="gradient-card rounded-xl p-3">
+        <input type="text" id="loanName" class="w-full bg-transparent border-none focus:outline-none text-white" placeholder="e.g. Home Loan, Car Loan, Phone Purchase" required>
+      </div>
+    </div>
+    
+    <!-- Principal Amount -->
+    <div class="mb-5">
+      <label for="principalAmount" class="block text-sm text-gray-300 mb-1">Principal Amount*</label>
+      <div class="gradient-card rounded-xl p-3 flex items-center">
+        <span class="text-gray-300 mr-2">₹</span>
+        <input type="number" id="principalAmount" class="w-full bg-transparent border-none focus:outline-none text-white" placeholder="Enter amount" required>
+      </div>
+    </div>
+    
+    <!-- Interest Rate -->
+    <div class="mb-5">
+      <label for="interestRate" class="block text-sm text-gray-300 mb-1">Interest Rate (p.a.)</label>
+      <div class="gradient-card rounded-xl p-3 flex items-center">
+        <input type="number" id="interestRate" step="0.01" class="w-full bg-transparent border-none focus:outline-none text-white" placeholder="e.g. 8.5">
+        <span class="text-gray-300 ml-2">%</span>
+      </div>
+    </div>
+    
+    <!-- Tenure -->
+    <div class="mb-5">
+      <label for="tenure" class="block text-sm text-gray-300 mb-1">Tenure*</label>
+      <div class="gradient-card rounded-xl p-3 flex items-center">
+        <input type="number" id="tenure" class="w-full bg-transparent border-none focus:outline-none text-white" placeholder="Number of months" required>
+        <span class="text-gray-300 ml-2">Months</span>
+      </div>
+    </div>
+    
+    <!-- EMI Amount -->
+    <div class="mb-5">
+      <div class="flex justify-between items-center mb-1">
+        <label for="emiAmount" class="block text-sm text-gray-300">EMI Amount*</label>
+        <button type="button" id="calculateEmi" class="text-xs text-primary cursor-pointer">Calculate</button>
+      </div>
+      <div class="gradient-card rounded-xl p-3 flex items-center">
+        <span class="text-gray-300 mr-2">₹</span>
+        <input type="number" id="emiAmount" class="w-full bg-transparent border-none focus:outline-none text-white" placeholder="Monthly payment amount" required>
+      </div>
+    </div>
+    
+    <!-- Payment Date -->
+    <div class="mb-5">
+      <label for="paymentDate" class="block text-sm text-gray-300 mb-1">Payment Date*</label>
+      <div class="gradient-card rounded-xl p-3 flex items-center">
+        <input type="date" id="paymentDate" class="w-full bg-transparent border-none focus:outline-none text-white" required>
+        <i class="ri-calendar-line text-gray-300 ml-2"></i>
+      </div>
+    </div>
+    
+    <!-- Bank/Lender Details -->
+    <div class="mb-5">
+      <label for="bankDetails" class="block text-sm text-gray-300 mb-1">Bank/Lender Details*</label>
+      <div class="gradient-card rounded-xl p-3">
+        <input type="text" id="bankDetails" class="w-full bg-transparent border-none focus:outline-none text-white" placeholder="e.g. HDFC Bank, SBI, Bajaj Finserv" required>
+      </div>
+    </div>
+    
+    <!-- Document Upload -->
+    <div class="mb-5">
+      <label class="block text-sm text-gray-300 mb-1">Upload Documents (Optional)</label>
+      <div class="gradient-card rounded-xl p-4 mb-2">
+        <div class="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-6">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mb-2">
+            <i class="ri-upload-cloud-line text-primary ri-lg"></i>
+          </div>
+          <p class="text-sm text-center mb-1">Drag & drop files or</p>
+          <button type="button" class="text-primary text-sm font-medium cursor-pointer">Browse Files</button>
+          <p class="text-xs text-gray-400 mt-2 text-center">Supported formats: PDF, JPG, PNG (Max: 5MB)</p>
+          <input type="file" id="documentUpload" class="file-input" multiple accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      <div id="uploadedFiles" class="space-y-2"></div>
+    </div>
+    
+    <!-- Payment Reminders -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-3">
+        <label class="text-sm text-gray-300">Payment Reminders</label>
+        <div class="relative inline-block w-12 h-6 cursor-pointer">
+          <input type="checkbox" id="reminder-toggle" class="opacity-0 w-0 h-0" checked>
+          <span class="absolute top-0 left-0 right-0 bottom-0 bg-primary rounded-full"></span>
+          <span class="absolute top-1 left-7 bg-white w-4 h-4 rounded-full transition-transform"></span>
+        </div>
+      </div>
+      <div id="reminderOptions" class="gradient-card rounded-xl p-4">
+        <div class="mb-3">
+          <label for="reminderDays" class="block text-sm text-gray-300 mb-1">Remind me</label>
+          <select id="reminderDays" class="w-full gradient-card rounded-lg p-2 bg-[#2a2a5a] border-none focus:outline-none text-white">
+            <option value="1">1 day before due date</option>
+            <option value="3" selected>3 days before due date</option>
+            <option value="5">5 days before due date</option>
+            <option value="7">7 days before due date</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1">Notification Method</label>
+          <div class="flex space-x-3">
+            <div class="flex items-center">
+              <input type="checkbox" id="notifyEmail" class="mr-2" checked>
+              <label for="notifyEmail" class="text-sm">Email</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="notifySms" class="mr-2" checked>
+              <label for="notifySms" class="text-sm">SMS</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="notifyPush" class="mr-2" checked>
+              <label for="notifyPush" class="text-sm">Push</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</main>
+
+<!-- Save Button (Fixed at bottom) -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-[#1a1a3a] shadow-lg">
+  <button id="saveButton" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white font-medium rounded-button">Save EMI</button>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+  <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gradient-card rounded-xl p-6 w-[90%] max-w-sm">
+    <div class="flex flex-col items-center">
+      <div class="w-16 h-16 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mb-4">
+        <i class="ri-check-line text-green-400 ri-2x"></i>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">EMI Added Successfully</h3>
+      <p class="text-sm text-gray-300 text-center mb-6">Your EMI has been added to your payment schedule</p>
+      <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white font-medium rounded-button text-center cursor-pointer">
+        Back to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script id="toggle-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const reminderToggle = document.getElementById('reminder-toggle');
+  const reminderOptions = document.getElementById('reminderOptions');
+  
+  reminderToggle.addEventListener('change', function() {
+    const span = this.nextElementSibling.nextElementSibling;
+    if (this.checked) {
+      this.nextElementSibling.classList.remove('bg-gray-600');
+      this.nextElementSibling.classList.add('bg-primary');
+      span.style.transform = 'translateX(24px)';
+      reminderOptions.classList.remove('hidden');
+    } else {
+      this.nextElementSibling.classList.remove('bg-primary');
+      this.nextElementSibling.classList.add('bg-gray-600');
+      span.style.transform = 'translateX(0)';
+      reminderOptions.classList.add('hidden');
+    }
+  });
+  
+  // Initialize toggle position
+  if (reminderToggle.checked) {
+    reminderToggle.nextElementSibling.classList.add('bg-primary');
+    reminderToggle.nextElementSibling.nextElementSibling.style.transform = 'translateX(24px)';
+  }
+});
+</script>
+
+<script id="emi-calculator-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const principalInput = document.getElementById('principalAmount');
+  const interestInput = document.getElementById('interestRate');
+  const tenureInput = document.getElementById('tenure');
+  const emiInput = document.getElementById('emiAmount');
+  const calculateButton = document.getElementById('calculateEmi');
+  
+  calculateButton.addEventListener('click', function() {
+    const principal = parseFloat(principalInput.value);
+    const interestRate = parseFloat(interestInput.value) / 12 / 100; // Monthly interest rate
+    const tenure = parseInt(tenureInput.value);
+    
+    if (!principal || !interestRate || !tenure) {
+      // Create a toast notification
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg z-50';
+      toast.textContent = 'Please fill all required fields';
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+      return;
+    }
+    
+    // EMI calculation formula: [P x R x (1+R)^N]/[(1+R)^N-1]
+    const emi = principal * interestRate * Math.pow(1 + interestRate, tenure) / (Math.pow(1 + interestRate, tenure) - 1);
+    
+    emiInput.value = emi.toFixed(2);
+  });
+});
+</script>
+
+<script id="document-upload-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('documentUpload');
+  const uploadedFilesContainer = document.getElementById('uploadedFiles');
+  
+  fileInput.addEventListener('change', function(e) {
+    const files = e.target.files;
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Check file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg z-50';
+        toast.textContent = `${file.name} exceeds 5MB limit`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+        continue;
+      }
+      
+      // Create file item
+      const fileItem = document.createElement('div');
+      fileItem.className = 'gradient-card rounded-xl p-3 flex justify-between items-center';
+      
+      // Determine icon based on file type
+      let iconClass = 'ri-file-line';
+      if (file.type.includes('pdf')) {
+        iconClass = 'ri-file-pdf-line';
+      } else if (file.type.includes('image')) {
+        iconClass = 'ri-image-line';
+      }
+      
+      fileItem.innerHTML = `
+        <div class="flex items-center">
+          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 bg-opacity-20 mr-3">
+            <i class="${iconClass} text-blue-400"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium truncate max-w-[180px]">${file.name}</p>
+            <p class="text-xs text-gray-400">${(file.size / 1024).toFixed(1)} KB</p>
+          </div>
+        </div>
+        <button type="button" class="delete-file w-8 h-8 flex items-center justify-center rounded-full bg-red-500 bg-opacity-20">
+          <i class="ri-delete-bin-line text-red-400"></i>
+        </button>
+      `;
+      
+      // Add delete functionality
+      const deleteButton = fileItem.querySelector('.delete-file');
+      deleteButton.addEventListener('click', function() {
+        fileItem.remove();
+      });
+      
+      uploadedFilesContainer.appendChild(fileItem);
+    }
+    
+    // Reset file input
+    fileInput.value = '';
+  });
+});
+</script>
+
+<script id="form-submit-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const saveButton = document.getElementById('saveButton');
+  const emiForm = document.getElementById('emiForm');
+  const successModal = document.getElementById('successModal');
+  
+  saveButton.addEventListener('click', function() {
+    // Check form validity
+    const requiredInputs = emiForm.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredInputs.forEach(input => {
+      if (!input.value.trim()) {
+        isValid = false;
+        input.parentElement.classList.add('border', 'border-red-500');
+        
+        // Remove error highlight after 3 seconds
+        setTimeout(() => {
+          input.parentElement.classList.remove('border', 'border-red-500');
+        }, 3000);
+      }
+    });
+    
+    if (!isValid) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg z-50';
+      toast.textContent = 'Please fill all required fields';
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+      return;
+    }
+    
+    // Show loading state
+    saveButton.disabled = true;
+    saveButton.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i> Saving...';
+    
+    // Simulate form submission
+    setTimeout(() => {
+      successModal.classList.remove('hidden');
+      
+      // Reset form
+      emiForm.reset();
+      document.getElementById('uploadedFiles').innerHTML = '';
+      
+      // Reset button
+      saveButton.disabled = false;
+      saveButton.innerHTML = 'Save EMI';
+    }, 1500);
+  });
+  
+  // Close modal when clicking outside
+  successModal.addEventListener('click', function(e) {
+    if (e.target === successModal) {
+      successModal.classList.add('hidden');
+    }
+  });
+});
+</script>
+
+<script id="date-initializer">
+document.addEventListener('DOMContentLoaded', function() {
+  // Set default date to today
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0];
+  document.getElementById('paymentDate').value = formattedDate;
+});
+</script>
+
+</body>
+</html>

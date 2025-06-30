@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Subscription</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#5046e5',secondary:'#8a7bff'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  background-color: #1a1a3a;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+.gradient-card {
+  background: linear-gradient(135deg, #2a2a5a 0%, #1a1a3a 100%);
+}
+.nav-gradient {
+  background: linear-gradient(180deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+.tab-gradient {
+  background: linear-gradient(0deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #5046e5;
+}
+.toggle-checkbox:checked + .toggle-label .toggle-switch {
+  transform: translateX(24px);
+}
+</style>
+</head>
+<body class="bg-[#1a1a3a] text-white">
+<!-- Nav Bar -->
+<nav class="nav-gradient fixed w-full top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+  <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a] cursor-pointer">
+    <i class="ri-arrow-left-s-line text-white ri-lg"></i>
+  </a>
+  <h1 class="text-lg font-semibold">Add Subscription</h1>
+  <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a] cursor-pointer">
+    <i class="ri-close-line text-white"></i>
+  </a>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-28 px-4">
+  <form id="subscription-form">
+    <!-- Subscription Name -->
+    <div class="mb-6">
+      <label for="subscription-name" class="block text-sm font-medium text-gray-300 mb-2">Subscription Name</label>
+      <input type="text" id="subscription-name" placeholder="Enter subscription name" class="w-full bg-[#2a2a5a] border-none rounded-button p-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:outline-none">
+    </div>
+
+    <!-- Provider Selection -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Provider</label>
+      <div class="flex items-center mb-3 bg-[#2a2a5a] rounded-button p-2">
+        <div class="w-8 h-8 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mr-2">
+          <i class="ri-search-line text-primary"></i>
+        </div>
+        <input type="text" placeholder="Search provider" class="bg-transparent border-none w-full text-white placeholder-gray-400 focus:outline-none">
+      </div>
+      
+      <div class="grid grid-cols-4 gap-3 mb-3">
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#E50914] mb-1">
+            <i class="ri-netflix-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Netflix</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#1DB954] mb-1">
+            <i class="ri-spotify-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Spotify</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#00A4EF] mb-1">
+            <i class="ri-microsoft-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Microsoft</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#FF9900] mb-1">
+            <i class="ri-amazon-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Amazon</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#A2AAAD] mb-1">
+            <i class="ri-apple-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Apple</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#FF0000] mb-1">
+            <i class="ri-youtube-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">YouTube</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#0088CC] mb-1">
+            <i class="ri-telegram-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Telegram</p>
+        </div>
+        <div class="provider-option cursor-pointer flex flex-col items-center">
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#5865F2] mb-1">
+            <i class="ri-discord-fill text-white ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Discord</p>
+        </div>
+      </div>
+      
+      <button type="button" class="text-primary text-sm flex items-center cursor-pointer">
+        <div class="w-5 h-5 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mr-1">
+          <i class="ri-add-line text-primary ri-xs"></i>
+        </div>
+        Upload custom logo
+      </button>
+    </div>
+
+    <!-- Amount -->
+    <div class="mb-6">
+      <label for="amount" class="block text-sm font-medium text-gray-300 mb-2">Amount</label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <span class="text-gray-300">₹</span>
+        </div>
+        <input type="number" id="amount" placeholder="0.00" class="w-full bg-[#2a2a5a] border-none rounded-button p-3 pl-8 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:outline-none">
+      </div>
+    </div>
+
+    <!-- Billing Cycle -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Billing Cycle</label>
+      <div class="grid grid-cols-3 gap-3 mb-3">
+        <div class="cycle-option cursor-pointer">
+          <input type="radio" id="monthly" name="billing-cycle" value="monthly" class="hidden" checked>
+          <label for="monthly" class="block text-center py-3 px-2 bg-[#2a2a5a] rounded-button border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-200 cycle-label">
+            <span class="text-sm">Monthly</span>
+          </label>
+        </div>
+        <div class="cycle-option cursor-pointer">
+          <input type="radio" id="yearly" name="billing-cycle" value="yearly" class="hidden">
+          <label for="yearly" class="block text-center py-3 px-2 bg-[#2a2a5a] rounded-button border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-200 cycle-label">
+            <span class="text-sm">Yearly</span>
+          </label>
+        </div>
+        <div class="cycle-option cursor-pointer">
+          <input type="radio" id="custom" name="billing-cycle" value="custom" class="hidden">
+          <label for="custom" class="block text-center py-3 px-2 bg-[#2a2a5a] rounded-button border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-200 cycle-label">
+            <span class="text-sm">Custom</span>
+          </label>
+        </div>
+      </div>
+      
+      <div id="custom-cycle-options" class="hidden bg-[#2a2a5a] rounded-button p-4 mb-3">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm">Every</span>
+          <div class="flex items-center">
+            <input type="number" min="1" value="1" class="w-16 bg-[#1a1a3a] border-none rounded-button p-2 text-center text-white">
+            <select class="ml-2 bg-[#1a1a3a] border-none rounded-button p-2 text-white">
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+              <option value="months">Months</option>
+              <option value="years">Years</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start Date -->
+    <div class="mb-6">
+      <label for="start-date" class="block text-sm font-medium text-gray-300 mb-2">Start Date</label>
+      <div class="relative">
+        <input type="date" id="start-date" class="w-full bg-[#2a2a5a] border-none rounded-button p-3 text-white focus:ring-2 focus:ring-primary focus:outline-none">
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <i class="ri-calendar-line text-gray-300"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="mb-6">
+      <label for="category" class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+      <div class="relative">
+        <select id="category" class="w-full bg-[#2a2a5a] border-none rounded-button p-3 text-white appearance-none focus:ring-2 focus:ring-primary focus:outline-none">
+          <option value="" disabled selected>Select category</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="software">Software</option>
+          <option value="utilities">Utilities</option>
+          <option value="streaming">Streaming</option>
+          <option value="gaming">Gaming</option>
+          <option value="education">Education</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <i class="ri-arrow-down-s-line text-gray-300"></i>
+        </div>
+      </div>
+      <button type="button" class="mt-2 text-primary text-sm flex items-center cursor-pointer">
+        <div class="w-5 h-5 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mr-1">
+          <i class="ri-add-line text-primary ri-xs"></i>
+        </div>
+        Add new category
+      </button>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="mb-6">
+      <label for="payment-method" class="block text-sm font-medium text-gray-300 mb-2">Payment Method</label>
+      <div class="relative">
+        <select id="payment-method" class="w-full bg-[#2a2a5a] border-none rounded-button p-3 text-white appearance-none focus:ring-2 focus:ring-primary focus:outline-none">
+          <option value="" disabled selected>Select payment method</option>
+          <option value="hdfc-credit">HDFC Credit Card (...4582)</option>
+          <option value="sbi-debit">SBI Debit Card (...1234)</option>
+          <option value="icici-credit">ICICI Credit Card (...7890)</option>
+          <option value="paytm">Paytm Wallet</option>
+          <option value="gpay">Google Pay</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <i class="ri-arrow-down-s-line text-gray-300"></i>
+        </div>
+      </div>
+      <button type="button" class="mt-2 text-primary text-sm flex items-center cursor-pointer">
+        <div class="w-5 h-5 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mr-1">
+          <i class="ri-add-line text-primary ri-xs"></i>
+        </div>
+        Add new payment method
+      </button>
+    </div>
+
+    <!-- Reminder Settings -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-2">
+        <label class="text-sm font-medium text-gray-300">Payment Reminder</label>
+        <div class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="reminder-toggle" class="toggle-checkbox sr-only" checked>
+          <div class="toggle-label block w-12 h-6 rounded-full bg-primary transition-colors duration-200 ease-in-out">
+            <div class="toggle-switch absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="reminder-settings" class="bg-[#2a2a5a] rounded-button p-4">
+        <div class="mb-3">
+          <label for="reminder-days" class="block text-sm text-gray-300 mb-2">Remind me before</label>
+          <div class="flex items-center">
+            <input type="number" id="reminder-days" min="1" max="30" value="3" class="w-16 bg-[#1a1a3a] border-none rounded-button p-2 text-center text-white">
+            <span class="ml-2 text-sm">days</span>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm text-gray-300 mb-2">Notification type</label>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="notification-option">
+              <input type="checkbox" id="push-notification" class="hidden" checked>
+              <label for="push-notification" class="block text-center py-2 px-1 bg-[#1a1a3a] rounded-button border-2 border-primary cursor-pointer transition-all duration-200 text-xs">
+                Push
+              </label>
+            </div>
+            <div class="notification-option">
+              <input type="checkbox" id="email-notification" class="hidden">
+              <label for="email-notification" class="block text-center py-2 px-1 bg-[#1a1a3a] rounded-button border-2 border-transparent cursor-pointer transition-all duration-200 text-xs">
+                Email
+              </label>
+            </div>
+            <div class="notification-option">
+              <input type="checkbox" id="sms-notification" class="hidden">
+              <label for="sms-notification" class="block text-center py-2 px-1 bg-[#1a1a3a] rounded-button border-2 border-transparent cursor-pointer transition-all duration-200 text-xs">
+                SMS
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</main>
+
+<!-- Save Button -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-[#1a1a3a] shadow-lg">
+  <button type="submit" form="subscription-form" class="w-full bg-primary hover:bg-opacity-90 text-white font-medium py-3 px-4 rounded-button !rounded-button transition duration-200">
+    Save Subscription
+  </button>
+</div>
+
+<!-- Scripts -->
+<script id="billing-cycle-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const cycleOptions = document.querySelectorAll('.cycle-option input');
+  const customCycleOptions = document.getElementById('custom-cycle-options');
+  const cycleLabels = document.querySelectorAll('.cycle-label');
+  
+  // Set initial active state
+  document.querySelector('input[name="billing-cycle"]:checked').nextElementSibling.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+  
+  cycleOptions.forEach(option => {
+    option.addEventListener('change', function() {
+      // Reset all labels
+      cycleLabels.forEach(label => {
+        label.classList.remove('border-primary', 'bg-primary', 'bg-opacity-10');
+      });
+      
+      // Set active label
+      this.nextElementSibling.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+      
+      // Show/hide custom options
+      if (this.id === 'custom') {
+        customCycleOptions.classList.remove('hidden');
+      } else {
+        customCycleOptions.classList.add('hidden');
+      }
+    });
+  });
+});
+</script>
+
+<script id="notification-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const reminderToggle = document.getElementById('reminder-toggle');
+  const reminderSettings = document.getElementById('reminder-settings');
+  const notificationOptions = document.querySelectorAll('.notification-option input');
+  
+  reminderToggle.addEventListener('change', function() {
+    if (this.checked) {
+      reminderSettings.classList.remove('opacity-50', 'pointer-events-none');
+    } else {
+      reminderSettings.classList.add('opacity-50', 'pointer-events-none');
+    }
+  });
+  
+  notificationOptions.forEach(option => {
+    option.addEventListener('change', function() {
+      if (this.checked) {
+        this.nextElementSibling.classList.add('border-primary');
+      } else {
+        this.nextElementSibling.classList.remove('border-primary');
+      }
+    });
+  });
+});
+</script>
+
+<script id="provider-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const providerOptions = document.querySelectorAll('.provider-option');
+  
+  providerOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      // Reset all selections
+      providerOptions.forEach(opt => {
+        opt.querySelector('div').classList.remove('ring-2', 'ring-primary');
+      });
+      
+      // Set selected
+      this.querySelector('div').classList.add('ring-2', 'ring-primary');
+      
+      // Update subscription name if empty
+      const subscriptionName = document.getElementById('subscription-name');
+      if (!subscriptionName.value) {
+        subscriptionName.value = this.querySelector('p').textContent.trim();
+      }
+    });
+  });
+});
+</script>
+
+<script id="form-submit-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('subscription-form');
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading state
+    const submitButton = document.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    submitButton.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i> Saving...';
+    submitButton.disabled = true;
+    
+    // Simulate form submission
+    setTimeout(() => {
+      // Create success modal
+      const successModal = document.createElement('div');
+      successModal.className = 'fixed inset-0 z-50 flex items-center justify-center';
+      successModal.innerHTML = `
+        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+        <div class="relative gradient-card rounded-xl p-6 max-w-sm mx-auto text-center">
+          <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-primary bg-opacity-20 mb-4">
+            <i class="ri-check-line text-primary ri-2x"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Subscription Added!</h3>
+          <p class="text-gray-300 mb-6">Your subscription has been successfully added to your account.</p>
+          <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="block w-full bg-primary hover:bg-opacity-90 text-white font-medium py-3 px-4 rounded-button !rounded-button transition duration-200">
+            Back to Home
+          </a>
+        </div>
+      `;
+      
+      document.body.appendChild(successModal);
+      
+      // Reset button state
+      submitButton.innerHTML = originalText;
+      submitButton.disabled = false;
+    }, 1500);
+  });
+});
+</script>
+
+<script id="date-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const startDateInput = document.getElementById('start-date');
+  
+  // Set default date to today
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  startDateInput.value = `${year}-${month}-${day}`;
+});
+</script>
+</body>
+</html>

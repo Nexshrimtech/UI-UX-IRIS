@@ -1,0 +1,3486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IrisPay</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#9333EA'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #1e1b4b 0%, #0f0f1a 100%);
+min-height: 100vh;
+color: white;
+}
+.glow {
+box-shadow: 0 0 15px rgba(79, 70, 229, 0.6);
+transition: all 0.3s ease;
+}
+.glow-gold {
+box-shadow: 0 0 15px rgba(234, 179, 8, 0.6);
+}
+.glow-button {
+transition: all 0.2s ease;
+}
+.glow-button:active {
+transform: scale(0.97);
+}
+.action-button {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(5px);
+transition: all 0.3s ease;
+}
+.action-button:hover {
+background: rgba(255, 255, 255, 0.15);
+transform: translateY(-2px);
+}
+.action-button:active {
+transform: translateY(0);
+}
+.carousel-card {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(5px);
+transition: all 0.3s ease;
+}
+.carousel-card:hover {
+transform: translateY(-2px);
+}
+.nav-item {
+transition: all 0.3s ease;
+}
+.nav-item.active {
+color: #4F46E5;
+text-shadow: 0 0 10px rgba(79, 70, 229, 0.6);
+}
+.nav-item.active i {
+filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.6));
+}
+.particles {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: -1;
+}
+.particle {
+position: absolute;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.1);
+animation: float 15s infinite ease-in-out;
+}
+@keyframes float {
+0%, 100% {
+transform: translateY(0) translateX(0);
+}
+25% {
+transform: translateY(-20px) translateX(10px);
+}
+50% {
+transform: translateY(-10px) translateX(-15px);
+}
+75% {
+transform: translateY(15px) translateX(5px);
+}
+}
+.iris-wave {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 300px;
+height: 300px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0) 70%);
+z-index: -1;
+animation: pulse 8s infinite ease-in-out;
+}
+@keyframes pulse {
+0%, 100% {
+transform: translate(-50%, -50%) scale(1);
+opacity: 0.3;
+}
+50% {
+transform: translate(-50%, -50%) scale(1.5);
+opacity: 0.1;
+}
+}
+</style>
+</head>
+<body class="relative">
+<!-- Background Effects -->
+<div class="particles" id="particles"></div>
+<div class="iris-wave"></div>
+<div class="iris-wave" style="animation-delay: 2s; width: 400px; height: 400px;"></div>
+<div class="iris-wave" style="animation-delay: 4s; width: 500px; height: 500px;"></div>
+<!-- Main Content -->
+<div class="min-h-screen pb-20">
+<!-- Header -->
+<header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-2">
+<i class="ri-user-3-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-xs text-gray-400">Hi,</div>
+<div class="text-sm font-medium">Abhishek</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<div id="chatButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-message-3-line ri-lg"></i>
+</div>
+<div id="notificationButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-notification-3-line ri-lg"></i>
+</div>
+<div id="notificationDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+<div id="notificationContent" class="absolute right-0 top-0 bottom-0 w-[320px] bg-[#1e1b4b] shadow-xl translate-x-full transition-transform duration-300">
+<div class="p-5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-semibold">Notifications</h3>
+<button id="closeNotifications" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="flex justify-between items-center mb-4">
+<button id="clearAllNotifications" class="text-sm text-indigo-300 hover:text-indigo-200">
+<i class="ri-delete-bin-line ri-lg align-bottom mr-1"></i>Clear All
+</button>
+<a href="#" class="text-sm text-indigo-300 hover:text-indigo-200">
+<i class="ri-settings-4-line ri-lg align-bottom mr-1"></i>Settings
+</a>
+</div>
+<div class="space-y-4">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="text-sm font-medium mb-3">Today</div>
+<div class="space-y-3">
+<div class="notification-item bg-white/5 rounded-lg p-3 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center mb-2">
+<div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
+<i class="ri-exchange-dollar-line text-green-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">Payment Received</div>
+<div class="text-xs text-indigo-300">2 hours ago</div>
+</div>
+<button class="notification-delete w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="text-xs text-gray-400">You received $50.00 from Michael Chen</div>
+</div>
+<div class="notification-item bg-white/5 rounded-lg p-3 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center mb-2">
+<div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-2">
+<i class="ri-shield-keyhole-line text-yellow-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">Security Alert</div>
+<div class="text-xs text-indigo-300">5 hours ago</div>
+</div>
+<button class="notification-delete w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="text-xs text-gray-400">New device logged into your account</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="text-sm font-medium mb-3">Yesterday</div>
+<div class="space-y-3">
+<div class="notification-item bg-white/5 rounded-lg p-3 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center mb-2">
+<div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-2">
+<i class="ri-gift-line text-purple-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">Special Offer</div>
+<div class="text-xs text-indigo-300">Yesterday, 2:30 PM</div>
+</div>
+<button class="notification-delete w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="text-xs text-gray-400">Get 20% cashback on your next transaction!</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="settingsButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-settings-3-line ri-lg"></i>
+</div>
+<div id="settingsDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+<div id="settingsContent" class="absolute right-0 top-0 bottom-0 w-[320px] bg-[#1e1b4b] shadow-xl translate-x-full transition-transform duration-300">
+<div class="p-5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-semibold">Settings</h3>
+<button id="closeSettings" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-settings-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Account Settings</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/c2e0551f-d907-4ce6-a0ef-bf71c28489e8" data-readdy="true" class="text-xs text-indigo-300">Manage your account details and preferences</a>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-shield-keyhole-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Security</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/e93ec349-8a7d-4d89-b54a-84a822f8caf5" data-readdy="true" class="text-xs text-indigo-300">Password, PIN, and authentication settings</a>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-notification-4-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Notifications</div>
+<div class="text-xs text-indigo-300">Customize your notification preferences</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-palette-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Appearance</div>
+<div class="text-xs text-indigo-300">Customize the app's look and feel</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+<i class="ri-global-line ri-lg text-yellow-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Language</div>
+<div class="text-xs text-indigo-300">Change your preferred language</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mr-3">
+<i class="ri-customer-service-2-line ri-lg text-orange-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Help & Support</div>
+<div class="text-xs text-indigo-300">Get help and contact support</div>
+</div>
+</div>
+</div>
+<div id="logoutButton" class="bg-white/5 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors">
+<div class="flex items-center text-red-400">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-logout-box-r-line ri-lg"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Logout</div>
+<div class="text-xs opacity-75">Sign out of your account</div>
+</div>
+</div>
+</div>
+<div id="logoutDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="logoutDialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Confirm Logout</h3>
+<button id="closeLogoutDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<p class="text-sm text-indigo-200 mb-6">Are you sure you want to log out of your account?</p>
+<div class="flex space-x-3">
+<button id="cancelLogout" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmLogout" class="flex-1 bg-red-500 hover:bg-red-600 text-sm py-2.5 rounded-button">Logout</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-20 px-4">
+<!-- Balance Card -->
+<div class="rounded-3xl p-6 mb-6 bg-[#1C1B3B] shadow-lg cursor-pointer" id="balanceCard">
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm text-gray-300">Available Balance</span>
+<div class="flex items-center text-xs text-yellow-400">
+<i class="ri-vip-crown-fill ri-sm mr-1"></i>
+<span>Premium</span>
+</div>
+</div>
+<div class="text-3xl font-bold text-white mb-2">₹12,458.90</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-gray-400">6232075690@irisid</span>
+<div class="flex items-center text-xs text-gray-400">
+<i class="ri-eye-line ri-sm mr-1"></i>
+<span>View Details</span>
+</div>
+</div>
+</div>
+<!-- PIN Verification Dialog -->
+<div id="pinDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="pinDialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Enter PIN</h3>
+<button id="closePinDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="mb-6">
+<div class="text-sm text-indigo-300 mb-4">Please enter your 4-digit PIN to continue</div>
+<div class="flex justify-center space-x-3 mb-3">
+<div class="w-3 h-3 rounded-full bg-white/20" id="pin1"></div>
+<div class="w-3 h-3 rounded-full bg-white/20" id="pin2"></div>
+<div class="w-3 h-3 rounded-full bg-white/20" id="pin3"></div>
+<div class="w-3 h-3 rounded-full bg-white/20" id="pin4"></div>
+</div>
+<input type="password" id="pinInput" class="opacity-0 absolute" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+<div class="grid grid-cols-3 gap-3">
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">1</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">2</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">3</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">4</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">5</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">6</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">7</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">8</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">9</button>
+<button class="bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium" id="pinClear">
+<i class="ri-delete-back-2-line"></i>
+</button>
+<button class="pin-button bg-white/5 hover:bg-white/10 w-16 h-16 rounded-2xl text-xl font-medium">0</button>
+<button class="bg-indigo-600 hover:bg-indigo-700 w-16 h-16 rounded-2xl text-xl" id="pinSubmit">
+<i class="ri-arrow-right-line"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-3 gap-x-4 gap-y-6 mb-8 px-2">
+<div id="addMoneyButton" class="flex flex-col items-center">
+<div class="w-14 h-14 rounded-2xl bg-[#1C1B3B] flex items-center justify-center mb-2 shadow-lg">
+<i class="ri-add-line ri-xl text-[#6C69FF]"></i>
+</div>
+<span class="text-xs text-gray-300 text-center">Add Money</span>
+</div>
+<div id="addMoneyDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="addMoneyDialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Add Money</h3>
+<button id="closeAddMoneyDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">$</span>
+<input type="text" id="addMoneyAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Payment Method</div>
+<div class="space-y-2">
+<div class="payment-method-container">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer" data-method="bankAccount">
+<input type="radio" name="addMoneyMethod" id="bankAccount" class="mr-3" checked>
+<div class="flex items-center">
+<i class="ri-bank-line ri-lg mr-2 text-blue-400"></i>
+<span class="text-sm">Bank Account</span>
+</div>
+</div>
+<div class="payment-details hidden mt-3 bg-white/5 rounded-lg p-4" id="bankAccountDetails">
+<div class="space-y-3">
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Account Number</label>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter account number">
+</div>
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">IFSC Code</label>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter IFSC code">
+</div>
+</div>
+</div>
+</div>
+<div class="payment-method-container">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer" data-method="debitCard">
+<input type="radio" name="addMoneyMethod" id="debitCard" class="mr-3">
+<div class="flex items-center">
+<i class="ri-bank-card-line ri-lg mr-2 text-green-400"></i>
+<span class="text-sm">Debit Card</span>
+</div>
+</div>
+<div class="payment-details hidden mt-3 bg-white/5 rounded-lg p-4" id="debitCardDetails">
+<div class="space-y-3">
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Card Number</label>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter card number">
+</div>
+<div class="flex space-x-3">
+<div class="flex-1">
+<label class="text-xs text-indigo-300 mb-1 block">Expiry Date</label>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="MM/YY">
+</div>
+<div class="w-24">
+<label class="text-xs text-indigo-300 mb-1 block">CVV</label>
+<input type="password" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="***">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="payment-method-container">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer" data-method="creditCard">
+<input type="radio" name="addMoneyMethod" id="creditCard" class="mr-3">
+<div class="flex items-center">
+<i class="ri-mastercard-line ri-lg mr-2 text-orange-400"></i>
+<span class="text-sm">Credit Card</span>
+</div>
+</div>
+<div class="payment-details hidden mt-3 bg-white/5 rounded-lg p-4" id="creditCardDetails">
+<div class="space-y-3">
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Card Number</label>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter card number">
+</div>
+<div class="flex space-x-3">
+<div class="flex-1">
+<label class="text-xs text-indigo-300 mb-1 block">Expiry Date</label>
+<input type="text" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="MM/YY">
+</div>
+<div class="w-24">
+<label class="text-xs text-indigo-300 mb-1 block">CVV</label>
+<input type="password" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="***">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="payment-method-container">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer" data-method="upiPayment">
+<input type="radio" name="addMoneyMethod" id="upiPayment" class="mr-3">
+<div class="flex items-center">
+<i class="ri-qr-code-line ri-lg mr-2 text-purple-400"></i>
+<span class="text-sm">UPI</span>
+</div>
+<div class="flex items-center ml-auto space-x-2">
+<i class="ri-google-fill text-[16px] text-blue-400"></i>
+<i class="ri-phone-fill text-[16px] text-green-400"></i>
+<i class="ri-whatsapp-fill text-[16px] text-green-500"></i>
+</div>
+</div>
+<div class="payment-details hidden mt-3 bg-white/5 rounded-lg p-4" id="upiPaymentDetails">
+<div class="space-y-3">
+<div class="bg-white/5 rounded-lg p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm font-medium">Scan QR Code</span>
+<button class="bg-indigo-600/20 hover:bg-indigo-600/30 text-xs px-3 py-1.5 rounded-button">
+<i class="ri-qr-scan-line mr-1"></i>Scan
+</button>
+</div>
+<div class="text-center py-6 border border-dashed border-indigo-500/20 rounded-lg">
+<i class="ri-qr-code-line text-4xl text-indigo-400 mb-2"></i>
+<div class="text-xs text-indigo-300">Scan QR code to pay</div>
+</div>
+</div>
+<div>
+<div class="relative">
+<input type="text" class="w-full bg-white/5 rounded-lg pl-3 pr-12 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="username@upi">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-indigo-400">@upi</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<button id="cancelAddMoney" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmAddMoney" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Add Money</button>
+</div>
+</div>
+</div>
+<div id="withdrawButton" class="flex flex-col items-center">
+<div class="w-14 h-14 rounded-2xl bg-[#1C1B3B] flex items-center justify-center mb-2 shadow-lg">
+<i class="ri-arrow-up-circle-line ri-xl text-[#6C69FF]"></i>
+</div>
+<span class="text-xs text-gray-300 text-center">Withdraw</span>
+</div>
+<div id="withdrawDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="withdrawDialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Withdraw Money</h3>
+<button id="closeWithdrawDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">$</span>
+<input type="text" id="withdrawAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Withdraw to</div>
+<div class="space-y-2">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer" id="bankAccountOption">
+<input type="radio" name="withdrawMethod" id="bankAccount" class="mr-3" checked>
+<div class="flex items-center">
+<i class="ri-bank-line ri-lg mr-2 text-blue-400"></i>
+<span class="text-sm">Bank Account</span>
+</div>
+</div>
+<div id="bankAccountDetails" class="mt-3 space-y-3">
+<div class="bg-white/5 rounded-lg p-4">
+<div class="mb-3">
+<label class="text-sm font-medium mb-2 block">Select Bank Account</label>
+<div class="relative">
+<select id="savedBankAccounts" class="w-full bg-white/5 rounded-lg pl-3 pr-10 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500 appearance-none cursor-pointer">
+<option value="">Select a saved account</option>
+<option value="account1">HDFC Bank •••• 4521</option>
+<option value="account2">Citibank •••• 7845</option>
+<option value="account3">Chase Bank •••• 9632</option>
+</select>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+<i class="ri-arrow-down-s-line text-indigo-400"></i>
+</div>
+</div>
+</div>
+<button id="addNewBankBtn" class="flex items-center text-sm text-indigo-300 hover:text-indigo-200 py-2">
+<i class="ri-add-line ri-lg mr-1"></i>
+Add New Bank Account
+</button>
+</div>
+<div id="newBankForm" class="hidden bg-white/5 rounded-lg p-4 space-y-3">
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Account Holder Name</label>
+<input type="text" id="accountHolderName" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter account holder name">
+</div>
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Account Number</label>
+<input type="text" id="accountNumber" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter account number">
+</div>
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Bank Name</label>
+<input type="text" id="bankName" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter bank name">
+</div>
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">IFSC/Routing Code</label>
+<input type="text" id="routingCode" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter IFSC/routing code">
+</div>
+<div class="flex space-x-3 mt-4">
+<button id="cancelBankAdd" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="saveBankAccount" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Save Account</button>
+</div>
+</div>
+</div>
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+<input type="radio" name="withdrawMethod" id="debitCard" class="mr-3">
+<div class="flex items-center">
+<i class="ri-bank-card-line ri-lg mr-2 text-green-400"></i>
+<span class="text-sm">Debit Card</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<button id="cancelWithdraw" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmWithdraw" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Withdraw</button>
+</div>
+</div>
+</div>
+<div id="transferButton" class="flex flex-col items-center">
+<div class="w-14 h-14 rounded-2xl bg-[#1C1B3B] flex items-center justify-center mb-2 shadow-lg">
+<i class="ri-exchange-funds-line ri-xl text-[#6C69FF]"></i>
+</div>
+<span class="text-xs text-gray-300 text-center">Transfer</span>
+</div>
+<div id="transferDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="transferDialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Transfer Money</h3>
+<button id="closeTransferDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<div class="text-sm font-medium mb-2">Recent Recipients</div>
+<div class="flex space-x-3 overflow-x-auto pb-2">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-1">
+<i class="ri-user-3-line ri-lg text-purple-400"></i>
+</div>
+<span class="text-[10px] whitespace-nowrap">Sarah M.</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-1">
+<i class="ri-user-3-line ri-lg text-blue-400"></i>
+</div>
+<span class="text-[10px] whitespace-nowrap">Michael R.</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-1">
+<i class="ri-user-3-line ri-lg text-green-400"></i>
+</div>
+<span class="text-[10px] whitespace-nowrap">Emma W.</span>
+</div>
+</div>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Transfer Method</div>
+<div class="space-y-2">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+<input type="radio" name="transferMethod" id="irisPayId" class="mr-3" checked>
+<div class="flex items-center">
+<i class="ri-at-line ri-lg mr-2 text-indigo-400"></i>
+<span class="text-sm">IrisPay ID</span>
+</div>
+</div>
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+<input type="radio" name="transferMethod" id="bankAccount" class="mr-3">
+<div class="flex items-center">
+<i class="ri-bank-line ri-lg mr-2 text-blue-400"></i>
+<span class="text-sm">Bank Account</span>
+</div>
+</div>
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+<input type="radio" name="transferMethod" id="phoneNumber" class="mr-3">
+<div class="flex items-center">
+<i class="ri-smartphone-line ri-lg mr-2 text-green-400"></i>
+<span class="text-sm">UPI</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Recipient Details</div>
+<input type="text" id="recipientId" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter IrisPay ID">
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">$</span>
+<input type="text" id="transferAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Note (Optional)</div>
+<input type="text" id="transferNote" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Add a note">
+</div>
+</div>
+<div class="flex space-x-3 mt-6">
+<button id="cancelTransfer" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmTransfer" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Transfer</button>
+</div>
+</div>
+</div>
+<div id="upiTransferButton" class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-[#1C1B3B] flex items-center justify-center mb-2 shadow-lg">
+<i class="ri-file-list-line ri-xl text-[#6C69FF]"></i>
+</div>
+<span class="text-xs text-gray-300 text-center">Transfer to UPI ID</span>
+</div>
+<div id="upiTransferDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="upiTransferDialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">UPI Transfer</h3>
+<button id="closeUpiTransfer" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<div class="text-sm font-medium mb-2">UPI ID</div>
+<div class="relative">
+<input type="text" id="upiIdInput" class="w-full bg-white/5 rounded-lg pl-3 pr-12 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter UPI ID">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-indigo-400">@upi</span>
+</div>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">₹</span>
+<input type="text" id="upiAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Note (Optional)</div>
+<input type="text" id="upiNote" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Add a note">
+</div>
+</div>
+<div class="flex space-x-3 mt-6">
+<button id="cancelUpiTransfer" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmUpiTransfer" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Send Money</button>
+</div>
+</div>
+</div>
+<div id="historyBalanceButton" class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-[#1C1B3B] flex items-center justify-center mb-2 shadow-lg">
+<i class="ri-file-list-line ri-xl text-[#6C69FF]"></i>
+</div>
+<span class="text-xs text-gray-300 text-center whitespace-nowrap">History & Balance</span>
+</div>
+<div id="historyBalanceDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="historyBalanceContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Transaction History</h3>
+<button id="closeHistoryBalance" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<div>
+<div class="text-sm text-gray-400">Available Balance</div>
+<div class="text-2xl font-bold">₹12,458.90</div>
+</div>
+<div class="flex space-x-2">
+<button class="bg-white/10 hover:bg-white/15 p-2 rounded-lg">
+<i class="ri-download-2-line ri-lg"></i>
+</button>
+<button class="bg-white/10 hover:bg-white/15 p-2 rounded-lg">
+<i class="ri-share-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="flex space-x-2 mb-4">
+<button class="flex-1 bg-white/5 hover:bg-white/10 py-2 rounded-lg text-sm active" id="allTransactions">All</button>
+<button class="flex-1 bg-white/5 hover:bg-white/10 py-2 rounded-lg text-sm" id="incomingTransactions">Incoming</button>
+<button class="flex-1 bg-white/5 hover:bg-white/10 py-2 rounded-lg text-sm" id="outgoingTransactions">Outgoing</button>
+</div>
+<div class="space-y-3 max-h-[400px] overflow-y-auto">
+<div class="bg-white/5 rounded-xl p-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-down-circle-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Salary Deposit</div>
+<div class="text-xs text-gray-400">June 25, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+₹3,850.00</div>
+<div class="text-xs text-gray-400">Completed</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-up-circle-line ri-lg text-red-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Netflix</div>
+<div class="text-xs text-gray-400">June 24, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-₹199.00</div>
+<div class="text-xs text-gray-400">Completed</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-up-circle-line ri-lg text-red-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon</div>
+<div class="text-xs text-gray-400">June 23, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-₹1,299.00</div>
+<div class="text-xs text-gray-400">Completed</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<button id="closeHistoryBalanceBtn" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Close</button>
+<button id="downloadStatement" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Download Statement</button>
+</div>
+</div>
+</div>
+<div id="receiveMoneyButton" class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-[#1C1B3B] flex items-center justify-center mb-2 shadow-lg">
+<i class="ri-qr-code-line ri-xl text-[#6C69FF]"></i>
+</div>
+<span class="text-xs text-gray-300 text-center">Receive Money</span>
+</div>
+<div id="receiveMoneyDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="receiveMoneyContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Receive Money</h3>
+<button id="closeReceiveMoney" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="flex space-x-2 mb-4">
+<button id="qrCodeTab" class="flex-1 bg-indigo-600 text-sm py-2 rounded-lg">QR & ID</button>
+<button id="requestMoneyTab" class="flex-1 bg-white/5 text-sm py-2 rounded-lg">Request Money</button>
+</div>
+<div id="qrCodeContent" class="space-y-4">
+<div class="bg-white/5 rounded-lg p-4">
+<div class="flex items-center justify-between mb-2">
+<div class="text-sm font-medium">Your Iris ID</div>
+<button id="copyIrisId" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-xs px-3 py-1.5 rounded-button">
+<i class="ri-file-copy-line mr-1"></i>Copy
+</button>
+</div>
+<div class="text-sm text-indigo-300 font-mono">6232075690@irisid</div>
+</div>
+<div class="bg-white/5 rounded-lg p-4">
+<div class="flex items-center justify-between mb-2">
+<div class="text-sm font-medium">Your QR Code</div>
+<button id="shareQrCode" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-xs px-3 py-1.5 rounded-button">
+<i class="ri-share-line mr-1"></i>Share
+</button>
+</div>
+<div class="flex justify-center py-4">
+<div class="w-40 h-40 bg-white rounded-lg flex items-center justify-center">
+<i class="ri-qr-code-line text-5xl text-[#1e1b4b]"></i>
+</div>
+</div>
+<div class="text-xs text-center text-indigo-300">Scan to pay me</div>
+</div>
+</div>
+<div id="requestMoneyContent" class="hidden space-y-4">
+<div class="relative">
+<div class="text-xs text-indigo-300 mb-1">Request From</div>
+<div class="relative">
+<input type="text" id="searchContact" class="w-full bg-white/5 rounded-lg pl-9 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Search contact or enter UPI ID">
+<i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+</div>
+</div>
+<div id="recentContacts" class="flex space-x-3 overflow-x-auto py-2">
+<div class="flex flex-col items-center cursor-pointer min-w-[60px]">
+<div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-1">
+<i class="ri-user-3-line text-purple-400"></i>
+</div>
+<span class="text-[10px] text-center">Sarah M.</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer min-w-[60px]">
+<div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-1">
+<i class="ri-user-3-line text-blue-400"></i>
+</div>
+<span class="text-[10px] text-center">Michael R.</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer min-w-[60px]">
+<div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-1">
+<i class="ri-user-3-line text-green-400"></i>
+</div>
+<span class="text-[10px] text-center">Emma W.</span>
+</div>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">₹</span>
+<input type="text" id="requestAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+<input type="text" id="requestNote" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Add a note (optional)">
+<button id="generateRequest" class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+Generate Payment Request
+</button>
+</div>
+</div>
+</div>
+<div id="scannerDialog" class="fixed inset-0 bg-black/90 z-50 hidden">
+<div id="scannerContent" class="h-full flex flex-col opacity-0 transition-opacity duration-300">
+<div class="flex justify-between items-center p-4">
+<h3 class="text-lg font-semibold">Scan QR Code</h3>
+<button id="closeScannerDialog" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="flex-1 relative">
+<div id="cameraView" class="w-full h-full bg-black">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-64 h-64 border-2 border-indigo-400 rounded-lg relative">
+<div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-indigo-400"></div>
+<div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400"></div>
+<div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400"></div>
+<div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400"></div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-0 inset-x-0 p-4 flex justify-between items-center bg-gradient-to-t from-black/80 to-transparent">
+<button id="toggleCameraButton" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">
+<i class="ri-camera-switch-line ri-lg"></i>
+</button>
+<button id="toggleFlashButton" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">
+<i class="ri-flashlight-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4 bg-[#1e1b4b]">
+<button id="manualEntryButton" class="w-full bg-white/10 hover:bg-white/15 py-3 rounded-button flex items-center justify-center">
+<i class="ri-keyboard-line ri-lg mr-2"></i>
+<span>Enter Code Manually</span>
+</button>
+</div>
+</div>
+</div>
+<div id="paymentConfirmDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+<div id="paymentConfirmContent" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[#1e1b4b] rounded-xl p-5 opacity-0 translate-y-4 transition-all duration-300">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Payment Details</h3>
+<button id="closePaymentConfirm" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-store-2-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium" id="merchantName">Loading...</div>
+<div class="text-xs text-indigo-300" id="merchantId">Loading...</div>
+</div>
+</div>
+<div class="text-sm text-indigo-300" id="transactionNote">Loading...</div>
+</div>
+<div class="flex justify-between items-center mb-4">
+<span class="text-sm">Amount to Pay</span>
+<span class="text-lg font-semibold" id="paymentAmount">Loading...</span>
+</div>
+<div class="flex space-x-3">
+<button id="cancelPaymentConfirm" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmPaymentBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Pay Now</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Payment Method Toggle -->
+<div class="flex items-center justify-between mb-4 bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-eye-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Iris Payment</div>
+<div class="text-xs text-gray-400">Enable/Disable payment method</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" id="irisPaymentToggle" class="sr-only peer" checked>
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+</label>
+</div>
+<!-- Quick Services Section -->
+<div class="grid grid-cols-3 gap-4 mb-8">
+<div class="bg-[#1C1B3B] rounded-xl p-4 flex flex-col items-center cursor-pointer hover:bg-[#1C1B3B]/80 transition-all">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/16942dce-8be9-4c78-b2f6-b1146de8eefb" data-readdy="true" class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-2">
+<i class="ri-smartphone-line ri-lg text-blue-400"></i>
+</a>
+<span class="text-xs text-center">Mobile Recharge</span>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4 flex flex-col items-center cursor-pointer hover:bg-[#1C1B3B]/80 transition-all">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/3ebb2855-6fec-423d-a32b-31a1d0d51534" data-readdy="true" class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+<i class="ri-money-dollar-circle-line ri-lg text-green-400"></i>
+</a>
+<span class="text-xs text-center">Get Loan</span>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4 flex flex-col items-center cursor-pointer hover:bg-[#1C1B3B]/80 transition-all">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/59204473-61cd-43f8-8364-1b5662cc7e95" data-readdy="true" class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-2">
+<i class="ri-train-line ri-lg text-purple-400"></i>
+</a>
+<span class="text-xs text-center">Book Train</span>
+</div>
+</div>
+<!-- Carousel Section -->
+<div class="mb-8">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Recent Updates</h2>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/040fc1c1-cc3a-4c31-a745-1b1a6f43e92b" data-readdy="true" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<div class="carousel-container overflow-x-auto pb-2" id="carousel">
+<div class="flex space-x-4 w-max">
+<div class="carousel-card rounded-xl p-4 w-64 cursor-pointer glow-button">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-gift-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">Reward Points</div>
+<div class="text-xs text-indigo-300 leading-tight">Earned 250 points</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-xs mb-1">Redeem before</div>
+<div class="text-sm font-medium">July 15, 2025</div>
+</div>
+</div>
+<div class="carousel-card rounded-xl p-4 w-64 cursor-pointer glow-button">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+<i class="ri-calendar-check-line ri-lg text-yellow-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">EMI Due</div>
+<div class="text-xs text-indigo-300 leading-tight">iPhone 15 Pro</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-xs mb-1">Due on</div>
+<div class="text-sm font-medium">June 30, 2025</div>
+</div>
+</div>
+<div class="carousel-card rounded-xl p-4 w-64 cursor-pointer glow-button">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-percent-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">Special Offer</div>
+<div class="text-xs text-indigo-300 leading-tight">10% cashback</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-xs mb-1">Valid until</div>
+<div class="text-sm font-medium">July 5, 2025</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Transactions -->
+<div class="mb-8">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Recent Transactions</h2>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/040fc1c1-cc3a-4c31-a745-1b1a6f43e92b" data-readdy="true" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<div class="space-y-3">
+<div class="bg-[#4E43DA]/10 rounded-xl p-4 flex justify-between items-center cursor-pointer hover:bg-[#4E43DA]/15 transition-all duration-300">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-[#4E43DA]/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">Amazon</div>
+<div class="text-xs text-indigo-300 leading-tight">June 28, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400 text-right leading-tight">-$129.99</div>
+<div class="text-xs text-indigo-300 text-right leading-tight">Shopping</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 flex justify-between items-center cursor-pointer">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-arrow-down-circle-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">Salary Deposit</div>
+<div class="text-xs text-indigo-300 leading-tight">June 25, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400 text-right leading-tight">+$3,850.00</div>
+<div class="text-xs text-indigo-300 text-right leading-tight">Income</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 flex justify-between items-center cursor-pointer">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-restaurant-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">Starbucks</div>
+<div class="text-xs text-indigo-300 leading-tight">June 24, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400 text-right leading-tight">-$8.75</div>
+<div class="text-xs text-indigo-300 text-right leading-tight">Food & Drink</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Payments -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Upcoming Payments</h2>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/c2e0551f-d907-4ce6-a0ef-bf71c28489e8" data-readdy="true" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4 border border-indigo-500/20">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-netflix-fill ri-lg text-red-500"></i>
+</div>
+<div>
+<div class="text-sm font-medium leading-tight">Netflix</div>
+<div class="text-xs text-indigo-300 leading-tight">Subscription</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-right leading-tight">$19.99</div>
+<div class="text-xs text-indigo-300 text-right leading-tight">July 2, 2025</div>
+</div>
+</div>
+<div class="flex justify-end">
+<button id="payNowButton" class="bg-indigo-600 hover:bg-indigo-700 text-xs px-4 py-2 rounded-button cursor-pointer">
+Pay Now
+</button>
+<div id="paymentDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="dialogContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Payment Confirmation</h3>
+<button id="closeDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-netflix-fill ri-lg text-red-500"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Netflix Subscription</div>
+<div class="text-xs text-indigo-300">Monthly Premium Plan</div>
+</div>
+</div>
+<div class="text-sm text-indigo-300">Next billing date: July 2, 2025</div>
+</div>
+<div class="mb-4">
+<div class="text-sm font-medium mb-2">Payment Method</div>
+<div class="space-y-2" id="paymentMethodsList">
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+<input type="radio" name="paymentMethod" id="card1" class="mr-3" checked>
+<div class="flex items-center">
+<i class="ri-visa-line ri-lg mr-2 text-blue-400"></i>
+<span class="text-sm">•••• 4582</span>
+</div>
+</div>
+<div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+<input type="radio" name="paymentMethod" id="card2" class="mr-3">
+<div class="flex items-center">
+<i class="ri-mastercard-line ri-lg mr-2 text-orange-400"></i>
+<span class="text-sm">•••• 8914</span>
+</div>
+</div>
+<button id="addNewCardBtn" class="flex items-center text-sm text-indigo-300 hover:text-indigo-200 py-2">
+<i class="ri-add-line ri-lg mr-1"></i>
+Add New Card
+</button>
+</div>
+<div id="cardInputForm" class="hidden">
+<div class="space-y-3 mt-4">
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Card Number</label>
+<input type="text" id="cardNumber" maxlength="19" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="1234 5678 9012 3456">
+</div>
+<div>
+<label class="text-xs text-indigo-300 mb-1 block">Cardholder Name</label>
+<input type="text" id="cardholderName" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="John Doe">
+</div>
+<div class="flex space-x-3">
+<div class="flex-1">
+<label class="text-xs text-indigo-300 mb-1 block">Expiry Date</label>
+<input type="text" id="expiryDate" maxlength="5" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="MM/YY">
+</div>
+<div class="w-24">
+<label class="text-xs text-indigo-300 mb-1 block">CVV</label>
+<input type="text" id="cvv" maxlength="3" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="123">
+</div>
+</div>
+<div class="flex space-x-3 mt-4">
+<button id="cancelCardAdd" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="saveCard" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Save Card</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mb-4">
+<span class="text-sm">Total Amount</span>
+<span class="text-lg font-semibold">$19.99</span>
+</div>
+<div class="flex space-x-3">
+<button id="cancelPayment" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmPayment" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Pay $19.99</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-[#1C1B3B]/90 backdrop-blur-md px-2 py-2 z-10">
+<div class="grid grid-cols-5 gap-1">
+<div class="nav-item active flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-home-5-line ri-lg mb-1"></i>
+<span class="text-[10px]">Home</span>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/122882b5-86f7-49b9-a828-a43382eceeed" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-file-list-3-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">Bills & Payments</span>
+</a>
+<!-- Bills Management Page -->
+<div id="billsManagementPage" class="fixed inset-0 bg-[#1e1b4b] z-50 transform translate-x-full transition-transform duration-300">
+<div class="flex flex-col h-full">
+<header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<button onclick="history.back()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-arrow-left-line ri-lg"></i>
+</button>
+<h1 class="text-lg font-semibold ml-3">Bills & EMIs</h1>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-search-line ri-lg"></i>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto pt-16 px-4 pb-[80px]">
+<!-- Analytics Section -->
+<div class="mb-6">
+<div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Monthly Overview</h2>
+<select class="bg-white/10 rounded-lg px-3 py-1.5 text-sm">
+<option>June 2025</option>
+<option>July 2025</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/5 rounded-lg p-3">
+<div class="text-sm text-gray-400">Total Bills</div>
+<div class="text-xl font-semibold">₹24,500</div>
+<div class="text-xs text-red-400">+12% vs last month</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="text-sm text-gray-400">Paid Amount</div>
+<div class="text-xl font-semibold">₹18,750</div>
+<div class="text-xs text-green-400">76% completed</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Payments -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Upcoming Payments</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-netflix-fill text-red-500"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Netflix</div>
+<div class="text-xs text-gray-400">Premium Plan</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹799</div>
+<div class="text-xs text-yellow-400">Due in 2 days</div>
+</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">Pay Now</button>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-card-line text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Credit Card Bill</div>
+<div class="text-xs text-gray-400">HDFC Bank</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹12,450</div>
+<div class="text-xs text-red-400">Due tomorrow</div>
+</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">Pay Now</button>
+</div>
+</div>
+</div>
+<!-- EMI & Loans -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">EMI & Loans</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-smartphone-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">iPhone 15 Pro</div>
+<div class="text-xs text-gray-400">12 of 24 EMIs paid</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹5,499</div>
+<div class="text-xs text-yellow-400">Due in 5 days</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg h-2 mb-3">
+<div class="bg-indigo-600 h-full rounded-lg" style="width: 50%"></div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">Pay EMI</button>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-home-4-line text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Home Loan</div>
+<div class="text-xs text-gray-400">36 of 180 EMIs paid</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹24,500</div>
+<div class="text-xs text-green-400">Paid for this month</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg h-2 mb-3">
+<div class="bg-indigo-600 h-full rounded-lg" style="width: 20%"></div>
+</div>
+<button class="w-full bg-white/10 hover:bg-white/15 text-sm py-2 rounded-button">View Details</button>
+</div>
+</div>
+</div>
+<!-- Utility Bills -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Utility Bills</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+<i class="ri-lightbulb-line text-yellow-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Electricity</div>
+<div class="text-xs text-gray-400">June 2025</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-2">₹2,450</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">Pay Bill</button>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-drop-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Water</div>
+<div class="text-xs text-gray-400">June 2025</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-2">₹850</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">Pay Bill</button>
+</div>
+</div>
+</div>
+<!-- Insurance -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Insurance</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-heart-pulse-line text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Health Insurance</div>
+<div class="text-xs text-gray-400">Family Floater Plan</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹2,499</div>
+<div class="text-xs text-yellow-400">Due in 15 days</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mr-3">
+<i class="ri-car-line text-orange-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Car Insurance</div>
+<div class="text-xs text-gray-400">Comprehensive Cover</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹4,999</div>
+<div class="text-xs text-green-400">Paid for this month</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<div id="scanPayButton" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-[#4E43DA] flex items-center justify-center -mt-7 mb-1 shadow-lg shadow-[#4E43DA]/30">
+<i class="ri-qr-scan-line ri-xl"></i>
+</div>
+<span class="text-[10px]">Pay</span>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/46ae2a96-3400-4e95-8162-9462cca66ddf" data-readdy="true" id="accountsButton" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-bank-card-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">Accounts & Cards</span>
+</a>
+<!-- Accounts & Cards Page -->
+<div id="accountsPage" class="fixed inset-0 bg-[#1e1b4b] z-50 transform translate-x-full transition-transform duration-300">
+<div class="flex flex-col h-full">
+<header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<button id="closeAccounts" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-arrow-left-line ri-lg"></i>
+</button>
+<h1 class="text-lg font-semibold ml-3">Accounts & Cards</h1>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-add-line ri-lg"></i>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto pt-16 px-4 pb-[80px]">
+<!-- Cards Stack -->
+<div class="relative h-48 mb-6">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-[280px] h-[170px] bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-lg transform -rotate-6 opacity-50"></div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-[280px] h-[170px] bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl shadow-lg transform rotate-3 opacity-70"></div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-[280px] h-[170px] bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6">
+<div class="flex justify-between items-start">
+<div>
+<div class="text-xs text-indigo-200 mb-1">Current Balance</div>
+<div class="text-2xl font-bold">₹45,678.90</div>
+</div>
+<i class="ri-visa-line text-2xl"></i>
+</div>
+<div class="mt-auto">
+<div class="text-xs text-indigo-200 mb-1">Card Number</div>
+<div class="font-mono">•••• •••• •••• 4521</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="grid grid-cols-4 gap-4 mb-6">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mb-2">
+<i class="ri-add-circle-line ri-lg text-indigo-400"></i>
+</div>
+<span class="text-[10px] text-center">Add Account</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+<i class="ri-bank-card-line ri-lg text-green-400"></i>
+</div>
+<span class="text-[10px] text-center">Cards</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-2">
+<i class="ri-file-list-3-line ri-lg text-blue-400"></i>
+</div>
+<span class="text-[10px] text-center">Statements</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-2">
+<i class="ri-pie-chart-line ri-lg text-purple-400"></i>
+</div>
+<span class="text-[10px] text-center">Analytics</span>
+</div>
+</div>
+<!-- Bank Accounts -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Bank Accounts</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">HDFC Bank</div>
+<div class="text-xs text-gray-400">Savings •••• 4521</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹32,450.65</div>
+<div class="text-xs text-green-400">Primary</div>
+</div>
+</div>
+<div class="flex justify-between text-xs text-gray-400">
+<span>Last updated: 2 mins ago</span>
+<button class="text-indigo-300">View Details</button>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Axis Bank</div>
+<div class="text-xs text-gray-400">Salary •••• 7845</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹15,780.25</div>
+<div class="text-xs text-gray-400">Secondary</div>
+</div>
+</div>
+<div class="flex justify-between text-xs text-gray-400">
+<span>Last updated: 15 mins ago</span>
+<button class="text-indigo-300">View Details</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Credit Cards -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Credit Cards</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-visa-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">HDFC Credit Card</div>
+<div class="text-xs text-gray-400">Visa Platinum •••• 4521</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹45,678.90</div>
+<div class="text-xs text-yellow-400">Due in 5 days</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="flex justify-between text-xs mb-2">
+<span>Credit Limit</span>
+<span>₹2,00,000</span>
+</div>
+<div class="h-2 bg-white/10 rounded-full mb-2">
+<div class="h-full bg-indigo-600 rounded-full" style="width: 35%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span>Available Credit</span>
+<span class="text-indigo-300">₹1,54,321.10</span>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mr-3">
+<i class="ri-mastercard-line text-orange-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Axis Credit Card</div>
+<div class="text-xs text-gray-400">Mastercard Gold •••• 8914</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹12,345.67</div>
+<div class="text-xs text-green-400">Paid for this month</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="flex justify-between text-xs mb-2">
+<span>Credit Limit</span>
+<span>₹1,50,000</span>
+</div>
+<div class="h-2 bg-white/10 rounded-full mb-2">
+<div class="h-full bg-indigo-600 rounded-full" style="width: 25%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span>Available Credit</span>
+<span class="text-indigo-300">₹1,37,654.33</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Transactions -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Recent Transactions</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line text-red-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon</div>
+<div class="text-xs text-gray-400">28 Jun, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-₹1,299.00</div>
+<div class="text-xs text-gray-400">Shopping</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Salary Credit</div>
+<div class="text-xs text-gray-400">25 Jun, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+₹45,000.00</div>
+<div class="text-xs text-gray-400">Income</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-netflix-fill text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Netflix</div>
+<div class="text-xs text-gray-400">24 Jun, 2025</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-₹649.00</div>
+<div class="text-xs text-gray-400">Entertainment</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/260ece7a-39c0-4fdf-b6f8-f37579ca4cb8" data-readdy="true" id="rewardsButton" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-gift-line ri-lg mb-1"></i>
+<span class="text-[10px]">Rewards</span>
+</a>
+<!-- Rewards Dialog -->
+<div id="rewardsDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+<div id="rewardsContent" class="absolute right-0 top-0 bottom-0 w-[320px] bg-[#1e1b4b] shadow-xl translate-x-full transition-transform duration-300">
+<div class="flex flex-col h-full">
+<div class="p-4 border-b border-white/10">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Rewards</h3>
+<button id="closeRewards" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="text-sm">Available Points</div>
+<div class="text-xs text-indigo-300">Level: Gold</div>
+</div>
+<div class="text-3xl font-bold mb-3">2,450</div>
+<div class="flex justify-between items-center text-xs text-indigo-300">
+<span>Next reward at 3,000 points</span>
+<span>550 points to go</span>
+</div>
+<div class="h-2 bg-white/10 rounded-full mt-2">
+<div class="h-full bg-indigo-600 rounded-full" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4">
+<div class="space-y-4">
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="text-sm font-medium">Available Rewards</div>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white/5 rounded-lg p-3">
+<div class="flex items-center mb-2">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-coupon-3-line text-purple-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">₹100 Cashback</div>
+<div class="text-xs text-gray-400">Valid till July 15, 2025</div>
+</div>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button">
+Redeem
+</button>
+</div>
+<div class="text-xs text-indigo-300">Required Points: 1,000</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="flex items-center mb-2">
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+<i class="ri-movie-2-line text-yellow-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">Movie Voucher</div>
+<div class="text-xs text-gray-400">Valid till July 30, 2025</div>
+</div>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button">
+Redeem
+</button>
+</div>
+<div class="text-xs text-indigo-300">Required Points: 2,000</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="text-sm font-medium">Recent Activity</div>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-add-circle-line text-green-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">Earned 150 Points</div>
+<div class="text-xs text-gray-400">Amazon Purchase</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+150</div>
+<div class="text-xs text-gray-400">2h ago</div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-exchange-line text-red-400"></i>
+</div>
+<div class="flex-1">
+<div class="text-sm font-medium">Redeemed Points</div>
+<div class="text-xs text-gray-400">₹50 Cashback</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-red-400">-500</div>
+<div class="text-xs text-gray-400">Yesterday</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<!-- Scripts -->
+<script id="particles-animation">
+document.addEventListener('DOMContentLoaded', function() {
+const particlesContainer = document.getElementById('particles');
+const particleCount = 15;
+for (let i = 0; i < particleCount; i++) {
+const particle = document.createElement('div');
+particle.classList.add('particle');
+// Random size between 3px and 8px
+const size = Math.random() * 5 + 3;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+// Random position
+particle.style.top = `${Math.random() * 100}%`;
+particle.style.left = `${Math.random() * 100}%`;
+// Random opacity
+particle.style.opacity = Math.random() * 0.3 + 0.1;
+// Random animation delay
+particle.style.animationDelay = `${Math.random() * 10}s`;
+particlesContainer.appendChild(particle);
+}
+});
+</script>
+<script id="navigation-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const navItems = document.querySelectorAll('.nav-item');
+const settingsButton = document.getElementById('settingsButton');
+const accountsButton = document.getElementById('accountsButton');
+const accountsPage = document.getElementById('accountsPage');
+const closeAccounts = document.getElementById('closeAccounts');
+function showAccountsPage() {
+accountsPage.classList.remove('translate-x-full');
+}
+function hideAccountsPage() {
+accountsPage.classList.add('translate-x-full');
+}
+accountsButton.addEventListener('click', showAccountsPage);
+closeAccounts.addEventListener('click', hideAccountsPage);
+const rewardsButton = document.getElementById('rewardsButton');
+const rewardsDialog = document.getElementById('rewardsDialog');
+const rewardsContent = document.getElementById('rewardsContent');
+const closeRewards = document.getElementById('closeRewards');
+function showRewards() {
+rewardsDialog.classList.remove('hidden');
+setTimeout(() => {
+rewardsContent.classList.remove('translate-x-full');
+}, 50);
+}
+function hideRewards() {
+rewardsContent.classList.add('translate-x-full');
+setTimeout(() => {
+rewardsDialog.classList.add('hidden');
+}, 300);
+}
+rewardsButton.addEventListener('click', showRewards);
+closeRewards.addEventListener('click', hideRewards);
+rewardsDialog.addEventListener('click', (e) => {
+if (e.target === rewardsDialog) {
+hideRewards();
+}
+});
+// Add click handlers for redeem buttons
+document.querySelectorAll('.bg-indigo-600.text-xs').forEach(button => {
+button.addEventListener('click', (e) => {
+e.stopPropagation();
+const rewardName = e.target.closest('.bg-white\\/5').querySelector('.text-sm.font-medium').textContent;
+const requiredPoints = parseInt(e.target.closest('.bg-white\\/5').querySelector('.text-xs.text-indigo-300').textContent.match(/\d+/)[0]);
+const availablePoints = parseInt(document.querySelector('#rewardsContent .text-3xl.font-bold').textContent.replace(/,/g, ''));
+if (availablePoints >= requiredPoints) {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Successfully redeemed ${rewardName}`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+} else {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-red-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+errorDiv.textContent = 'Insufficient points';
+document.body.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+}
+});
+});
+const settingsDialog = document.getElementById('settingsDialog');
+const notificationButton = document.getElementById('notificationButton');
+const notificationDialog = document.getElementById('notificationDialog');
+const notificationContent = document.getElementById('notificationContent');
+const closeNotifications = document.getElementById('closeNotifications');
+const clearAllNotifications = document.getElementById('clearAllNotifications');
+const settingsContent = document.getElementById('settingsContent');
+const closeSettings = document.getElementById('closeSettings');
+const logoutButton = document.getElementById('logoutButton');
+const logoutDialog = document.getElementById('logoutDialog');
+const logoutDialogContent = document.getElementById('logoutDialogContent');
+const closeLogoutDialog = document.getElementById('closeLogoutDialog');
+const cancelLogout = document.getElementById('cancelLogout');
+const confirmLogout = document.getElementById('confirmLogout');
+navItems.forEach(item => {
+item.addEventListener('click', function() {
+navItems.forEach(navItem => {
+navItem.classList.remove('active');
+});
+this.classList.add('active');
+});
+});
+function showSettings() {
+settingsDialog.classList.remove('hidden');
+setTimeout(() => {
+settingsContent.classList.remove('translate-x-full');
+}, 50);
+}
+function hideSettings() {
+settingsContent.classList.add('translate-x-full');
+setTimeout(() => {
+settingsDialog.classList.add('hidden');
+}, 300);
+}
+settingsButton.addEventListener('click', showSettings);
+closeSettings.addEventListener('click', hideSettings);
+settingsDialog.addEventListener('click', (e) => {
+if (e.target === settingsDialog) {
+hideSettings();
+}
+});
+function showNotifications() {
+notificationDialog.classList.remove('hidden');
+setTimeout(() => {
+notificationContent.classList.remove('translate-x-full');
+}, 50);
+}
+function hideNotifications() {
+notificationContent.classList.add('translate-x-full');
+setTimeout(() => {
+notificationDialog.classList.add('hidden');
+}, 300);
+}
+notificationButton.addEventListener('click', showNotifications);
+closeNotifications.addEventListener('click', hideNotifications);
+notificationDialog.addEventListener('click', (e) => {
+if (e.target === notificationDialog) {
+hideNotifications();
+}
+});
+document.querySelectorAll('.notification-delete').forEach(button => {
+button.addEventListener('click', (e) => {
+e.stopPropagation();
+const notificationItem = e.target.closest('.notification-item');
+notificationItem.style.opacity = '0';
+setTimeout(() => {
+notificationItem.remove();
+}, 300);
+});
+});
+clearAllNotifications.addEventListener('click', () => {
+const notifications = document.querySelectorAll('.notification-item');
+notifications.forEach(notification => {
+notification.style.opacity = '0';
+});
+setTimeout(() => {
+notifications.forEach(notification => notification.remove());
+}, 300);
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'All notifications cleared';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+document.querySelectorAll('.notification-item').forEach(item => {
+item.addEventListener('click', () => {
+item.classList.add('bg-white/10');
+const unreadDot = item.querySelector('.unread-dot');
+if (unreadDot) {
+unreadDot.remove();
+}
+});
+});
+function showLogoutDialog() {
+logoutDialog.classList.remove('hidden');
+setTimeout(() => {
+logoutDialogContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideLogoutDialog() {
+logoutDialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+logoutDialog.classList.add('hidden');
+}, 300);
+}
+logoutButton.addEventListener('click', showLogoutDialog);
+closeLogoutDialog.addEventListener('click', hideLogoutDialog);
+cancelLogout.addEventListener('click', hideLogoutDialog);
+confirmLogout.addEventListener('click', () => {
+hideLogoutDialog();
+window.location.href = '/login';
+});
+logoutDialog.addEventListener('click', (e) => {
+if (e.target === logoutDialog) {
+hideLogoutDialog();
+}
+});
+});
+</script>
+<script id="add-money-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const addMoneyDialog = document.getElementById('addMoneyDialog');
+const addMoneyDialogContent = document.getElementById('addMoneyDialogContent');
+const addMoneyButton = document.getElementById('addMoneyButton');
+const closeAddMoneyDialog = document.getElementById('closeAddMoneyDialog');
+const cancelAddMoney = document.getElementById('cancelAddMoney');
+const confirmAddMoney = document.getElementById('confirmAddMoney');
+const addMoneyAmount = document.getElementById('addMoneyAmount');
+const paymentMethods = document.querySelectorAll('[data-method]');
+const paymentDetails = document.querySelectorAll('.payment-details');
+// Initialize payment method toggle system
+paymentMethods.forEach(method => {
+method.addEventListener('click', () => {
+const methodId = method.getAttribute('data-method');
+const radio = method.querySelector('input[type="radio"]');
+const details = document.getElementById(`${methodId}Details`);
+// Check the radio button
+radio.checked = true;
+// Hide all payment details first
+paymentDetails.forEach(detail => {
+detail.classList.add('hidden');
+});
+// Show the selected payment details
+details.classList.remove('hidden');
+// Add active state to selected method
+paymentMethods.forEach(m => {
+m.classList.remove('bg-white/10');
+});
+method.classList.add('bg-white/10');
+});
+});
+// Show bank account details by default
+document.getElementById('bankAccountDetails').classList.remove('hidden');
+document.querySelector('[data-method="bankAccount"]').classList.add('bg-white/10');
+// Handle input validation
+const cardInputs = document.querySelectorAll('input[placeholder*="card number"]');
+cardInputs.forEach(input => {
+input.addEventListener('input', (e) => {
+let value = e.target.value.replace(/\D/g, '');
+if (value.length > 16) value = value.slice(0, 16);
+let formattedValue = '';
+for (let i = 0; i < value.length; i++) {
+if (i > 0 && i % 4 === 0) formattedValue += ' ';
+formattedValue += value[i];
+}
+e.target.value = formattedValue;
+});
+});
+const expiryInputs = document.querySelectorAll('input[placeholder="MM/YY"]');
+expiryInputs.forEach(input => {
+input.addEventListener('input', (e) => {
+let value = e.target.value.replace(/\D/g, '');
+if (value.length > 4) value = value.slice(0, 4);
+if (value.length > 2) {
+value = value.slice(0, 2) + '/' + value.slice(2);
+}
+e.target.value = value;
+});
+});
+const cvvInputs = document.querySelectorAll('input[placeholder="***"]');
+cvvInputs.forEach(input => {
+input.addEventListener('input', (e) => {
+let value = e.target.value.replace(/\D/g, '');
+if (value.length > 3) value = value.slice(0, 3);
+e.target.value = value;
+});
+});
+const upiInputs = document.querySelectorAll('input[placeholder*="@upi"]');
+upiInputs.forEach(input => {
+input.addEventListener('input', (e) => {
+e.target.value = e.target.value.toLowerCase();
+});
+});
+function showAddMoneyDialog() {
+addMoneyDialog.classList.remove('hidden');
+setTimeout(() => {
+addMoneyDialogContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideAddMoneyDialog() {
+addMoneyDialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+addMoneyDialog.classList.add('hidden');
+addMoneyAmount.value = '';
+}, 300);
+}
+addMoneyButton.addEventListener('click', showAddMoneyDialog);
+closeAddMoneyDialog.addEventListener('click', hideAddMoneyDialog);
+cancelAddMoney.addEventListener('click', hideAddMoneyDialog);
+addMoneyAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d.]/g, '');
+const parts = value.split('.');
+if (parts.length > 2) {
+value = parts[0] + '.' + parts.slice(1).join('');
+}
+if (parts[1]?.length > 2) {
+value = parts[0] + '.' + parts[1].slice(0, 2);
+}
+e.target.value = value;
+});
+confirmAddMoney.addEventListener('click', () => {
+const amount = parseFloat(addMoneyAmount.value);
+if (!amount || amount <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+addMoneyAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideAddMoneyDialog();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Successfully added $${amount.toFixed(2)}`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+addMoneyDialog.addEventListener('click', (e) => {
+if (e.target === addMoneyDialog) {
+hideAddMoneyDialog();
+}
+});
+upiPayment.addEventListener('change', () => {
+if (upiPayment.checked) {
+upiOptions.classList.remove('hidden');
+confirmAddMoney.disabled = true;
+confirmAddMoney.classList.add('opacity-50', 'cursor-not-allowed');
+} else {
+upiOptions.classList.add('hidden');
+confirmAddMoney.disabled = false;
+confirmAddMoney.classList.remove('opacity-50', 'cursor-not-allowed');
+}
+});
+upiId.addEventListener('input', () => {
+const isValid = upiId.value.includes('@');
+confirmAddMoney.disabled = !isValid;
+confirmAddMoney.classList.toggle('opacity-50', !isValid);
+confirmAddMoney.classList.toggle('cursor-not-allowed', !isValid);
+});
+function launchUPIApp(app) {
+const amount = addMoneyAmount.value;
+if (!amount || parseFloat(amount) <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+addMoneyAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+const upiDeepLink = {
+'google-pay': `gpay://upi/pay?pa=${upiId.value}&pn=IrisPay&am=${amount}&cu=INR`,
+'phonepe': `phonepe://pay?pa=${upiId.value}&pn=IrisPay&am=${amount}&cu=INR`,
+'whatsapp': `whatsapp://pay?phone=&pa=${upiId.value}&pn=IrisPay&am=${amount}&cu=INR`
+};
+window.location.href = upiDeepLink[app];
+}
+googlePayBtn.addEventListener('click', () => launchUPIApp('google-pay'));
+phonepeBtn.addEventListener('click', () => launchUPIApp('phonepe'));
+whatsappBtn.addEventListener('click', () => launchUPIApp('whatsapp'));
+});
+</script>
+<script id="payment-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const paymentDialog = document.getElementById('paymentDialog');
+const dialogContent = document.getElementById('dialogContent');
+const payNowButton = document.getElementById('payNowButton');
+const closeDialog = document.getElementById('closeDialog');
+const cancelPayment = document.getElementById('cancelPayment');
+const confirmPayment = document.getElementById('confirmPayment');
+const addNewCardBtn = document.getElementById('addNewCardBtn');
+const cardInputForm = document.getElementById('cardInputForm');
+const cancelCardAdd = document.getElementById('cancelCardAdd');
+const saveCard = document.getElementById('saveCard');
+const cardNumber = document.getElementById('cardNumber');
+const cardholderName = document.getElementById('cardholderName');
+const expiryDate = document.getElementById('expiryDate');
+const cvv = document.getElementById('cvv');
+const paymentMethodsList = document.getElementById('paymentMethodsList');
+function formatCardNumber(input) {
+let value = input.value.replace(/\D/g, '');
+let formattedValue = '';
+for (let i = 0; i < value.length; i++) {
+if (i > 0 && i % 4 === 0) {
+formattedValue += ' ';
+}
+formattedValue += value[i];
+}
+input.value = formattedValue;
+}
+function formatExpiryDate(input) {
+let value = input.value.replace(/\D/g, '');
+if (value.length >= 2) {
+value = value.slice(0, 2) + '/' + value.slice(2);
+}
+input.value = value;
+}
+cardNumber.addEventListener('input', () => formatCardNumber(cardNumber));
+expiryDate.addEventListener('input', () => formatExpiryDate(expiryDate));
+cvv.addEventListener('input', (e) => {
+e.target.value = e.target.value.replace(/\D/g, '');
+});
+addNewCardBtn.addEventListener('click', () => {
+cardInputForm.classList.remove('hidden');
+addNewCardBtn.classList.add('hidden');
+});
+cancelCardAdd.addEventListener('click', () => {
+cardInputForm.classList.add('hidden');
+addNewCardBtn.classList.remove('hidden');
+cardNumber.value = '';
+cardholderName.value = '';
+expiryDate.value = '';
+cvv.value = '';
+});
+saveCard.addEventListener('click', () => {
+if (!cardNumber.value || !cardholderName.value || !expiryDate.value || !cvv.value) {
+alert('Please fill in all card details');
+return;
+}
+const lastFourDigits = cardNumber.value.slice(-4);
+const cardType = cardNumber.value.startsWith('4') ? 'visa' : 'mastercard';
+const iconClass = cardType === 'visa' ? 'ri-visa-line text-blue-400' : 'ri-mastercard-line text-orange-400';
+const newCard = document.createElement('div');
+newCard.className = 'flex items-center bg-white/5 rounded-lg p-3 cursor-pointer';
+newCard.innerHTML = `
+<input type="radio" name="paymentMethod" class="mr-3">
+<div class="flex items-center">
+<i class="${iconClass} ri-lg mr-2"></i>
+<span class="text-sm">•••• ${lastFourDigits}</span>
+</div>
+`;
+paymentMethodsList.insertBefore(newCard, addNewCardBtn);
+cardInputForm.classList.add('hidden');
+addNewCardBtn.classList.remove('hidden');
+cardNumber.value = '';
+cardholderName.value = '';
+expiryDate.value = '';
+cvv.value = '';
+});
+function showDialog() {
+paymentDialog.classList.remove('hidden');
+setTimeout(() => {
+dialogContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideDialog() {
+dialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+paymentDialog.classList.add('hidden');
+}, 300);
+}
+payNowButton.addEventListener('click', showDialog);
+closeDialog.addEventListener('click', hideDialog);
+cancelPayment.addEventListener('click', hideDialog);
+confirmPayment.addEventListener('click', () => {
+hideDialog();
+// Add payment processing logic here
+});
+paymentDialog.addEventListener('click', (e) => {
+if (e.target === paymentDialog) {
+hideDialog();
+}
+});
+});
+</script>
+<script id="scanner-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const scanPayButton = document.getElementById('scanPayButton');
+const scannerDialog = document.getElementById('scannerDialog');
+const scannerContent = document.getElementById('scannerContent');
+const closeScannerDialog = document.getElementById('closeScannerDialog');
+const toggleCameraButton = document.getElementById('toggleCameraButton');
+const toggleFlashButton = document.getElementById('toggleFlashButton');
+const manualEntryButton = document.getElementById('manualEntryButton');
+const paymentConfirmDialog = document.getElementById('paymentConfirmDialog');
+const paymentConfirmContent = document.getElementById('paymentConfirmContent');
+const closePaymentConfirm = document.getElementById('closePaymentConfirm');
+const cancelPaymentConfirm = document.getElementById('cancelPaymentConfirm');
+const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+function showScannerDialog() {
+scannerDialog.classList.remove('hidden');
+setTimeout(() => {
+scannerContent.classList.remove('opacity-0');
+requestCameraAccess();
+}, 50);
+}
+function hideScannerDialog() {
+scannerContent.classList.add('opacity-0');
+setTimeout(() => {
+scannerDialog.classList.add('hidden');
+stopCamera();
+}, 300);
+}
+function showPaymentConfirm(data) {
+paymentConfirmDialog.classList.remove('hidden');
+setTimeout(() => {
+paymentConfirmContent.classList.remove('opacity-0', 'translate-y-4');
+document.getElementById('merchantName').textContent = data.merchantName;
+document.getElementById('merchantId').textContent = data.merchantId;
+document.getElementById('transactionNote').textContent = data.note;
+document.getElementById('paymentAmount').textContent = `$${data.amount}`;
+}, 50);
+}
+function hidePaymentConfirm() {
+paymentConfirmContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+paymentConfirmDialog.classList.add('hidden');
+}, 300);
+}
+let stream = null;
+async function requestCameraAccess() {
+try {
+stream = await navigator.mediaDevices.getUserMedia({
+video: { facingMode: 'environment' }
+});
+const video = document.createElement('video');
+video.srcObject = stream;
+video.autoplay = true;
+document.getElementById('cameraView').appendChild(video);
+// Simulate QR code detection after 3 seconds
+setTimeout(() => {
+const mockData = {
+merchantName: "Coffee House",
+merchantId: "CH78945612",
+note: "Coffee and Pastries",
+amount: "15.75"
+};
+hideScannerDialog();
+showPaymentConfirm(mockData);
+}, 3000);
+} catch (err) {
+console.error('Camera access error:', err);
+}
+}
+function stopCamera() {
+if (stream) {
+stream.getTracks().forEach(track => track.stop());
+const video = document.querySelector('#cameraView video');
+if (video) video.remove();
+}
+}
+scanPayButton.addEventListener('click', showScannerDialog);
+closeScannerDialog.addEventListener('click', hideScannerDialog);
+closePaymentConfirm.addEventListener('click', hidePaymentConfirm);
+cancelPaymentConfirm.addEventListener('click', hidePaymentConfirm);
+confirmPaymentBtn.addEventListener('click', () => {
+hidePaymentConfirm();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Payment successful!';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+let isFlashOn = false;
+toggleFlashButton.addEventListener('click', () => {
+isFlashOn = !isFlashOn;
+toggleFlashButton.innerHTML = isFlashOn ?
+'<i class="ri-flashlight-fill ri-lg"></i>' :
+'<i class="ri-flashlight-line ri-lg"></i>';
+});
+manualEntryButton.addEventListener('click', () => {
+hideScannerDialog();
+const mockData = {
+merchantName: "Manual Entry",
+merchantId: "ME78945612",
+note: "Manual Payment",
+amount: "0.00"
+};
+showPaymentConfirm(mockData);
+});
+});
+</script>
+<script id="receive-money-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const receiveMoneyButton = document.getElementById('receiveMoneyButton');
+const receiveMoneyDialog = document.getElementById('receiveMoneyDialog');
+const receiveMoneyContent = document.getElementById('receiveMoneyContent');
+const closeReceiveMoney = document.getElementById('closeReceiveMoney');
+const copyIrisId = document.getElementById('copyIrisId');
+const shareQrCode = document.getElementById('shareQrCode');
+const requestAmount = document.getElementById('requestAmount');
+const requestNote = document.getElementById('requestNote');
+const generateRequest = document.getElementById('generateRequest');
+const qrCodeTab = document.getElementById('qrCodeTab');
+const requestMoneyTab = document.getElementById('requestMoneyTab');
+const qrCodeContent = document.getElementById('qrCodeContent');
+const requestMoneyContent = document.getElementById('requestMoneyContent');
+// Tab switching functionality
+qrCodeTab.addEventListener('click', () => {
+qrCodeTab.classList.add('bg-indigo-600');
+qrCodeTab.classList.remove('bg-white/5');
+requestMoneyTab.classList.remove('bg-indigo-600');
+requestMoneyTab.classList.add('bg-white/5');
+qrCodeContent.classList.remove('hidden');
+requestMoneyContent.classList.add('hidden');
+});
+requestMoneyTab.addEventListener('click', () => {
+requestMoneyTab.classList.add('bg-indigo-600');
+requestMoneyTab.classList.remove('bg-white/5');
+qrCodeTab.classList.remove('bg-indigo-600');
+qrCodeTab.classList.add('bg-white/5');
+requestMoneyContent.classList.remove('hidden');
+qrCodeContent.classList.add('hidden');
+});
+function showReceiveMoneyDialog() {
+receiveMoneyDialog.classList.remove('hidden');
+setTimeout(() => {
+receiveMoneyContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideReceiveMoneyDialog() {
+receiveMoneyContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+receiveMoneyDialog.classList.add('hidden');
+requestAmount.value = '';
+requestNote.value = '';
+}, 300);
+}
+receiveMoneyButton.addEventListener('click', showReceiveMoneyDialog);
+closeReceiveMoney.addEventListener('click', hideReceiveMoneyDialog);
+receiveMoneyDialog.addEventListener('click', (e) => {
+if (e.target === receiveMoneyDialog) {
+hideReceiveMoneyDialog();
+}
+});
+copyIrisId.addEventListener('click', () => {
+navigator.clipboard.writeText('6232075690@irisid').then(() => {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Iris ID copied to clipboard';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+});
+shareQrCode.addEventListener('click', () => {
+if (navigator.share) {
+navigator.share({
+title: 'My Iris Pay QR Code',
+text: 'Scan this QR code to pay me via Iris Pay',
+url: window.location.href
+}).catch(console.error);
+} else {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'QR Code shared successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+}
+});
+requestAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d.]/g, '');
+const parts = value.split('.');
+if (parts.length > 2) {
+value = parts[0] + '.' + parts.slice(1).join('');
+}
+if (parts[1]?.length > 2) {
+value = parts[0] + '.' + parts[1].slice(0, 2);
+}
+e.target.value = value;
+});
+const searchContact = document.getElementById('searchContact');
+const recentContacts = document.getElementById('recentContacts');
+recentContacts.querySelectorAll('.flex.flex-col').forEach(contact => {
+contact.addEventListener('click', () => {
+searchContact.value = contact.querySelector('span').textContent;
+});
+});
+generateRequest.addEventListener('click', () => {
+const amount = parseFloat(requestAmount.value);
+const recipient = searchContact.value.trim();
+if (!recipient) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please select or enter a recipient';
+searchContact.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+if (!amount || amount <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+requestAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideReceiveMoneyDialog();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Payment request for ₹${amount.toFixed(2)} sent to ${recipient}`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+});
+</script>
+<script id="transfer-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const historyBalanceButton = document.getElementById('historyBalanceButton');
+const historyBalanceDialog = document.getElementById('historyBalanceDialog');
+const historyBalanceContent = document.getElementById('historyBalanceContent');
+const closeHistoryBalance = document.getElementById('closeHistoryBalance');
+const closeHistoryBalanceBtn = document.getElementById('closeHistoryBalanceBtn');
+const downloadStatement = document.getElementById('downloadStatement');
+const allTransactions = document.getElementById('allTransactions');
+const incomingTransactions = document.getElementById('incomingTransactions');
+const outgoingTransactions = document.getElementById('outgoingTransactions');
+function showHistoryBalance() {
+historyBalanceDialog.classList.remove('hidden');
+setTimeout(() => {
+historyBalanceContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideHistoryBalance() {
+historyBalanceContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+historyBalanceDialog.classList.add('hidden');
+}, 300);
+}
+historyBalanceButton.addEventListener('click', showHistoryBalance);
+closeHistoryBalance.addEventListener('click', hideHistoryBalance);
+closeHistoryBalanceBtn.addEventListener('click', hideHistoryBalance);
+historyBalanceDialog.addEventListener('click', (e) => {
+if (e.target === historyBalanceDialog) {
+hideHistoryBalance();
+}
+});
+[allTransactions, incomingTransactions, outgoingTransactions].forEach(button => {
+button.addEventListener('click', () => {
+// Remove active class from all buttons
+[allTransactions, incomingTransactions, outgoingTransactions].forEach(btn => {
+btn.classList.remove('bg-indigo-600', 'text-white');
+btn.classList.add('bg-white/5');
+});
+// Add active class to clicked button
+button.classList.remove('bg-white/5');
+button.classList.add('bg-indigo-600', 'text-white');
+// Filter transactions based on selection
+filterTransactions(button.id);
+});
+});
+function filterTransactions(type) {
+const transactions = document.querySelectorAll('.space-y-3 > div');
+transactions.forEach(transaction => {
+const isIncoming = transaction.querySelector('.text-green-400');
+switch(type) {
+case 'incomingTransactions':
+transaction.style.display = isIncoming ? 'flex' : 'none';
+break;
+case 'outgoingTransactions':
+transaction.style.display = !isIncoming ? 'flex' : 'none';
+break;
+default:
+transaction.style.display = 'flex';
+}
+});
+}
+downloadStatement.addEventListener('click', () => {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Statement downloaded successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+const transferDialog = document.getElementById('transferDialog');
+const upiTransferButton = document.getElementById('upiTransferButton');
+const upiTransferDialog = document.getElementById('upiTransferDialog');
+const upiTransferDialogContent = document.getElementById('upiTransferDialogContent');
+const closeUpiTransfer = document.getElementById('closeUpiTransfer');
+const cancelUpiTransfer = document.getElementById('cancelUpiTransfer');
+const confirmUpiTransfer = document.getElementById('confirmUpiTransfer');
+const upiIdInput = document.getElementById('upiIdInput');
+const upiAmount = document.getElementById('upiAmount');
+const upiNote = document.getElementById('upiNote');
+function showUpiTransferDialog() {
+upiTransferDialog.classList.remove('hidden');
+setTimeout(() => {
+upiTransferDialogContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideUpiTransferDialog() {
+upiTransferDialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+upiTransferDialog.classList.add('hidden');
+upiIdInput.value = '';
+upiAmount.value = '';
+upiNote.value = '';
+}, 300);
+}
+upiTransferButton.addEventListener('click', showUpiTransferDialog);
+closeUpiTransfer.addEventListener('click', hideUpiTransferDialog);
+cancelUpiTransfer.addEventListener('click', hideUpiTransferDialog);
+upiAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d.]/g, '');
+const parts = value.split('.');
+if (parts.length > 2) {
+value = parts[0] + '.' + parts.slice(1).join('');
+}
+if (parts[1]?.length > 2) {
+value = parts[0] + '.' + parts[1].slice(0, 2);
+}
+e.target.value = value;
+});
+confirmUpiTransfer.addEventListener('click', () => {
+const upiId = upiIdInput.value.trim();
+const amount = parseFloat(upiAmount.value);
+if (!upiId) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid UPI ID';
+upiIdInput.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+if (!amount || amount <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+upiAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideUpiTransferDialog();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Successfully sent ₹${amount.toFixed(2)} to ${upiId}`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+upiTransferDialog.addEventListener('click', (e) => {
+if (e.target === upiTransferDialog) {
+hideUpiTransferDialog();
+}
+});
+const transferDialogContent = document.getElementById('transferDialogContent');
+const transferButton = document.getElementById('transferButton');
+const closeTransferDialog = document.getElementById('closeTransferDialog');
+const cancelTransfer = document.getElementById('cancelTransfer');
+const confirmTransfer = document.getElementById('confirmTransfer');
+const transferAmount = document.getElementById('transferAmount');
+const recipientId = document.getElementById('recipientId');
+const transferNote = document.getElementById('transferNote');
+const transferMethods = document.getElementsByName('transferMethod');
+function showTransferDialog() {
+transferDialog.classList.remove('hidden');
+setTimeout(() => {
+transferDialogContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideTransferDialog() {
+transferDialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+transferDialog.classList.add('hidden');
+transferAmount.value = '';
+recipientId.value = '';
+transferNote.value = '';
+}, 300);
+}
+transferButton.addEventListener('click', showTransferDialog);
+closeTransferDialog.addEventListener('click', hideTransferDialog);
+cancelTransfer.addEventListener('click', hideTransferDialog);
+transferAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d.]/g, '');
+const parts = value.split('.');
+if (parts.length > 2) {
+value = parts[0] + '.' + parts.slice(1).join('');
+}
+if (parts[1]?.length > 2) {
+value = parts[0] + '.' + parts[1].slice(0, 2);
+}
+e.target.value = value;
+});
+transferMethods.forEach(method => {
+method.addEventListener('change', () => {
+const placeholders = {
+'irisPayId': 'Enter IrisPay ID',
+'bankAccount': 'Enter Bank Account Number',
+'phoneNumber': 'Enter Phone Number'
+};
+recipientId.placeholder = placeholders[method.id];
+});
+});
+confirmTransfer.addEventListener('click', () => {
+const amount = parseFloat(transferAmount.value);
+if (!amount || amount <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+transferAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+if (!recipientId.value.trim()) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter recipient details';
+recipientId.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideTransferDialog();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Successfully transferred $${amount.toFixed(2)}`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+transferDialog.addEventListener('click', (e) => {
+if (e.target === transferDialog) {
+hideTransferDialog();
+}
+});
+});
+</script>
+<script id="withdraw-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const withdrawDialog = document.getElementById('withdrawDialog');
+const withdrawDialogContent = document.getElementById('withdrawDialogContent');
+const withdrawButton = document.getElementById('withdrawButton');
+const closeWithdrawDialog = document.getElementById('closeWithdrawDialog');
+const cancelWithdraw = document.getElementById('cancelWithdraw');
+const confirmWithdraw = document.getElementById('confirmWithdraw');
+const withdrawAmount = document.getElementById('withdrawAmount');
+const bankAccountOption = document.getElementById('bankAccountOption');
+const bankAccountDetails = document.getElementById('bankAccountDetails');
+const addNewBankBtn = document.getElementById('addNewBankBtn');
+const newBankForm = document.getElementById('newBankForm');
+const cancelBankAdd = document.getElementById('cancelBankAdd');
+const saveBankAccount = document.getElementById('saveBankAccount');
+const accountHolderName = document.getElementById('accountHolderName');
+const accountNumber = document.getElementById('accountNumber');
+const bankName = document.getElementById('bankName');
+const routingCode = document.getElementById('routingCode');
+const savedBankAccounts = document.getElementById('savedBankAccounts');
+function validateBankDetails() {
+const fields = [accountHolderName, accountNumber, bankName, routingCode];
+let isValid = true;
+fields.forEach(field => {
+if (!field.value.trim()) {
+isValid = false;
+field.classList.add('border-red-500');
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'This field is required';
+if (!field.nextElementSibling?.classList.contains('text-red-400')) {
+field.parentElement.appendChild(errorDiv);
+}
+} else {
+field.classList.remove('border-red-500');
+const errorDiv = field.nextElementSibling;
+if (errorDiv?.classList.contains('text-red-400')) {
+errorDiv.remove();
+}
+}
+});
+return isValid;
+}
+addNewBankBtn.addEventListener('click', () => {
+newBankForm.classList.remove('hidden');
+addNewBankBtn.classList.add('hidden');
+});
+cancelBankAdd.addEventListener('click', () => {
+newBankForm.classList.add('hidden');
+addNewBankBtn.classList.remove('hidden');
+[accountHolderName, accountNumber, bankName, routingCode].forEach(field => {
+field.value = '';
+field.classList.remove('border-red-500');
+const errorDiv = field.nextElementSibling;
+if (errorDiv?.classList.contains('text-red-400')) {
+errorDiv.remove();
+}
+});
+});
+saveBankAccount.addEventListener('click', () => {
+if (validateBankDetails()) {
+const lastFourDigits = accountNumber.value.slice(-4);
+const option = document.createElement('option');
+option.value = `account${Date.now()}`;
+option.textContent = `${bankName.value} •••• ${lastFourDigits}`;
+savedBankAccounts.insertBefore(option, savedBankAccounts.firstChild);
+savedBankAccounts.value = option.value;
+newBankForm.classList.add('hidden');
+addNewBankBtn.classList.remove('hidden');
+[accountHolderName, accountNumber, bankName, routingCode].forEach(field => {
+field.value = '';
+});
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Bank account added successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+}
+});
+[accountHolderName, accountNumber, bankName, routingCode].forEach(field => {
+field.addEventListener('input', () => {
+field.classList.remove('border-red-500');
+const errorDiv = field.nextElementSibling;
+if (errorDiv?.classList.contains('text-red-400')) {
+errorDiv.remove();
+}
+});
+});
+bankAccountOption.addEventListener('click', () => {
+document.getElementById('bankAccount').checked = true;
+bankAccountDetails.style.display = 'block';
+});
+document.getElementById('debitCard').addEventListener('change', () => {
+bankAccountDetails.style.display = 'none';
+});
+function showWithdrawDialog() {
+withdrawDialog.classList.remove('hidden');
+setTimeout(() => {
+withdrawDialogContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideWithdrawDialog() {
+withdrawDialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+withdrawDialog.classList.add('hidden');
+withdrawAmount.value = '';
+}, 300);
+}
+withdrawButton.addEventListener('click', showWithdrawDialog);
+closeWithdrawDialog.addEventListener('click', hideWithdrawDialog);
+cancelWithdraw.addEventListener('click', hideWithdrawDialog);
+withdrawAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d.]/g, '');
+const parts = value.split('.');
+if (parts.length > 2) {
+value = parts[0] + '.' + parts.slice(1).join('');
+}
+if (parts[1]?.length > 2) {
+value = parts[0] + '.' + parts[1].slice(0, 2);
+}
+e.target.value = value;
+});
+confirmWithdraw.addEventListener('click', () => {
+const amount = parseFloat(withdrawAmount.value);
+if (!amount || amount <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+withdrawAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideWithdrawDialog();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Withdrawal of $${amount.toFixed(2)} initiated`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+withdrawDialog.addEventListener('click', (e) => {
+if (e.target === withdrawDialog) {
+hideWithdrawDialog();
+}
+});
+});
+</script>
+<script id="carousel-scroll">
+document.addEventListener('DOMContentLoaded', function() {
+const carousel = document.getElementById('carousel');
+let isDown = false;
+let startX;
+let scrollLeft;
+carousel.addEventListener('mousedown', (e) => {
+isDown = true;
+carousel.classList.add('active');
+startX = e.pageX - carousel.offsetLeft;
+scrollLeft = carousel.scrollLeft;
+});
+carousel.addEventListener('mouseleave', () => {
+isDown = false;
+carousel.classList.remove('active');
+});
+carousel.addEventListener('mouseup', () => {
+isDown = false;
+carousel.classList.remove('active');
+});
+carousel.addEventListener('mousemove', (e) => {
+if (!isDown) return;
+e.preventDefault();
+const x = e.pageX - carousel.offsetLeft;
+const walk = (x - startX) * 2;
+carousel.scrollLeft = scrollLeft - walk;
+});
+// Touch events for mobile
+carousel.addEventListener('touchstart', (e) => {
+isDown = true;
+startX = e.touches[0].pageX - carousel.offsetLeft;
+scrollLeft = carousel.scrollLeft;
+});
+carousel.addEventListener('touchend', () => {
+isDown = false;
+});
+carousel.addEventListener('touchmove', (e) => {
+if (!isDown) return;
+const x = e.touches[0].pageX - carousel.offsetLeft;
+const walk = (x - startX) * 2;
+carousel.scrollLeft = scrollLeft - walk;
+});
+});
+</script>
+<!-- Chat Dialog -->
+<div id="chatDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+<div id="chatContent" class="absolute right-0 top-0 bottom-0 w-[320px] bg-[#1e1b4b] shadow-xl translate-x-full transition-transform duration-300">
+<div class="flex flex-col h-full">
+<div class="p-4 border-b border-white/10">
+<div class="flex justify-between items-center">
+<h3 class="text-lg font-semibold">Messages</h3>
+<button id="closeChatDialog" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="relative mt-3">
+<input type="text" placeholder="Search messages..." class="w-full bg-white/5 rounded-lg pl-9 pr-3 py-2 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500">
+<i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Chat Items -->
+<div id="sarahChatItem" class="flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-3-line text-blue-400"></i>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div class="text-sm font-medium truncate">Sarah Miller</div>
+<div class="text-xs text-gray-400">2m ago</div>
+</div>
+<div class="text-xs text-gray-400 truncate">Hey, how are you doing?</div>
+</div>
+</div>
+<div id="conversationView" class="fixed inset-0 bg-[#1e1b4b] z-50 translate-x-full transition-transform duration-300">
+<div class="flex flex-col h-full">
+<div class="p-4 border-b border-white/10">
+<div class="flex items-center">
+<button id="backToChats" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 mr-3">
+<i class="ri-arrow-left-line ri-lg"></i>
+</button>
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-2">
+<i class="ri-user-3-line text-blue-400"></i>
+</div>
+<span class="text-sm font-medium flex-1">Sarah Miller</span>
+<div class="flex items-center space-x-2">
+<div class="relative">
+<button id="chatOptionsBtn" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-more-2-line ri-lg"></i>
+</button>
+<div id="chatOptionsMenu" class="absolute right-0 top-full mt-2 w-56 bg-[#1C1B3B] rounded-xl shadow-lg border border-white/10 hidden">
+<div class="py-1">
+<button class="w-full px-4 py-2.5 flex items-center text-sm hover:bg-white/5 transition-colors">
+<i class="ri-user-line ri-lg w-5 h-5 mr-3 flex items-center justify-center"></i>
+View Profile
+</button>
+<button class="w-full px-4 py-2.5 flex items-center text-sm hover:bg-white/5 transition-colors">
+<i class="ri-notification-off-line ri-lg w-5 h-5 mr-3 flex items-center justify-center"></i>
+Mute Notifications
+</button>
+<button class="w-full px-4 py-2.5 flex items-center text-sm hover:bg-white/5 transition-colors">
+<i class="ri-mail-unread-line ri-lg w-5 h-5 mr-3 flex items-center justify-center"></i>
+Mark as Unread
+</button>
+<button class="w-full px-4 py-2.5 flex items-center text-sm hover:bg-white/5 transition-colors">
+<i class="ri-delete-bin-line ri-lg w-5 h-5 mr-3 flex items-center justify-center"></i>
+Clear Chat History
+</button>
+<button class="w-full px-4 py-2.5 flex items-center text-sm hover:bg-white/5 transition-colors">
+<i class="ri-forbid-line ri-lg w-5 h-5 mr-3 flex items-center justify-center text-red-400"></i>
+<span class="text-red-400">Block Contact</span>
+</button>
+<button class="w-full px-4 py-2.5 flex items-center text-sm hover:bg-white/5 transition-colors">
+<i class="ri-delete-bin-6-line ri-lg w-5 h-5 mr-3 flex items-center justify-center text-red-400"></i>
+<span class="text-red-400">Delete Conversation</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<div class="flex justify-start">
+<div class="bg-white/5 rounded-lg p-3 max-w-[80%]">
+<div class="text-sm">Hey, how are you doing?</div>
+<div class="text-xs text-gray-400 mt-1">2:30 PM</div>
+</div>
+</div>
+<div class="flex justify-end">
+<div class="bg-indigo-600 rounded-lg p-3 max-w-[80%]">
+<div class="text-sm">Hi Sarah! I'm good, thanks for asking. How about you?</div>
+<div class="text-xs text-indigo-300 mt-1">2:31 PM</div>
+</div>
+</div>
+<div class="flex justify-start">
+<div class="bg-white/5 rounded-lg p-3 max-w-[80%]">
+<div class="text-sm">I'm doing great! Just wanted to check if you received my payment?</div>
+<div class="text-xs text-gray-400 mt-1">2:32 PM</div>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-white/10">
+<div class="flex space-x-2 mb-3">
+<button id="sendMoneyBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+<i class="ri-send-plane-line ri-lg mr-1"></i>Send Money
+</button>
+<button id="requestMoneyBtn" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">
+<i class="ri-arrow-down-line ri-lg mr-1"></i>Request
+</button>
+</div>
+<div class="flex space-x-2">
+<div class="flex-1 relative">
+<input type="text" id="messageInput" placeholder="Type a message..." class="w-full bg-white/5 rounded-lg pl-10 pr-3 py-2.5 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500">
+<button class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-emotion-line ri-lg text-gray-400"></i>
+</button>
+</div>
+<button id="sendMessage" class="w-10 h-10 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700">
+<i class="ri-send-plane-fill ri-lg"></i>
+</button>
+</div>
+</div>
+<!-- Money Transfer Dialog -->
+<div id="moneyTransferDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden">
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[#1e1b4b] rounded-xl p-5 opacity-0 translate-y-4 transition-all duration-300" id="moneyTransferContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold" id="transferDialogTitle">Send Money</h3>
+<button id="closeMoneyTransfer" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<div class="text-sm font-medium mb-2">Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">₹</span>
+<input type="text" id="moneyAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Note (Optional)</div>
+<input type="text" id="transferNote" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Add a note">
+</div>
+</div>
+<div class="flex space-x-3 mt-6">
+<button id="cancelMoneyTransfer" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmMoneyTransfer" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Send</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-3-line text-purple-400"></i>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div class="text-sm font-medium truncate">Michael Chen</div>
+<div class="text-xs text-gray-400">1h ago</div>
+</div>
+<div class="text-xs text-gray-400 truncate">Thanks for the payment!</div>
+</div>
+</div>
+<div class="flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-3-line text-green-400"></i>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div class="text-sm font-medium truncate">Emma Watson</div>
+<div class="text-xs text-gray-400">Yesterday</div>
+</div>
+<div class="text-xs text-gray-400 truncate">Let's catch up soon!</div>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-white/10">
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+<i class="ri-add-line ri-lg mr-1"></i>New Message
+</button>
+</div>
+</div>
+</div>
+</div>
+<script id="pin-verification">
+document.addEventListener('DOMContentLoaded', function() {
+const balanceCard = document.getElementById('balanceCard');
+const irisPaymentToggle = document.getElementById('irisPaymentToggle');
+irisPaymentToggle.addEventListener('change', function() {
+const status = this.checked ? 'enabled' : 'disabled';
+const bgColor = this.checked ? 'bg-green-500/90' : 'bg-red-500/90';
+const statusDiv = document.createElement('div');
+statusDiv.className = `fixed top-4 left-1/2 -translate-x-1/2 ${bgColor} text-white px-4 py-2 rounded-lg text-sm z-50 opacity-0 transition-opacity duration-300`;
+statusDiv.textContent = `Iris Payment ${status}`;
+document.body.appendChild(statusDiv);
+// Fade in
+setTimeout(() => {
+statusDiv.classList.remove('opacity-0');
+}, 50);
+// Fade out and remove
+setTimeout(() => {
+statusDiv.classList.add('opacity-0');
+setTimeout(() => statusDiv.remove(), 300);
+}, 2700);
+// Update toggle switch appearance
+const toggleBg = this.nextElementSibling;
+if (this.checked) {
+toggleBg.classList.remove('bg-white/10');
+toggleBg.classList.add('bg-indigo-600');
+} else {
+toggleBg.classList.remove('bg-indigo-600');
+toggleBg.classList.add('bg-white/10');
+}
+});
+const pinDialog = document.getElementById('pinDialog');
+const pinDialogContent = document.getElementById('pinDialogContent');
+const closePinDialog = document.getElementById('closePinDialog');
+const pinInput = document.getElementById('pinInput');
+const pinDots = [
+document.getElementById('pin1'),
+document.getElementById('pin2'),
+document.getElementById('pin3'),
+document.getElementById('pin4')
+];
+const pinClear = document.getElementById('pinClear');
+const pinSubmit = document.getElementById('pinSubmit');
+const pinButtons = document.querySelectorAll('.pin-button');
+let currentPinLength = 0;
+function showPinDialog() {
+pinDialog.classList.remove('hidden');
+setTimeout(() => {
+pinDialogContent.classList.remove('opacity-0', 'translate-y-4');
+pinInput.focus();
+}, 50);
+}
+function hidePinDialog() {
+pinDialogContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+pinDialog.classList.add('hidden');
+pinInput.value = '';
+currentPinLength = 0;
+updatePinDots();
+}, 300);
+}
+function updatePinDots() {
+const length = pinInput.value.length;
+pinDots.forEach((dot, index) => {
+dot.classList.toggle('bg-indigo-500', index < length);
+dot.classList.toggle('bg-white/20', index >= length);
+});
+}
+function handlePinSubmit() {
+const pin = pinInput.value;
+if (pin.length === 4) {
+pinSubmit.classList.add('bg-indigo-700');
+setTimeout(() => {
+pinSubmit.classList.remove('bg-indigo-700');
+}, 200);
+if (pin === '1234') { // Replace with actual PIN validation
+const successDiv = document.createElement('div');
+successDiv.className = 'text-green-400 text-xs mt-3 text-center';
+successDiv.textContent = 'PIN verified successfully';
+pinDialogContent.querySelector('.mb-6').appendChild(successDiv);
+setTimeout(() => {
+hidePinDialog();
+window.location.href = '/account'; // Replace with actual account page URL
+}, 1000);
+} else {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-3 text-center';
+errorDiv.textContent = 'Incorrect PIN. Please try again.';
+pinDialogContent.querySelector('.mb-6').appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+// Shake animation for error feedback
+pinDialogContent.classList.add('animate-shake');
+setTimeout(() => {
+pinDialogContent.classList.remove('animate-shake');
+}, 500);
+pinInput.value = '';
+currentPinLength = 0;
+updatePinDots();
+}
+}
+}
+balanceCard.addEventListener('click', showPinDialog);
+closePinDialog.addEventListener('click', hidePinDialog);
+pinDialog.addEventListener('click', (e) => {
+if (e.target === pinDialog) {
+hidePinDialog();
+}
+});
+pinButtons.forEach(button => {
+button.addEventListener('click', () => {
+if (currentPinLength < 4) {
+const digit = button.textContent.trim();
+pinInput.value += digit;
+currentPinLength++;
+updatePinDots();
+// Add visual feedback
+button.classList.add('bg-indigo-600');
+setTimeout(() => {
+button.classList.remove('bg-indigo-600');
+}, 200);
+if (currentPinLength === 4) {
+handlePinSubmit();
+}
+}
+});
+});
+pinClear.addEventListener('click', () => {
+if (currentPinLength > 0) {
+pinInput.value = pinInput.value.slice(0, -1);
+currentPinLength--;
+updatePinDots();
+// Add visual feedback
+pinClear.classList.add('bg-indigo-600');
+setTimeout(() => {
+pinClear.classList.remove('bg-indigo-600');
+}, 200);
+}
+});
+pinSubmit.addEventListener('click', handlePinSubmit);
+pinInput.addEventListener('input', () => {
+pinInput.value = pinInput.value.replace(/\D/g, '').slice(0, 4);
+updatePinDots();
+if (pinInput.value.length === 4) {
+handlePinSubmit();
+}
+});
+});
+</script>
+<script id="chat-dialog">
+document.addEventListener('DOMContentLoaded', function() {
+const chatButton = document.getElementById('chatButton');
+const chatDialog = document.getElementById('chatDialog');
+const chatOptionsBtn = document.getElementById('chatOptionsBtn');
+const chatOptionsMenu = document.getElementById('chatOptionsMenu');
+let isOptionsMenuOpen = false;
+function toggleOptionsMenu() {
+isOptionsMenuOpen = !isOptionsMenuOpen;
+chatOptionsMenu.classList.toggle('hidden', !isOptionsMenuOpen);
+}
+function closeOptionsMenu() {
+isOptionsMenuOpen = false;
+chatOptionsMenu.classList.add('hidden');
+}
+chatOptionsBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+toggleOptionsMenu();
+});
+document.addEventListener('click', (e) => {
+if (!chatOptionsMenu.contains(e.target) && !chatOptionsBtn.contains(e.target)) {
+closeOptionsMenu();
+}
+});
+chatOptionsMenu.querySelectorAll('button').forEach(button => {
+button.addEventListener('click', () => {
+const action = button.textContent.trim();
+let message = '';
+switch(action) {
+case 'Block Contact':
+message = 'Contact blocked successfully';
+break;
+case 'Delete Conversation':
+message = 'Conversation deleted';
+break;
+case 'Mark as Unread':
+message = 'Conversation marked as unread';
+break;
+case 'Mute Notifications':
+message = 'Notifications muted';
+break;
+case 'Clear Chat History':
+message = 'Chat history cleared';
+break;
+case 'View Profile':
+message = 'Opening profile...';
+break;
+}
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-[70]';
+successDiv.textContent = message;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+closeOptionsMenu();
+});
+});
+const sendMoneyBtn = document.getElementById('sendMoneyBtn');
+const requestMoneyBtn = document.getElementById('requestMoneyBtn');
+const moneyTransferDialog = document.getElementById('moneyTransferDialog');
+const moneyTransferContent = document.getElementById('moneyTransferContent');
+const closeMoneyTransfer = document.getElementById('closeMoneyTransfer');
+const cancelMoneyTransfer = document.getElementById('cancelMoneyTransfer');
+const confirmMoneyTransfer = document.getElementById('confirmMoneyTransfer');
+const moneyAmount = document.getElementById('moneyAmount');
+const transferNote = document.getElementById('transferNote');
+const transferDialogTitle = document.getElementById('transferDialogTitle');
+let isRequestMoney = false;
+function showMoneyTransfer(isRequest) {
+isRequestMoney = isRequest;
+transferDialogTitle.textContent = isRequest ? 'Request Money' : 'Send Money';
+confirmMoneyTransfer.textContent = isRequest ? 'Request' : 'Send';
+moneyTransferDialog.classList.remove('hidden');
+setTimeout(() => {
+moneyTransferContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideMoneyTransfer() {
+moneyTransferContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+moneyTransferDialog.classList.add('hidden');
+moneyAmount.value = '';
+transferNote.value = '';
+}, 300);
+}
+function addTransactionMessage(amount, note, isRequest, isSuccess = true) {
+const messageContainer = document.createElement('div');
+messageContainer.className = 'flex justify-center my-4';
+const transactionCard = document.createElement('div');
+transactionCard.className = 'bg-white/5 rounded-xl p-4 w-4/5 text-center';
+const amountText = document.createElement('div');
+amountText.className = 'text-2xl font-bold mb-2';
+amountText.innerHTML = `₹${amount}`;
+const statusText = document.createElement('div');
+statusText.className = 'text-sm mb-1';
+if (isRequest) {
+statusText.textContent = isSuccess ? 'requested' : 'Request failed';
+statusText.className += isSuccess ? ' text-yellow-400' : ' text-red-400';
+} else {
+statusText.textContent = isSuccess ? 'sent' : 'Payment failed';
+statusText.className += isSuccess ? ' text-green-400' : ' text-red-400';
+}
+const noteText = document.createElement('div');
+noteText.className = 'text-xs text-gray-400';
+noteText.textContent = note || 'No note';
+const timestamp = document.createElement('div');
+timestamp.className = 'text-xs text-gray-400 mt-2';
+timestamp.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+transactionCard.appendChild(amountText);
+transactionCard.appendChild(statusText);
+transactionCard.appendChild(noteText);
+transactionCard.appendChild(timestamp);
+messageContainer.appendChild(transactionCard);
+const chatMessages = conversationView.querySelector('.overflow-y-auto');
+chatMessages.appendChild(messageContainer);
+chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+moneyAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d]/g, '');
+e.target.value = value ? `${value}` : '';
+});
+sendMoneyBtn.addEventListener('click', () => showMoneyTransfer(false));
+requestMoneyBtn.addEventListener('click', () => showMoneyTransfer(true));
+closeMoneyTransfer.addEventListener('click', hideMoneyTransfer);
+cancelMoneyTransfer.addEventListener('click', hideMoneyTransfer);
+confirmMoneyTransfer.addEventListener('click', () => {
+const amount = moneyAmount.value;
+const note = transferNote.value;
+if (!amount || parseInt(amount) <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+moneyAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideMoneyTransfer();
+addTransactionMessage(amount, note, isRequestMoney);
+});
+moneyTransferDialog.addEventListener('click', (e) => {
+if (e.target === moneyTransferDialog) {
+hideMoneyTransfer();
+}
+});
+const chatContent = document.getElementById('chatContent');
+const closeChatDialog = document.getElementById('closeChatDialog');
+const sarahChatItem = document.getElementById('sarahChatItem');
+const conversationView = document.getElementById('conversationView');
+const backToChats = document.getElementById('backToChats');
+const messageInput = document.getElementById('messageInput');
+const sendMessage = document.getElementById('sendMessage');
+function showChatDialog() {
+chatDialog.classList.remove('hidden');
+setTimeout(() => {
+chatContent.classList.remove('translate-x-full');
+}, 50);
+}
+function hideChatDialog() {
+chatContent.classList.add('translate-x-full');
+setTimeout(() => {
+chatDialog.classList.add('hidden');
+}, 300);
+}
+chatButton.addEventListener('click', showChatDialog);
+closeChatDialog.addEventListener('click', hideChatDialog);
+chatDialog.addEventListener('click', (e) => {
+if (e.target === chatDialog) {
+hideChatDialog();
+}
+});
+function showConversation() {
+conversationView.classList.remove('translate-x-full');
+}
+function hideConversation() {
+conversationView.classList.add('translate-x-full');
+}
+sarahChatItem.addEventListener('click', showConversation);
+backToChats.addEventListener('click', hideConversation);
+function sendNewMessage() {
+const messageText = messageInput.value.trim();
+if (!messageText) return;
+const messageContainer = document.createElement('div');
+messageContainer.className = 'flex justify-end';
+messageContainer.innerHTML = `
+<div class="bg-indigo-600 rounded-lg p-3 max-w-[80%]">
+<div class="text-sm">${messageText}</div>
+<div class="text-xs text-indigo-300 mt-1">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+</div>
+`;
+const chatMessages = conversationView.querySelector('.overflow-y-auto');
+chatMessages.appendChild(messageContainer);
+chatMessages.scrollTop = chatMessages.scrollHeight;
+messageInput.value = '';
+}
+sendMessage.addEventListener('click', sendNewMessage);
+messageInput.addEventListener('keypress', (e) => {
+if (e.key === 'Enter' && !e.shiftKey) {
+e.preventDefault();
+sendNewMessage();
+}
+});
+});
+</script>
+</body>
+</html>

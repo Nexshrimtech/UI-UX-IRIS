@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rewards & Cashback</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#9333EA'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #1e1b4b 0%, #0f0f1a 100%);
+min-height: 100vh;
+color: white;
+}
+.glow {
+box-shadow: 0 0 15px rgba(79, 70, 229, 0.6);
+transition: all 0.3s ease;
+}
+.glow-gold {
+box-shadow: 0 0 15px rgba(234, 179, 8, 0.6);
+}
+.glow-button {
+transition: all 0.2s ease;
+}
+.glow-button:active {
+transform: scale(0.97);
+}
+.action-button {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(5px);
+transition: all 0.3s ease;
+}
+.action-button:hover {
+background: rgba(255, 255, 255, 0.15);
+transform: translateY(-2px);
+}
+.action-button:active {
+transform: translateY(0);
+}
+.carousel-card {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(5px);
+transition: all 0.3s ease;
+}
+.carousel-card:hover {
+transform: translateY(-2px);
+}
+.nav-item {
+transition: all 0.3s ease;
+}
+.nav-item.active {
+color: #4F46E5;
+text-shadow: 0 0 10px rgba(79, 70, 229, 0.6);
+}
+.nav-item.active i {
+filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.6));
+}
+.particles {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: -1;
+}
+.particle {
+position: absolute;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.1);
+animation: float 15s infinite ease-in-out;
+}
+@keyframes float {
+0%, 100% {
+transform: translateY(0) translateX(0);
+}
+25% {
+transform: translateY(-20px) translateX(10px);
+}
+50% {
+transform: translateY(-10px) translateX(-15px);
+}
+75% {
+transform: translateY(15px) translateX(5px);
+}
+}
+.iris-wave {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 300px;
+height: 300px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0) 70%);
+z-index: -1;
+animation: pulse 8s infinite ease-in-out;
+}
+@keyframes pulse {
+0%, 100% {
+transform: translate(-50%, -50%) scale(1);
+opacity: 0.3;
+}
+50% {
+transform: translate(-50%, -50%) scale(1.5);
+opacity: 0.1;
+}
+}
+.progress-ring {
+transform: rotate(-90deg);
+transform-origin: center;
+transition: all 0.5s ease;
+}
+.tier-progress {
+height: 6px;
+background: rgba(255, 255, 255, 0.1);
+border-radius: 3px;
+overflow: hidden;
+}
+.tier-progress-bar {
+height: 100%;
+background: linear-gradient(90deg, #4F46E5 0%, #9333EA 100%);
+border-radius: 3px;
+transition: width 1s ease;
+}
+.spin-wheel {
+transition: transform 5s cubic-bezier(0.1, 0.05, 0.05, 1);
+}
+.slot-reel {
+transition: transform 3s cubic-bezier(0.1, 0.05, 0.05, 1);
+}
+.cashback-jar {
+position: relative;
+width: 100px;
+height: 120px;
+margin: 0 auto;
+background: rgba(255, 255, 255, 0.1);
+border-radius: 0 0 50px 50px;
+overflow: hidden;
+backdrop-filter: blur(5px);
+}
+.cashback-jar::before {
+content: '';
+position: absolute;
+top: -10px;
+left: -10px;
+right: -10px;
+height: 20px;
+background: rgba(255, 255, 255, 0.2);
+border-radius: 50%;
+}
+.jar-fill {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+background: linear-gradient(180deg, #4F46E5 0%, #9333EA 100%);
+transition: height 1s ease;
+}
+.scratch-card {
+position: relative;
+width: 100%;
+height: 120px;
+border-radius: 12px;
+overflow: hidden;
+}
+.scratch-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, #4F46E5 0%, #9333EA 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+transition: opacity 0.3s ease;
+}
+</style>
+</head>
+<body class="relative">
+<!-- Background Effects -->
+<div class="particles" id="particles"></div>
+<div class="iris-wave"></div>
+<div class="iris-wave" style="animation-delay: 2s; width: 400px; height: 400px;"></div>
+<div class="iris-wave" style="animation-delay: 4s; width: 500px; height: 500px;"></div>
+<!-- Main Content -->
+<div class="min-h-screen pb-20">
+<!-- Header -->
+<header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-2">
+<i class="ri-user-3-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-xs text-gray-400">Hi,</div>
+<div class="text-sm font-medium">Abhishek</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<div id="notificationButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-notification-3-line ri-lg"></i>
+</div>
+<div id="settingsButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-settings-3-line ri-lg"></i>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-20 px-4">
+<!-- Total Rewards Card -->
+<div class="rounded-3xl p-6 mb-6 bg-[#1C1B3B] shadow-lg relative overflow-hidden">
+<div class="flex justify-between items-start mb-2 relative z-10">
+<span class="text-sm text-gray-300">Total Cashback & Rewards</span>
+<div class="flex items-center text-xs text-yellow-400">
+<i class="ri-vip-crown-fill ri-sm mr-1"></i>
+<span>Gold Tier</span>
+</div>
+</div>
+<div class="flex items-center justify-between relative z-10">
+<div>
+<div class="text-3xl font-bold text-white mb-2">₹4,586.50</div>
+<div class="text-xs text-gray-400">
+<span class="text-green-400">+₹250</span> this month
+</div>
+</div>
+<div class="w-20 h-20 relative">
+<svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
+<circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none" />
+<circle cx="50" cy="50" r="40" stroke="url(#progressGradient)" stroke-width="8" fill="none" stroke-dasharray="251.2" stroke-dashoffset="75.36" />
+<defs>
+<linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+<stop offset="0%" stop-color="#4F46E5" />
+<stop offset="100%" stop-color="#9333EA" />
+</linearGradient>
+</defs>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-sm font-bold">70%</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 relative z-10">
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-button text-xs flex items-center">
+<i class="ri-exchange-dollar-line mr-1"></i>
+Redeem
+</button>
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-button text-xs flex items-center">
+<i class="ri-history-line mr-1"></i>
+History
+</button>
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-button text-xs flex items-center">
+<i class="ri-share-line mr-1"></i>
+Share
+</button>
+</div>
+<div class="absolute top-0 right-0 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+<div class="absolute bottom-0 left-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
+</div>
+<!-- Category Tabs -->
+<div class="mb-6">
+<div class="overflow-x-auto pb-2">
+<div class="flex space-x-3">
+<button class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">All Rewards</button>
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full text-sm whitespace-nowrap">Shopping</button>
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full text-sm whitespace-nowrap">Bills & EMI</button>
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full text-sm whitespace-nowrap">Recharges</button>
+<button class="bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full text-sm whitespace-nowrap">Referrals</button>
+</div>
+</div>
+</div>
+<!-- Status Tabs -->
+<div class="bg-[#1C1B3B] rounded-xl p-1 flex mb-6">
+<button class="flex-1 py-3 text-sm rounded-xl bg-indigo-600 text-white">Wallet</button>
+<button class="flex-1 py-3 text-sm text-gray-300">Earned</button>
+<button class="flex-1 py-3 text-sm text-gray-300">Pending</button>
+<button class="flex-1 py-3 text-sm text-gray-300">Used</button>
+</div>
+<!-- Cashback By Category -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Cashback By Category</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-bill-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Bills</div>
+<div class="text-xs text-gray-400">Electricity, Water, etc.</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹1,245.75</div>
+<div class="text-xs text-green-400">+₹120 this month</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Shopping</div>
+<div class="text-xs text-gray-400">Online & Offline</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹2,150.25</div>
+<div class="text-xs text-green-400">+₹85 this month</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-card-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">EMI</div>
+<div class="text-xs text-gray-400">Loan & Card Payments</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹785.50</div>
+<div class="text-xs text-green-400">+₹25 this month</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-add-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Referrals</div>
+<div class="text-xs text-gray-400">Friends & Family</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹405.00</div>
+<div class="text-xs text-green-400">+₹20 this month</div>
+</div>
+</div>
+</div>
+<!-- Tier Status -->
+<div class="bg-[#1C1B3B] rounded-xl p-5 mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Tier Status</h2>
+<div class="flex items-center text-xs text-yellow-400">
+<i class="ri-vip-crown-fill ri-sm mr-1"></i>
+<span>Gold</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm text-gray-300">Silver</span>
+<span class="text-sm text-yellow-400">Gold</span>
+<span class="text-sm text-gray-300">Platinum</span>
+</div>
+<div class="tier-progress mb-4">
+<div class="tier-progress-bar" style="width: 65%"></div>
+</div>
+<div class="flex justify-between text-xs text-gray-400 mb-4">
+<span>0 points</span>
+<span>5,000 points</span>
+<span>10,000 points</span>
+</div>
+<div class="bg-white/5 rounded-lg p-4">
+<div class="text-sm font-medium mb-2">Your Benefits</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-2">
+<i class="ri-percent-line text-indigo-400"></i>
+</div>
+<span class="text-xs">5% Extra Cashback</span>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-2">
+<i class="ri-coupon-3-line text-purple-400"></i>
+</div>
+<span class="text-xs">Priority Coupons</span>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-2">
+<i class="ri-customer-service-2-line text-blue-400"></i>
+</div>
+<span class="text-xs">Priority Support</span>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
+<i class="ri-exchange-dollar-line text-green-400"></i>
+</div>
+<span class="text-xs">Faster Redemption</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Cashback Timeline -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Cashback Timeline</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-4">
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon</div>
+<div class="text-xs text-gray-400">Shopping</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+₹125.50</div>
+<div class="text-xs text-gray-400">June 28, 2025</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="text-xs text-gray-400">Order #AMZ8745219</div>
+<button class="bg-indigo-600/20 hover:bg-indigo-600/30 text-xs px-3 py-1.5 rounded-button">
+Claim
+</button>
+</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-bill-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Electricity Bill</div>
+<div class="text-xs text-gray-400">Bill Payment</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+₹45.75</div>
+<div class="text-xs text-gray-400">June 25, 2025</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="text-xs text-gray-400">Bill #EB7845219</div>
+<div class="text-xs text-indigo-300">Auto-claimed</div>
+</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-add-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Referral Bonus</div>
+<div class="text-xs text-gray-400">Priya Sharma joined</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-green-400">+₹100.00</div>
+<div class="text-xs text-gray-400">June 23, 2025</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="text-xs text-gray-400">Referral #RF4521987</div>
+<button class="bg-indigo-600/20 hover:bg-indigo-600/30 text-xs px-3 py-1.5 rounded-button">
+Claim
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Flash Deals & Boosters -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Flash Deals & Boosters</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="overflow-x-auto pb-2">
+<div class="flex space-x-4 w-max">
+<div class="bg-[#1C1B3B] rounded-xl p-4 w-64 relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-indigo-600 text-xs px-2 py-1 rounded-bl-lg">2d left</div>
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-bill-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Bill Booster</div>
+<div class="text-xs text-gray-400">Pay 3 bills, get extra</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3 mb-3">
+<div class="text-sm font-medium mb-1">Pay 3 bills = Extra ₹50</div>
+<div class="flex items-center text-xs text-gray-400">
+<span>Progress: 2/3</span>
+<div class="ml-2 flex-1 h-1 bg-white/10 rounded-full">
+<div class="h-full bg-indigo-600 rounded-full" style="width: 66%"></div>
+</div>
+</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Activate
+</button>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4 w-64 relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-purple-600 text-xs px-2 py-1 rounded-bl-lg">New</div>
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Shopping Spree</div>
+<div class="text-xs text-gray-400">Spend ₹5000, get 10% back</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3 mb-3">
+<div class="text-sm font-medium mb-1">10% Cashback up to ₹500</div>
+<div class="flex items-center text-xs text-gray-400">
+<span>Progress: ₹2,450/₹5,000</span>
+<div class="ml-2 flex-1 h-1 bg-white/10 rounded-full">
+<div class="h-full bg-purple-600 rounded-full" style="width: 49%"></div>
+</div>
+</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Activate
+</button>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4 w-64 relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-green-600 text-xs px-2 py-1 rounded-bl-lg">Popular</div>
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-calendar-check-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Streak Bonus</div>
+<div class="text-xs text-gray-400">Daily app usage rewards</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3 mb-3">
+<div class="text-sm font-medium mb-1">7-day streak = ₹100 bonus</div>
+<div class="flex items-center text-xs text-gray-400">
+<span>Progress: 5/7 days</span>
+<div class="ml-2 flex-1 h-1 bg-white/10 rounded-full">
+<div class="h-full bg-green-600 rounded-full" style="width: 71%"></div>
+</div>
+</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Check In
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Gamified Rewards -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Gamified Rewards</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div id="spinWheel" class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="text-sm font-medium mb-3 text-center">Spin & Win</div>
+<div class="relative w-full aspect-square mb-3">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-full h-full spin-wheel" id="wheelCanvas">
+<svg viewBox="0 0 100 100" class="w-full h-full">
+<circle cx="50" cy="50" r="45" fill="#1C1B3B" stroke="#4F46E5" stroke-width="1" />
+<path d="M50,50 L95,50 A45,45 0 0,0 72.5,12.5 Z" fill="#4F46E5" />
+<path d="M50,50 L72.5,12.5 A45,45 0 0,0 27.5,12.5 Z" fill="#9333EA" />
+<path d="M50,50 L27.5,12.5 A45,45 0 0,0 5,50 Z" fill="#4F46E5" />
+<path d="M50,50 L5,50 A45,45 0 0,0 27.5,87.5 Z" fill="#9333EA" />
+<path d="M50,50 L27.5,87.5 A45,45 0 0,0 72.5,87.5 Z" fill="#4F46E5" />
+<path d="M50,50 L72.5,87.5 A45,45 0 0,0 95,50 Z" fill="#9333EA" />
+<circle cx="50" cy="50" r="5" fill="white" />
+<text x="82" y="50" text-anchor="middle" fill="white" font-size="4">₹50</text>
+<text x="60" y="25" text-anchor="middle" fill="white" font-size="4">₹100</text>
+<text x="40" y="25" text-anchor="middle" fill="white" font-size="4">₹20</text>
+<text x="18" y="50" text-anchor="middle" fill="white" font-size="4">₹10</text>
+<text x="40" y="75" text-anchor="middle" fill="white" font-size="4">₹5</text>
+<text x="60" y="75" text-anchor="middle" fill="white" font-size="4">₹200</text>
+</svg>
+</div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-8 bg-yellow-400 clip-path-triangle"></div>
+</div>
+</div>
+<button id="spinButton" class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Spin Now
+</button>
+</div>
+<div id="slotMachine" class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="text-sm font-medium mb-3 text-center">Slot Machine</div>
+<div class="flex justify-center space-x-2 mb-3">
+<div class="w-16 h-20 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
+<div class="slot-reel" id="reel1">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-coupon-3-fill ri-2x text-yellow-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-coin-fill ri-2x text-yellow-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-gift-fill ri-2x text-purple-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-shopping-bag-fill ri-2x text-green-400"></i>
+</div>
+</div>
+</div>
+</div>
+<div class="w-16 h-20 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
+<div class="slot-reel" id="reel2">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-shopping-bag-fill ri-2x text-green-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-coupon-3-fill ri-2x text-yellow-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-coin-fill ri-2x text-yellow-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-gift-fill ri-2x text-purple-400"></i>
+</div>
+</div>
+</div>
+</div>
+<div class="w-16 h-20 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
+<div class="slot-reel" id="reel3">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-gift-fill ri-2x text-purple-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-shopping-bag-fill ri-2x text-green-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-coupon-3-fill ri-2x text-yellow-400"></i>
+</div>
+<div class="w-12 h-12 flex items-center justify-center">
+<i class="ri-coin-fill ri-2x text-yellow-400"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+<button id="slotButton" class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Pull Lever
+</button>
+</div>
+</div>
+</div>
+<!-- Scratch Cards -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Scratch Cards</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="scratch-card cursor-pointer" id="scratchCard1">
+<div class="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl">
+<div class="text-center">
+<i class="ri-fingerprint-line ri-2x mb-1"></i>
+<div class="text-sm">Scratch to reveal</div>
+</div>
+</div>
+<div class="scratch-overlay" id="scratchOverlay1">
+<div class="text-center">
+<i class="ri-hand-coin-line ri-2x mb-1"></i>
+<div class="text-sm">Scratch here!</div>
+</div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center rounded-xl opacity-0" id="scratchReward1">
+<div class="text-center">
+<div class="text-2xl font-bold text-yellow-400 mb-1">₹50</div>
+<div class="text-sm">Cashback!</div>
+</div>
+</div>
+</div>
+<div class="scratch-card cursor-pointer" id="scratchCard2">
+<div class="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl">
+<div class="text-center">
+<i class="ri-fingerprint-line ri-2x mb-1"></i>
+<div class="text-sm">Scratch to reveal</div>
+</div>
+</div>
+<div class="scratch-overlay" id="scratchOverlay2">
+<div class="text-center">
+<i class="ri-hand-coin-line ri-2x mb-1"></i>
+<div class="text-sm">Scratch here!</div>
+</div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center rounded-xl opacity-0" id="scratchReward2">
+<div class="text-center">
+<div class="text-2xl font-bold text-yellow-400 mb-1">10%</div>
+<div class="text-sm">Extra Cashback!</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Cashback Jar -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Cashback Jar</h2>
+<span class="text-sm text-yellow-400">₹1,245.50</span>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center justify-between mb-4">
+<div>
+<div class="text-sm font-medium">Your Jar is filling up!</div>
+<div class="text-xs text-gray-400">Auto-save your cashback</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input type="checkbox" id="jarToggle" class="sr-only peer" checked>
+<div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+</label>
+</div>
+<div class="flex items-center space-x-4">
+<div class="cashback-jar">
+<div class="jar-fill" style="height: 65%"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between text-sm mb-1">
+<span>Current</span>
+<span>₹1,245.50</span>
+</div>
+<div class="tier-progress mb-3">
+<div class="tier-progress-bar" style="width: 65%"></div>
+</div>
+<div class="flex justify-between text-xs text-gray-400 mb-4">
+<span>₹0</span>
+<span>Goal: ₹2,000</span>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Withdraw to Bank
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- AI-Based Offer Feed -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Personalized Offers</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="space-y-3">
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-shopping-bag-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon Shopping</div>
+<div class="text-xs text-gray-400">Based on your shopping history</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-yellow-400">10% Cashback</div>
+<div class="text-xs text-gray-400">Expires in 2 days</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3 mb-3">
+<div class="text-sm">Get 10% cashback on electronics purchases above ₹5,000</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Shop Now
+</button>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-restaurant-line ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Zomato</div>
+<div class="text-xs text-gray-400">Food delivery offer</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium text-yellow-400">15% Cashback</div>
+<div class="text-xs text-gray-400">Weekend special</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3 mb-3">
+<div class="text-sm">15% cashback on food orders above ₹500 this weekend</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button">
+Order Food
+</button>
+</div>
+</div>
+</div>
+<!-- Smart Redemption Advisor -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Smart Redemption Advisor</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-4">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-ai-generate ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">AI Recommendations</div>
+<div class="text-xs text-gray-400">Based on your spending patterns</div>
+</div>
+</div>
+<div class="space-y-3 mb-4">
+<div class="bg-white/5 rounded-lg p-3">
+<div class="text-sm font-medium mb-1">Best Value: Bill Payments</div>
+<div class="text-xs text-gray-400">Use your ₹500 cashback for your upcoming electricity bill for maximum value</div>
+<button class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button">
+Apply Now
+</button>
+</div>
+<div class="bg-white/5 rounded-lg p-3">
+<div class="text-sm font-medium mb-1">Save More: Bank Transfer</div>
+<div class="text-xs text-gray-400">Transfer ₹1,000 cashback to your savings account with 5% bonus</div>
+<button class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button">
+Transfer
+</button>
+</div>
+</div>
+<button class="w-full bg-white/10 hover:bg-white/15 text-sm py-2 rounded-button flex items-center justify-center">
+<i class="ri-refresh-line mr-1"></i>
+Refresh Recommendations
+</button>
+</div>
+</div>
+<!-- Rewards Store -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Rewards Store</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+<i class="ri-coupon-3-line ri-lg text-yellow-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Amazon Voucher</div>
+<div class="text-xs text-gray-400">E-commerce</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹500</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-gray-400">Points required: 2,500</span>
+<button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-button">
+Redeem
+</button>
+</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-movie-2-line ri-lg text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Movie Ticket</div>
+<div class="text-xs text-gray-400">Entertainment</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹300</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-gray-400">Points required: 1,500</span>
+<button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-button">
+Redeem
+</button>
+</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-flight-takeoff-line ri-lg text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Travel Discount</div>
+<div class="text-xs text-gray-400">MakeMyTrip</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹1,000</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-gray-400">Points required: 5,000</span>
+<button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-button">
+Redeem
+</button>
+</div>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-spotify-fill ri-lg text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Spotify Premium</div>
+<div class="text-xs text-gray-400">3-month subscription</div>
+</div>
+</div>
+<div class="text-lg font-medium mb-1">₹450</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-gray-400">Points required: 2,250</span>
+<button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-button">
+Redeem
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Referral Program -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Referral Program</h2>
+<button class="text-xs text-indigo-300">View All</button>
+</div>
+<div class="bg-[#1C1B3B] rounded-xl p-4">
+<div class="flex items-center mb-4">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-add-line ri-lg text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Invite & Earn</div>
+<div class="text-xs text-gray-400">Get ₹100 for each friend who joins</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="text-sm font-medium mb-2">Your Referral Code</div>
+<div class="flex items-center">
+<div class="flex-1 bg-white/10 rounded-lg py-2 px-3 text-sm font-mono">ABHISHEK100</div>
+<button class="ml-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded-button">
+<i class="ri-file-copy-line"></i>
+</button>
+</div>
+</div>
+<div class="flex justify-between mb-4">
+<div class="text-center">
+<div class="text-2xl font-bold">5</div>
+<div class="text-xs text-gray-400">Friends Invited</div>
+</div>
+<div class="text-center">
+<div class="text-2xl font-bold">3</div>
+<div class="text-xs text-gray-400">Signed Up</div>
+</div>
+<div class="text-center">
+<div class="text-2xl font-bold text-green-400">₹300</div>
+<div class="text-xs text-gray-400">Earned</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button flex items-center justify-center">
+<i class="ri-whatsapp-line mr-1"></i>
+WhatsApp
+</button>
+<button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button flex items-center justify-center">
+<i class="ri-share-line mr-1"></i>
+Share
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-[#1C1B3B]/90 backdrop-blur-md px-2 py-2 z-10">
+<div class="grid grid-cols-5 gap-1">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/38dd8703-bf56-4de2-b480-1332f0c36989" data-readdy="true" class="nav-item flex flex-col items-center py-1">
+<i class="ri-home-5-line ri-lg mb-1"></i>
+<span class="text-[10px]">Homi</span>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/122882b5-86f7-49b9-a828-a43382eceeed" data-readdy="true" class="nav-item flex flex-col items-center py-1">
+<i class="ri-file-list-3-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">EMI Hub</span>
+</a>
+<a href="pay.html" class="nav-item flex flex-col items-center py-1">
+<div class="w-14 h-14 rounded-full bg-[#4E43DA] flex items-center justify-center -mt-7 mb-1 shadow-lg shadow-[#4E43DA]/30">
+<i class="ri-qr-scan-line ri-xl"></i>
+</div>
+<span class="text-[10px]">Pay</span>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/46ae2a96-3400-4e95-8162-9462cca66ddf" data-readdy="true" class="nav-item flex flex-col items-center py-1">
+<i class="ri-bank-card-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">Accounts</span>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/260ece7a-39c0-4fdf-b6f8-f37579ca4cb8" data-readdy="true" class="nav-item active flex flex-col items-center py-1">
+<i class="ri-gift-line ri-lg mb-1"></i>
+<span class="text-[10px]">Rewards</span>
+</a>
+</div>
+</nav>
+<!-- Reward Claimed Dialog -->
+<div id="rewardClaimedDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="rewardClaimedContent">
+<div class="text-center mb-4">
+<div class="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+<i class="ri-check-line ri-3x text-indigo-400"></i>
+</div>
+<h3 class="text-xl font-semibold">Reward Claimed!</h3>
+<p class="text-sm text-indigo-300 mt-2">Your cashback has been added to your wallet</p>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4">
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm">Amount</span>
+<span class="text-lg font-semibold" id="claimedAmount">₹125.50</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-gray-400">Transaction ID</span>
+<span class="text-xs text-gray-400" id="transactionId">TXN78945612</span>
+</div>
+</div>
+<button id="closeRewardClaimed" class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+Done
+</button>
+</div>
+</div>
+<!-- Spin Result Dialog -->
+<div id="spinResultDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="spinResultContent">
+<div class="text-center mb-4">
+<div class="w-20 h-20 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-4">
+<i class="ri-trophy-line ri-3x text-yellow-400"></i>
+</div>
+<h3 class="text-xl font-semibold">Congratulations!</h3>
+<p class="text-sm text-indigo-300 mt-2">You won a reward</p>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4 text-center">
+<div class="text-3xl font-bold text-yellow-400 mb-2" id="spinRewardAmount">₹50</div>
+<div class="text-sm text-gray-400">Added to your cashback wallet</div>
+</div>
+<div class="flex space-x-3">
+<button id="spinAgain" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">
+Spin Again
+</button>
+<button id="claimSpinReward" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+Claim Reward
+</button>
+</div>
+</div>
+</div>
+<!-- Slot Result Dialog -->
+<div id="slotResultDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="slotResultContent">
+<div class="text-center mb-4">
+<div class="w-20 h-20 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
+<i class="ri-gift-2-line ri-3x text-purple-400"></i>
+</div>
+<h3 class="text-xl font-semibold">You Won!</h3>
+<p class="text-sm text-indigo-300 mt-2" id="slotResultText">You matched 3 symbols!</p>
+</div>
+<div class="bg-white/5 rounded-lg p-4 mb-4 text-center">
+<div class="text-3xl font-bold text-yellow-400 mb-2" id="slotRewardAmount">₹100</div>
+<div class="text-sm text-gray-400">Added to your cashback wallet</div>
+</div>
+<div class="flex space-x-3">
+<button id="playAgain" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">
+Play Again
+</button>
+<button id="claimSlotReward" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+Claim Reward
+</button>
+</div>
+</div>
+</div>
+<!-- Scripts -->
+<script id="particles-animation">
+document.addEventListener('DOMContentLoaded', function() {
+const particlesContainer = document.getElementById('particles');
+const particleCount = 15;
+for (let i = 0; i < particleCount; i++) {
+const particle = document.createElement('div');
+particle.classList.add('particle');
+// Random size between 3px and 8px
+const size = Math.random() * 5 + 3;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+// Random position
+particle.style.top = `${Math.random() * 100}%`;
+particle.style.left = `${Math.random() * 100}%`;
+// Random opacity
+particle.style.opacity = Math.random() * 0.3 + 0.1;
+// Random animation delay
+particle.style.animationDelay = `${Math.random() * 10}s`;
+particlesContainer.appendChild(particle);
+}
+});
+</script>
+<script id="navigation-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const currentPage = window.location.pathname.split('/').pop() || 'homi.html';
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item => {
+const href = item.getAttribute('href');
+if (href === currentPage) {
+item.classList.add('active');
+} else {
+item.classList.remove('active');
+}
+});
+});
+</script>
+<script id="reward-claim-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const claimButtons = document.querySelectorAll('button:not([id])');
+const rewardClaimedDialog = document.getElementById('rewardClaimedDialog');
+const rewardClaimedContent = document.getElementById('rewardClaimedContent');
+const closeRewardClaimed = document.getElementById('closeRewardClaimed');
+const claimedAmount = document.getElementById('claimedAmount');
+const transactionId = document.getElementById('transactionId');
+function showRewardClaimedDialog(amount) {
+claimedAmount.textContent = amount;
+transactionId.textContent = 'TXN' + Math.floor(Math.random() * 10000000);
+rewardClaimedDialog.classList.remove('hidden');
+setTimeout(() => {
+rewardClaimedContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideRewardClaimedDialog() {
+rewardClaimedContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+rewardClaimedDialog.classList.add('hidden');
+}, 300);
+}
+claimButtons.forEach(button => {
+if (button.textContent.trim() === 'Claim') {
+button.addEventListener('click', function() {
+const amount = this.closest('.bg-\\[\\#1C1B3B\\]').querySelector('.text-sm.font-medium.text-green-400').textContent;
+showRewardClaimedDialog(amount);
+});
+}
+});
+closeRewardClaimed.addEventListener('click', hideRewardClaimedDialog);
+rewardClaimedDialog.addEventListener('click', (e) => {
+if (e.target === rewardClaimedDialog) {
+hideRewardClaimedDialog();
+}
+});
+});
+</script>
+<script id="spin-wheel-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const spinButton = document.getElementById('spinButton');
+const wheelCanvas = document.getElementById('wheelCanvas');
+const spinResultDialog = document.getElementById('spinResultDialog');
+const spinResultContent = document.getElementById('spinResultContent');
+const spinRewardAmount = document.getElementById('spinRewardAmount');
+const spinAgain = document.getElementById('spinAgain');
+const claimSpinReward = document.getElementById('claimSpinReward');
+let canSpin = true;
+const rewards = ['₹10', '₹50', '₹100', '₹20', '₹5', '₹200'];
+function showSpinResultDialog(reward) {
+spinRewardAmount.textContent = reward;
+spinResultDialog.classList.remove('hidden');
+setTimeout(() => {
+spinResultContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideSpinResultDialog() {
+spinResultContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+spinResultDialog.classList.add('hidden');
+}, 300);
+}
+function spinWheel() {
+if (!canSpin) return;
+canSpin = false;
+spinButton.disabled = true;
+spinButton.classList.add('opacity-50');
+// Random number of rotations (3-5 full rotations)
+const rotations = 3 + Math.random() * 2;
+// Random reward index
+const rewardIndex = Math.floor(Math.random() * rewards.length);
+// Calculate final rotation angle
+// Each segment is 60 degrees (360 / 6)
+// We add a small offset to land in the middle of the segment
+const finalAngle = rotations * 360 + rewardIndex * 60 + 30;
+// Apply rotation
+wheelCanvas.style.transform = `rotate(${finalAngle}deg)`;
+// Show result after animation completes
+setTimeout(() => {
+showSpinResultDialog(rewards[rewardIndex]);
+canSpin = true;
+spinButton.disabled = false;
+spinButton.classList.remove('opacity-50');
+}, 5000);
+}
+spinButton.addEventListener('click', spinWheel);
+spinAgain.addEventListener('click', () => {
+hideSpinResultDialog();
+setTimeout(spinWheel, 500);
+});
+claimSpinReward.addEventListener('click', hideSpinResultDialog);
+spinResultDialog.addEventListener('click', (e) => {
+if (e.target === spinResultDialog) {
+hideSpinResultDialog();
+}
+});
+});
+</script>
+<script id="slot-machine-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const slotButton = document.getElementById('slotButton');
+const reel1 = document.getElementById('reel1');
+const reel2 = document.getElementById('reel2');
+const reel3 = document.getElementById('reel3');
+const slotResultDialog = document.getElementById('slotResultDialog');
+const slotResultContent = document.getElementById('slotResultContent');
+const slotResultText = document.getElementById('slotResultText');
+const slotRewardAmount = document.getElementById('slotRewardAmount');
+const playAgain = document.getElementById('playAgain');
+const claimSlotReward = document.getElementById('claimSlotReward');
+let canPlay = true;
+const symbols = ['coin', 'gift', 'coupon', 'shopping'];
+function showSlotResultDialog(matches, reward) {
+slotResultText.textContent = `You matched ${matches} symbols!`;
+slotRewardAmount.textContent = reward;
+slotResultDialog.classList.remove('hidden');
+setTimeout(() => {
+slotResultContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideSlotResultDialog() {
+slotResultContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+slotResultDialog.classList.add('hidden');
+}, 300);
+}
+function pullLever() {
+if (!canPlay) return;
+canPlay = false;
+slotButton.disabled = true;
+slotButton.classList.add('opacity-50');
+// Random positions for each reel
+const pos1 = Math.floor(Math.random() * 4);
+const pos2 = Math.floor(Math.random() * 4);
+const pos3 = Math.floor(Math.random() * 4);
+// Apply rotation
+reel1.style.transform = `translateY(-${pos1 * 48}px)`;
+setTimeout(() => {
+reel2.style.transform = `translateY(-${pos2 * 48}px)`;
+}, 300);
+setTimeout(() => {
+reel3.style.transform = `translateY(-${pos3 * 48}px)`;
+}, 600);
+// Determine matches and reward
+setTimeout(() => {
+let matches = 1;
+let reward = '₹10';
+if (pos1 === pos2 && pos2 === pos3) {
+matches = 3;
+reward = '₹200';
+} else if (pos1 === pos2 || pos2 === pos3 || pos1 === pos3) {
+matches = 2;
+reward = '₹50';
+}
+showSlotResultDialog(matches, reward);
+canPlay = true;
+slotButton.disabled = false;
+slotButton.classList.remove('opacity-50');
+}, 3000);
+}
+slotButton.addEventListener('click', pullLever);
+playAgain.addEventListener('click', () => {
+hideSlotResultDialog();
+setTimeout(pullLever, 500);
+});
+claimSlotReward.addEventListener('click', hideSlotResultDialog);
+slotResultDialog.addEventListener('click', (e) => {
+if (e.target === slotResultDialog) {
+hideSlotResultDialog();
+}
+});
+});
+</script>
+<script id="scratch-card-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const scratchCard1 = document.getElementById('scratchCard1');
+const scratchOverlay1 = document.getElementById('scratchOverlay1');
+const scratchReward1 = document.getElementById('scratchReward1');
+const scratchCard2 = document.getElementById('scratchCard2');
+const scratchOverlay2 = document.getElementById('scratchOverlay2');
+const scratchReward2 = document.getElementById('scratchReward2');
+function setupScratchCard(card, overlay, reward) {
+let isScratching = false;
+let scratchProgress = 0;
+card.addEventListener('mousedown', startScratching);
+card.addEventListener('touchstart', startScratching);
+card.addEventListener('mousemove', scratch);
+card.addEventListener('touchmove', scratch);
+card.addEventListener('mouseup', stopScratching);
+card.addEventListener('touchend', stopScratching);
+card.addEventListener('mouseleave', stopScratching);
+function startScratching(e) {
+e.preventDefault();
+isScratching = true;
+}
+function scratch(e) {
+e.preventDefault();
+if (!isScratching) return;
+scratchProgress += 5;
+if (scratchProgress > 100) scratchProgress = 100;
+overlay.style.opacity = 1 - (scratchProgress / 100);
+reward.style.opacity = scratchProgress / 100;
+if (scratchProgress >= 100) {
+completeScratching();
+}
+}
+function stopScratching() {
+isScratching = false;
+}
+function completeScratching() {
+overlay.style.opacity = 0;
+reward.style.opacity = 1;
+card.removeEventListener('mousedown', startScratching);
+card.removeEventListener('touchstart', startScratching);
+card.removeEventListener('mousemove', scratch);
+card.removeEventListener('touchmove', scratch);
+card.removeEventListener('mouseup', stopScratching);
+card.removeEventListener('touchend', stopScratching);
+card.removeEventListener('mouseleave', stopScratching);
+// Add a small bounce animation to the reward
+reward.style.animation = 'bounce 0.5s';
+}
+}
+setupScratchCard(scratchCard1, scratchOverlay1, scratchReward1);
+setupScratchCard(scratchCard2, scratchOverlay2, scratchReward2);
+});
+</script>
+<script id="cashback-jar-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const jarToggle = document.getElementById('jarToggle');
+const jarFill = document.querySelector('.jar-fill');
+jarToggle.addEventListener('change', function() {
+if (this.checked) {
+jarFill.style.height = '65%';
+} else {
+jarFill.style.height = '0%';
+}
+const status = this.checked ? 'enabled' : 'disabled';
+const bgColor = this.checked ? 'bg-green-500/90' : 'bg-red-500/90';
+const statusDiv = document.createElement('div');
+statusDiv.className = `fixed top-4 left-1/2 -translate-x-1/2 ${bgColor} text-white px-4 py-2 rounded-lg text-sm z-50 opacity-0 transition-opacity duration-300`;
+statusDiv.textContent = `Auto-save ${status}`;
+document.body.appendChild(statusDiv);
+// Fade in
+setTimeout(() => {
+statusDiv.classList.remove('opacity-0');
+}, 50);
+// Fade out and remove
+setTimeout(() => {
+statusDiv.classList.add('opacity-0');
+setTimeout(() => statusDiv.remove(), 300);
+}, 2700);
+});
+});
+</script>
+<script id="cashback-analytics">
+document.addEventListener('DOMContentLoaded', function() {
+// Initialize cashback by category chart
+const chartContainer = document.getElementById('cashbackChart');
+if (chartContainer) {
+const chart = echarts.init(chartContainer);
+const option = {
+backgroundColor: 'transparent',
+tooltip: {
+trigger: 'item',
+formatter: '{b}: {c} ({d}%)'
+},
+legend: {
+orient: 'vertical',
+right: 10,
+top: 'center',
+textStyle: {
+color: '#fff'
+}
+},
+series: [
+{
+type: 'pie',
+radius: ['40%', '70%'],
+avoidLabelOverlap: false,
+itemStyle: {
+borderRadius: 10,
+borderColor: '#1C1B3B',
+borderWidth: 2
+},
+label: {
+show: false
+},
+emphasis: {
+label: {
+show: true,
+fontSize: '14',
+fontWeight: 'bold'
+}
+},
+labelLine: {
+show: false
+},
+data: [
+{ value: 1245.75, name: 'Bills', itemStyle: { color: '#4F46E5' } },
+{ value: 2150.25, name: 'Shopping', itemStyle: { color: '#9333EA' } },
+{ value: 785.50, name: 'EMI', itemStyle: { color: '#3B82F6' } },
+{ value: 405.00, name: 'Referrals', itemStyle: { color: '#10B981' } }
+]
+}
+]
+};
+chart.setOption(option);
+window.addEventListener('resize', function() {
+chart.resize();
+});
+}
+});
+</script>
+</body>
+</html>

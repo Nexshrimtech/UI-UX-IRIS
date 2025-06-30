@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Recharge</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#9333EA'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f0f1a 100%);
+  min-height: 100vh;
+  color: white;
+}
+.operator-card.selected {
+  border-color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.1);
+}
+.plan-card.selected {
+  border-color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.1);
+}
+</style>
+</head>
+<body>
+<div class="min-h-screen pb-20">
+  <!-- Header -->
+  <header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+    <div class="flex items-center">
+      <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/38dd8703-bf56-4de2-b480-1332f0c36989" data-readdy="true" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 mr-2">
+        <i class="ri-arrow-left-line ri-lg"></i>
+      </a>
+      <h1 class="text-lg font-semibold">Mobile Recharge</h1>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-20 px-4 pb-20">
+    <!-- Mobile Number Input -->
+    <div class="bg-[#1C1B3B] rounded-xl p-5 mb-6">
+      <div class="text-sm text-gray-400 mb-2">Mobile Number</div>
+      <div class="flex items-center mb-4">
+        <div class="flex items-center bg-white/5 rounded-lg px-3 py-2.5 mr-2">
+          <span class="text-sm">+91</span>
+          <i class="ri-arrow-down-s-line ml-1"></i>
+        </div>
+        <div class="flex-1 relative">
+          <input type="tel" id="mobileNumber" class="w-full bg-white/5 rounded-lg px-3 py-2.5 text-sm border-none focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Enter mobile number" maxlength="10">
+          <button id="contactsButton" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="ri-contacts-line"></i>
+          </button>
+        </div>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <input type="checkbox" id="saveNumber" class="mr-2 opacity-0 absolute">
+          <div class="w-4 h-4 border border-gray-400 rounded flex items-center justify-center bg-transparent relative">
+            <i class="ri-check-line text-xs absolute opacity-0" id="checkIcon"></i>
+          </div>
+          <label for="saveNumber" class="text-xs text-gray-300 ml-2 cursor-pointer">Save this number</label>
+        </div>
+        <div id="operatorDisplay" class="text-xs text-gray-400 hidden">
+          <span class="operator-name"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operator Selection -->
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold mb-4">Select Operator</h2>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="operator-card cursor-pointer flex flex-col items-center bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center mb-2">
+            <i class="ri-signal-tower-line text-red-400 ri-lg"></i>
+          </div>
+          <span class="text-xs text-center">Airtel</span>
+        </div>
+        <div class="operator-card cursor-pointer flex flex-col items-center bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-2">
+            <i class="ri-signal-tower-line text-blue-400 ri-lg"></i>
+          </div>
+          <span class="text-xs text-center">Jio</span>
+        </div>
+        <div class="operator-card cursor-pointer flex flex-col items-center bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-2">
+            <i class="ri-signal-tower-line text-purple-400 ri-lg"></i>
+          </div>
+          <span class="text-xs text-center">Vi</span>
+        </div>
+        <div class="operator-card cursor-pointer flex flex-col items-center bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+            <i class="ri-signal-tower-line text-green-400 ri-lg"></i>
+          </div>
+          <span class="text-xs text-center">BSNL</span>
+        </div>
+        <div class="operator-card cursor-pointer flex flex-col items-center bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center mb-2">
+            <i class="ri-signal-tower-line text-yellow-400 ri-lg"></i>
+          </div>
+          <span class="text-xs text-center">Tata Play</span>
+        </div>
+        <div class="operator-card cursor-pointer flex flex-col items-center bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center mb-2">
+            <i class="ri-signal-tower-line text-orange-400 ri-lg"></i>
+          </div>
+          <span class="text-xs text-center">MTNL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recharge Type Toggle -->
+    <div class="mb-6">
+      <div class="flex bg-white/5 rounded-full p-1">
+        <button id="prepaidBtn" class="flex-1 py-2 px-4 rounded-full bg-primary text-white text-sm font-medium">Prepaid</button>
+        <button id="postpaidBtn" class="flex-1 py-2 px-4 rounded-full text-sm font-medium">Postpaid</button>
+      </div>
+    </div>
+
+    <!-- Prepaid Plans Section -->
+    <div id="prepaidSection" class="mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Recommended Plans</h2>
+        <button id="viewAllPlans" class="text-xs text-primary">View All</button>
+      </div>
+      
+      <div class="space-y-3">
+        <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex justify-between items-center mb-2">
+            <div class="text-lg font-semibold">₹239</div>
+            <div class="text-xs text-gray-400">Validity: 28 days</div>
+          </div>
+          <div class="text-sm mb-2">1.5GB/day + Unlimited Calls</div>
+          <div class="text-xs text-gray-400">Free Disney+ Hotstar Mobile</div>
+        </div>
+        
+        <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex justify-between items-center mb-2">
+            <div class="text-lg font-semibold">₹479</div>
+            <div class="text-xs text-gray-400">Validity: 56 days</div>
+          </div>
+          <div class="text-sm mb-2">1.5GB/day + Unlimited Calls</div>
+          <div class="text-xs text-gray-400">Free Amazon Prime Video Mobile</div>
+        </div>
+        
+        <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex justify-between items-center mb-2">
+            <div class="text-lg font-semibold">₹719</div>
+            <div class="text-xs text-gray-400">Validity: 84 days</div>
+          </div>
+          <div class="text-sm mb-2">2GB/day + Unlimited Calls</div>
+          <div class="text-xs text-gray-400">Free Netflix Mobile + Disney+ Hotstar</div>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <div class="text-sm mb-2">Enter Custom Amount</div>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">₹</span>
+          <input type="text" id="customAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border-none focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Enter amount">
+        </div>
+      </div>
+    </div>
+
+    <!-- Postpaid Section (Hidden by default) -->
+    <div id="postpaidSection" class="mb-6 hidden">
+      <div class="bg-white/5 rounded-xl p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+          <div class="text-sm text-gray-400">Bill Amount</div>
+          <div class="text-lg font-semibold">₹849.00</div>
+        </div>
+        <div class="flex justify-between items-center mb-3">
+          <div class="text-sm text-gray-400">Due Date</div>
+          <div class="text-sm">July 10, 2025</div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="text-sm text-gray-400">Bill Period</div>
+          <div class="text-sm">June 01 - June 30, 2025</div>
+        </div>
+      </div>
+      
+      <div class="bg-white/5 rounded-xl p-4">
+        <div class="text-sm mb-3">Bill Details</div>
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <div class="text-xs text-gray-400">Base Plan</div>
+            <div class="text-xs">₹699.00</div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-xs text-gray-400">International Roaming</div>
+            <div class="text-xs">₹99.00</div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-xs text-gray-400">Additional Data Pack</div>
+            <div class="text-xs">₹51.00</div>
+          </div>
+          <div class="border-t border-white/10 my-2"></div>
+          <div class="flex justify-between items-center">
+            <div class="text-xs font-medium">Total Amount</div>
+            <div class="text-xs font-medium">₹849.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Recharges -->
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold mb-4">Recent Recharges</h2>
+      <div class="overflow-x-auto">
+        <div class="flex space-x-4 pb-2">
+          <div class="bg-white/5 rounded-xl p-4 min-w-[200px]">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-sm font-medium">9876543210</div>
+              <div class="text-xs text-gray-400">Jio</div>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs text-gray-400">Amount</div>
+              <div class="text-sm">₹239.00</div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="text-xs text-gray-400">June 15, 2025</div>
+              <button class="text-xs text-primary">Recharge</button>
+            </div>
+          </div>
+          
+          <div class="bg-white/5 rounded-xl p-4 min-w-[200px]">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-sm font-medium">8765432109</div>
+              <div class="text-xs text-gray-400">Airtel</div>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs text-gray-400">Amount</div>
+              <div class="text-sm">₹479.00</div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="text-xs text-gray-400">June 01, 2025</div>
+              <button class="text-xs text-primary">Recharge</button>
+            </div>
+          </div>
+          
+          <div class="bg-white/5 rounded-xl p-4 min-w-[200px]">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-sm font-medium">7654321098</div>
+              <div class="text-xs text-gray-400">Vi</div>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs text-gray-400">Amount</div>
+              <div class="text-sm">₹719.00</div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="text-xs text-gray-400">May 20, 2025</div>
+              <button class="text-xs text-primary">Recharge</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Method Selection -->
+    <div class="mb-8">
+      <h2 class="text-lg font-semibold mb-4">Payment Method</h2>
+      <div class="space-y-3">
+        <div class="payment-method cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex items-center">
+            <div class="w-5 h-5 rounded-full border border-gray-400 flex items-center justify-center mr-3 relative">
+              <div class="w-3 h-3 rounded-full bg-primary absolute opacity-0"></div>
+            </div>
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+                <i class="ri-bank-card-line text-indigo-400"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium">Credit/Debit Card</div>
+                <div class="text-xs text-gray-400">Visa, Mastercard, RuPay</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="payment-method cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex items-center">
+            <div class="w-5 h-5 rounded-full border border-gray-400 flex items-center justify-center mr-3 relative">
+              <div class="w-3 h-3 rounded-full bg-primary absolute opacity-0"></div>
+            </div>
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                <i class="ri-bank-line text-blue-400"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium">Net Banking</div>
+                <div class="text-xs text-gray-400">All major banks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="payment-method cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex items-center">
+            <div class="w-5 h-5 rounded-full border border-gray-400 flex items-center justify-center mr-3 relative">
+              <div class="w-3 h-3 rounded-full bg-primary absolute opacity-0"></div>
+            </div>
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                <i class="ri-qr-code-line text-green-400"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium">UPI</div>
+                <div class="text-xs text-gray-400">Google Pay, PhonePe, Paytm</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="payment-method cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+          <div class="flex items-center">
+            <div class="w-5 h-5 rounded-full border border-gray-400 flex items-center justify-center mr-3 relative">
+              <div class="w-3 h-3 rounded-full bg-primary absolute opacity-0"></div>
+            </div>
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+                <i class="ri-wallet-3-line text-purple-400"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium">Wallet</div>
+                <div class="text-xs text-gray-400">IrisPay Balance: ₹12,458.90</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proceed Button -->
+    <button id="proceedBtn" class="w-full bg-primary hover:bg-indigo-700 text-white py-3.5 rounded-button font-medium">
+      Proceed to Recharge
+    </button>
+  </main>
+
+  <!-- Contacts Dialog -->
+  <div id="contactsDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+    <div id="contactsContent" class="absolute bottom-0 left-0 right-0 bg-[#1e1b4b] rounded-t-xl p-5 transform translate-y-full transition-transform duration-300">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Select Contact</h3>
+        <button id="closeContacts" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+          <i class="ri-close-line ri-lg"></i>
+        </button>
+      </div>
+      <div class="relative mb-4">
+        <input type="text" placeholder="Search contacts..." class="w-full bg-white/5 rounded-lg pl-9 pr-3 py-2.5 text-sm border-none focus:outline-none focus:ring-1 focus:ring-primary">
+        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div class="max-h-[300px] overflow-y-auto">
+        <div class="space-y-2">
+          <div class="contact-item flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+              <i class="ri-user-3-line text-blue-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">Aditya Sharma</div>
+              <div class="text-xs text-gray-400">9876543210</div>
+            </div>
+          </div>
+          <div class="contact-item flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+              <i class="ri-user-3-line text-purple-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">Priya Patel</div>
+              <div class="text-xs text-gray-400">8765432109</div>
+            </div>
+          </div>
+          <div class="contact-item flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+              <i class="ri-user-3-line text-green-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">Rahul Gupta</div>
+              <div class="text-xs text-gray-400">7654321098</div>
+            </div>
+          </div>
+          <div class="contact-item flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+              <i class="ri-user-3-line text-red-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">Neha Verma</div>
+              <div class="text-xs text-gray-400">9876123450</div>
+            </div>
+          </div>
+          <div class="contact-item flex items-center p-3 rounded-lg hover:bg-white/5 cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+              <i class="ri-user-3-line text-yellow-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">Vikram Singh</div>
+              <div class="text-xs text-gray-400">8123456789</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Plans Dialog -->
+  <div id="allPlansDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+    <div id="allPlansContent" class="absolute inset-0 bg-[#1e1b4b] transform translate-y-full transition-transform duration-300">
+      <div class="flex items-center p-4 border-b border-white/10">
+        <button id="closeAllPlans" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 mr-3">
+          <i class="ri-arrow-left-line ri-lg"></i>
+        </button>
+        <h3 class="text-lg font-semibold">All Plans</h3>
+      </div>
+      
+      <div class="p-4">
+        <div class="flex space-x-2 mb-4 overflow-x-auto">
+          <button class="bg-primary text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">All</button>
+          <button class="bg-white/5 px-4 py-2 rounded-full text-sm whitespace-nowrap">Truly Unlimited</button>
+          <button class="bg-white/5 px-4 py-2 rounded-full text-sm whitespace-nowrap">Data</button>
+          <button class="bg-white/5 px-4 py-2 rounded-full text-sm whitespace-nowrap">Talktime</button>
+          <button class="bg-white/5 px-4 py-2 rounded-full text-sm whitespace-nowrap">Entertainment</button>
+        </div>
+        
+        <div class="space-y-3 overflow-y-auto max-h-[calc(100vh-140px)]">
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹239</div>
+              <div class="text-xs text-gray-400">Validity: 28 days</div>
+            </div>
+            <div class="text-sm mb-2">1.5GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Free Disney+ Hotstar Mobile</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹299</div>
+              <div class="text-xs text-gray-400">Validity: 28 days</div>
+            </div>
+            <div class="text-sm mb-2">2GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Free Disney+ Hotstar Mobile</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹479</div>
+              <div class="text-xs text-gray-400">Validity: 56 days</div>
+            </div>
+            <div class="text-sm mb-2">1.5GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Free Amazon Prime Video Mobile</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹549</div>
+              <div class="text-xs text-gray-400">Validity: 56 days</div>
+            </div>
+            <div class="text-sm mb-2">2GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Free Amazon Prime Video Mobile</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹719</div>
+              <div class="text-xs text-gray-400">Validity: 84 days</div>
+            </div>
+            <div class="text-sm mb-2">2GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Free Netflix Mobile + Disney+ Hotstar</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹999</div>
+              <div class="text-xs text-gray-400">Validity: 84 days</div>
+            </div>
+            <div class="text-sm mb-2">3GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Free Netflix Mobile + Disney+ Hotstar + Amazon Prime</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹1499</div>
+              <div class="text-xs text-gray-400">Validity: 365 days</div>
+            </div>
+            <div class="text-sm mb-2">24GB total + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Annual Plan</div>
+          </div>
+          
+          <div class="plan-card cursor-pointer bg-white/5 rounded-xl p-4 border border-transparent">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">₹2999</div>
+              <div class="text-xs text-gray-400">Validity: 365 days</div>
+            </div>
+            <div class="text-sm mb-2">2GB/day + Unlimited Calls</div>
+            <div class="text-xs text-gray-400">Annual Plan with all OTT subscriptions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Dialog -->
+  <div id="summaryDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+    <div id="summaryContent" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[#1e1b4b] rounded-xl p-5 opacity-0 translate-y-4 transition-all duration-300">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Recharge Summary</h3>
+        <button id="closeSummary" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+          <i class="ri-close-line ri-lg"></i>
+        </button>
+      </div>
+      
+      <div class="bg-white/5 rounded-lg p-4 mb-4">
+        <div class="flex items-center mb-3">
+          <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+            <i class="ri-smartphone-line ri-lg text-blue-400"></i>
+          </div>
+          <div>
+            <div class="text-sm font-medium" id="summaryMobile">9876543210</div>
+            <div class="text-xs text-gray-400" id="summaryOperator">Jio</div>
+          </div>
+        </div>
+        <div class="text-sm text-gray-300" id="summaryPlan">₹239 - 1.5GB/day, 28 days validity</div>
+      </div>
+      
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-sm">Amount to Pay</span>
+        <span class="text-lg font-semibold" id="summaryAmount">₹239.00</span>
+      </div>
+      
+      <div class="flex space-x-3">
+        <button id="cancelSummary" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+        <button id="confirmPayment" class="flex-1 bg-primary hover:bg-indigo-700 text-sm py-2.5 rounded-button">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Dialog -->
+  <div id="successDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+    <div id="successContent" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[#1e1b4b] rounded-xl p-5 opacity-0 translate-y-4 transition-all duration-300">
+      <div class="flex flex-col items-center mb-4">
+        <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
+          <i class="ri-check-line ri-2x text-green-400"></i>
+        </div>
+        <h3 class="text-lg font-semibold">Recharge Successful!</h3>
+      </div>
+      
+      <div class="bg-white/5 rounded-lg p-4 mb-4">
+        <div class="flex justify-between items-center mb-2">
+          <div class="text-sm text-gray-400">Mobile Number</div>
+          <div class="text-sm font-medium" id="successMobile">9876543210</div>
+        </div>
+        <div class="flex justify-between items-center mb-2">
+          <div class="text-sm text-gray-400">Operator</div>
+          <div class="text-sm font-medium" id="successOperator">Jio</div>
+        </div>
+        <div class="flex justify-between items-center mb-2">
+          <div class="text-sm text-gray-400">Amount</div>
+          <div class="text-sm font-medium" id="successAmount">₹239.00</div>
+        </div>
+        <div class="flex justify-between items-center mb-2">
+          <div class="text-sm text-gray-400">Transaction ID</div>
+          <div class="text-sm font-medium">IRIS123456789</div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="text-sm text-gray-400">Date & Time</div>
+          <div class="text-sm font-medium">29 Jun 2025, 14:30</div>
+        </div>
+      </div>
+      
+      <div class="flex space-x-3 mb-4">
+        <button id="shareReceipt" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button flex items-center justify-center">
+          <i class="ri-share-line mr-2"></i>Share
+        </button>
+        <button id="downloadReceipt" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button flex items-center justify-center">
+          <i class="ri-download-2-line mr-2"></i>Download
+        </button>
+      </div>
+      
+      <button id="closeSuccess" class="w-full bg-primary hover:bg-indigo-700 text-sm py-2.5 rounded-button">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- Set Reminder Dialog -->
+  <div id="reminderDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+    <div id="reminderContent" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[#1e1b4b] rounded-xl p-5 opacity-0 translate-y-4 transition-all duration-300">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Set Recharge Reminder</h3>
+        <button id="closeReminder" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+          <i class="ri-close-line ri-lg"></i>
+        </button>
+      </div>
+      
+      <div class="text-sm text-gray-300 mb-4">
+        Get a reminder before your plan expires
+      </div>
+      
+      <div class="mb-4">
+        <div class="text-sm font-medium mb-2">Remind me</div>
+        <div class="space-y-2">
+          <div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+            <input type="radio" name="reminderTime" id="oneDay" class="mr-3" checked>
+            <div class="text-sm">1 day before expiry</div>
+          </div>
+          <div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+            <input type="radio" name="reminderTime" id="twoDays" class="mr-3">
+            <div class="text-sm">2 days before expiry</div>
+          </div>
+          <div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+            <input type="radio" name="reminderTime" id="threeDays" class="mr-3">
+            <div class="text-sm">3 days before expiry</div>
+          </div>
+          <div class="flex items-center bg-white/5 rounded-lg p-3 cursor-pointer">
+            <input type="radio" name="reminderTime" id="custom" class="mr-3">
+            <div class="text-sm">Custom</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex space-x-3">
+        <button id="cancelReminder" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+        <button id="setReminder" class="flex-1 bg-primary hover:bg-indigo-700 text-sm py-2.5 rounded-button">Set Reminder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="mobile-recharge-interactions">
+document.addEventListener('DOMContentLoaded', function() {
+  // Toggle save number checkbox
+  const saveNumber = document.getElementById('saveNumber');
+  const checkIcon = document.getElementById('checkIcon');
+  
+  saveNumber.addEventListener('change', function() {
+    if (this.checked) {
+      checkIcon.classList.remove('opacity-0');
+      checkIcon.classList.add('opacity-100');
+    } else {
+      checkIcon.classList.remove('opacity-100');
+      checkIcon.classList.add('opacity-0');
+    }
+  });
+
+  // Operator selection
+  const operatorCards = document.querySelectorAll('.operator-card');
+  const operatorDisplay = document.getElementById('operatorDisplay');
+  
+  operatorCards.forEach(card => {
+    card.addEventListener('click', function() {
+      // Remove selected class from all cards
+      operatorCards.forEach(c => c.classList.remove('selected'));
+      
+      // Add selected class to clicked card
+      this.classList.add('selected');
+      
+      // Update operator display
+      const operatorName = this.querySelector('span').textContent;
+      operatorDisplay.querySelector('.operator-name').textContent = operatorName;
+      operatorDisplay.classList.remove('hidden');
+    });
+  });
+
+  // Recharge type toggle
+  const prepaidBtn = document.getElementById('prepaidBtn');
+  const postpaidBtn = document.getElementById('postpaidBtn');
+  const prepaidSection = document.getElementById('prepaidSection');
+  const postpaidSection = document.getElementById('postpaidSection');
+  
+  prepaidBtn.addEventListener('click', function() {
+    prepaidBtn.classList.add('bg-primary', 'text-white');
+    postpaidBtn.classList.remove('bg-primary', 'text-white');
+    prepaidSection.classList.remove('hidden');
+    postpaidSection.classList.add('hidden');
+  });
+  
+  postpaidBtn.addEventListener('click', function() {
+    postpaidBtn.classList.add('bg-primary', 'text-white');
+    prepaidBtn.classList.remove('bg-primary', 'text-white');
+    postpaidSection.classList.remove('hidden');
+    prepaidSection.classList.add('hidden');
+  });
+
+  // Plan selection
+  const planCards = document.querySelectorAll('.plan-card');
+  
+  planCards.forEach(card => {
+    card.addEventListener('click', function() {
+      // Remove selected class from all cards
+      planCards.forEach(c => c.classList.remove('selected'));
+      
+      // Add selected class to clicked card
+      this.classList.add('selected');
+      
+      // Clear custom amount if a plan is selected
+      document.getElementById('customAmount').value = '';
+    });
+  });
+
+  // Custom amount input
+  const customAmount = document.getElementById('customAmount');
+  
+  customAmount.addEventListener('input', function() {
+    // Clear plan selection if custom amount is entered
+    planCards.forEach(card => card.classList.remove('selected'));
+    
+    // Format input to allow only numbers
+    this.value = this.value.replace(/[^\d]/g, '');
+  });
+
+  // Payment method selection
+  const paymentMethods = document.querySelectorAll('.payment-method');
+  
+  paymentMethods.forEach(method => {
+    method.addEventListener('click', function() {
+      // Remove selected class from all methods
+      paymentMethods.forEach(m => {
+        m.classList.remove('selected');
+        m.querySelector('.w-3').classList.add('opacity-0');
+      });
+      
+      // Add selected class to clicked method
+      this.classList.add('selected');
+      this.querySelector('.w-3').classList.remove('opacity-0');
+    });
+  });
+
+  // Contacts dialog
+  const contactsButton = document.getElementById('contactsButton');
+  const contactsDialog = document.getElementById('contactsDialog');
+  const contactsContent = document.getElementById('contactsContent');
+  const closeContacts = document.getElementById('closeContacts');
+  const contactItems = document.querySelectorAll('.contact-item');
+  const mobileNumberInput = document.getElementById('mobileNumber');
+  
+  function showContactsDialog() {
+    contactsDialog.classList.remove('hidden');
+    setTimeout(() => {
+      contactsContent.classList.remove('translate-y-full');
+    }, 50);
+  }
+  
+  function hideContactsDialog() {
+    contactsContent.classList.add('translate-y-full');
+    setTimeout(() => {
+      contactsDialog.classList.add('hidden');
+    }, 300);
+  }
+  
+  contactsButton.addEventListener('click', showContactsDialog);
+  closeContacts.addEventListener('click', hideContactsDialog);
+  
+  contactsDialog.addEventListener('click', (e) => {
+    if (e.target === contactsDialog) {
+      hideContactsDialog();
+    }
+  });
+  
+  contactItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const phoneNumber = this.querySelector('.text-xs.text-gray-400').textContent;
+      mobileNumberInput.value = phoneNumber;
+      hideContactsDialog();
+      
+      // Auto-detect operator (simplified example)
+      const operators = ['Jio', 'Airtel', 'Vi', 'BSNL'];
+      const randomOperator = operators[Math.floor(Math.random() * operators.length)];
+      
+      operatorDisplay.querySelector('.operator-name').textContent = randomOperator;
+      operatorDisplay.classList.remove('hidden');
+      
+      // Select the corresponding operator card
+      operatorCards.forEach(card => {
+        if (card.querySelector('span').textContent === randomOperator) {
+          card.click();
+        }
+      });
+    });
+  });
+
+  // All plans dialog
+  const viewAllPlans = document.getElementById('viewAllPlans');
+  const allPlansDialog = document.getElementById('allPlansDialog');
+  const allPlansContent = document.getElementById('allPlansContent');
+  const closeAllPlans = document.getElementById('closeAllPlans');
+  
+  function showAllPlansDialog() {
+    allPlansDialog.classList.remove('hidden');
+    setTimeout(() => {
+      allPlansContent.classList.remove('translate-y-full');
+    }, 50);
+  }
+  
+  function hideAllPlansDialog() {
+    allPlansContent.classList.add('translate-y-full');
+    setTimeout(() => {
+      allPlansDialog.classList.add('hidden');
+    }, 300);
+  }
+  
+  viewAllPlans.addEventListener('click', showAllPlansDialog);
+  closeAllPlans.addEventListener('click', hideAllPlansDialog);
+  
+  allPlansDialog.addEventListener('click', (e) => {
+    if (e.target === allPlansDialog) {
+      hideAllPlansDialog();
+    }
+  });
+  
+  // Plan selection in all plans dialog
+  const allPlanCards = allPlansContent.querySelectorAll('.plan-card');
+  
+  allPlanCards.forEach(card => {
+    card.addEventListener('click', function() {
+      // Remove selected class from all cards
+      allPlanCards.forEach(c => c.classList.remove('selected'));
+      
+      // Add selected class to clicked card
+      this.classList.add('selected');
+      
+      // Close dialog and update main view
+      hideAllPlansDialog();
+      
+      // Update the selected plan in the main view
+      const amount = this.querySelector('.text-lg.font-semibold').textContent;
+      const validity = this.querySelector('.text-xs.text-gray-400').textContent;
+      const benefits = this.querySelector('.text-sm.mb-2').textContent;
+      
+      // Find a plan card in the main view with the same amount and select it
+      planCards.forEach(mainCard => {
+        if (mainCard.querySelector('.text-lg.font-semibold').textContent === amount) {
+          mainCard.click();
+        }
+      });
+    });
+  });
+
+  // Summary dialog
+  const proceedBtn = document.getElementById('proceedBtn');
+  const summaryDialog = document.getElementById('summaryDialog');
+  const summaryContent = document.getElementById('summaryContent');
+  const closeSummary = document.getElementById('closeSummary');
+  const cancelSummary = document.getElementById('cancelSummary');
+  const confirmPayment = document.getElementById('confirmPayment');
+  
+  function showSummaryDialog() {
+    // Validate inputs
+    const mobileNumber = mobileNumberInput.value.trim();
+    if (!mobileNumber || mobileNumber.length !== 10) {
+      showToast('Please enter a valid 10-digit mobile number');
+      return;
+    }
+    
+    if (!document.querySelector('.operator-card.selected')) {
+      showToast('Please select an operator');
+      return;
+    }
+    
+    let amount = '';
+    let planDetails = '';
+    
+    if (prepaidSection.classList.contains('hidden')) {
+      // Postpaid
+      amount = '₹849.00';
+      planDetails = 'Postpaid Bill Payment';
+    } else {
+      // Prepaid
+      const selectedPlan = document.querySelector('.plan-card.selected');
+      const customAmountValue = customAmount.value.trim();
+      
+      if (!selectedPlan && !customAmountValue) {
+        showToast('Please select a plan or enter a custom amount');
+        return;
+      }
+      
+      if (selectedPlan) {
+        amount = selectedPlan.querySelector('.text-lg.font-semibold').textContent;
+        const validity = selectedPlan.querySelector('.text-xs.text-gray-400').textContent;
+        const benefits = selectedPlan.querySelector('.text-sm.mb-2').textContent;
+        planDetails = `${benefits}, ${validity.toLowerCase()}`;
+      } else {
+        amount = `₹${customAmountValue}.00`;
+        planDetails = 'Custom recharge amount';
+      }
+    }
+    
+    if (!document.querySelector('.payment-method.selected')) {
+      showToast('Please select a payment method');
+      return;
+    }
+    
+    // Update summary dialog
+    document.getElementById('summaryMobile').textContent = mobileNumber;
+    document.getElementById('summaryOperator').textContent = document.querySelector('.operator-card.selected span').textContent;
+    document.getElementById('summaryPlan').textContent = `${amount} - ${planDetails}`;
+    document.getElementById('summaryAmount').textContent = amount;
+    
+    // Show dialog
+    summaryDialog.classList.remove('hidden');
+    setTimeout(() => {
+      summaryContent.classList.remove('opacity-0', 'translate-y-4');
+    }, 50);
+  }
+  
+  function hideSummaryDialog() {
+    summaryContent.classList.add('opacity-0', 'translate-y-4');
+    setTimeout(() => {
+      summaryDialog.classList.add('hidden');
+    }, 300);
+  }
+  
+  proceedBtn.addEventListener('click', showSummaryDialog);
+  closeSummary.addEventListener('click', hideSummaryDialog);
+  cancelSummary.addEventListener('click', hideSummaryDialog);
+  
+  summaryDialog.addEventListener('click', (e) => {
+    if (e.target === summaryDialog) {
+      hideSummaryDialog();
+    }
+  });
+
+  // Success dialog
+  const successDialog = document.getElementById('successDialog');
+  const successContent = document.getElementById('successContent');
+  const closeSuccess = document.getElementById('closeSuccess');
+  const shareReceipt = document.getElementById('shareReceipt');
+  const downloadReceipt = document.getElementById('downloadReceipt');
+  
+  function showSuccessDialog() {
+    // Update success dialog
+    document.getElementById('successMobile').textContent = document.getElementById('summaryMobile').textContent;
+    document.getElementById('successOperator').textContent = document.getElementById('summaryOperator').textContent;
+    document.getElementById('successAmount').textContent = document.getElementById('summaryAmount').textContent;
+    
+    // Hide summary dialog
+    hideSummaryDialog();
+    
+    // Show success dialog
+    successDialog.classList.remove('hidden');
+    setTimeout(() => {
+      successContent.classList.remove('opacity-0', 'translate-y-4');
+    }, 50);
+  }
+  
+  function hideSuccessDialog() {
+    successContent.classList.add('opacity-0', 'translate-y-4');
+    setTimeout(() => {
+      successDialog.classList.add('hidden');
+    }, 300);
+  }
+  
+  confirmPayment.addEventListener('click', showSuccessDialog);
+  closeSuccess.addEventListener('click', hideSuccessDialog);
+  
+  successDialog.addEventListener('click', (e) => {
+    if (e.target === successDialog) {
+      hideSuccessDialog();
+    }
+  });
+  
+  shareReceipt.addEventListener('click', function() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Mobile Recharge Receipt',
+        text: `Mobile: ${document.getElementById('successMobile').textContent}\nOperator: ${document.getElementById('successOperator').textContent}\nAmount: ${document.getElementById('successAmount').textContent}\nTransaction ID: IRIS123456789\nDate: 29 Jun 2025, 14:30`,
+      }).catch(console.error);
+    } else {
+      showToast('Sharing not supported on this device');
+    }
+  });
+  
+  downloadReceipt.addEventListener('click', function() {
+    showToast('Receipt downloaded successfully');
+  });
+
+  // Reminder dialog
+  const reminderDialog = document.getElementById('reminderDialog');
+  const reminderContent = document.getElementById('reminderContent');
+  const closeReminder = document.getElementById('closeReminder');
+  const cancelReminder = document.getElementById('cancelReminder');
+  const setReminder = document.getElementById('setReminder');
+  
+  function showReminderDialog() {
+    reminderDialog.classList.remove('hidden');
+    setTimeout(() => {
+      reminderContent.classList.remove('opacity-0', 'translate-y-4');
+    }, 50);
+  }
+  
+  function hideReminderDialog() {
+    reminderContent.classList.add('opacity-0', 'translate-y-4');
+    setTimeout(() => {
+      reminderDialog.classList.add('hidden');
+    }, 300);
+  }
+  
+  closeSuccess.addEventListener('click', function() {
+    hideSuccessDialog();
+    showReminderDialog();
+  });
+  
+  closeReminder.addEventListener('click', hideReminderDialog);
+  cancelReminder.addEventListener('click', hideReminderDialog);
+  
+  setReminder.addEventListener('click', function() {
+    hideReminderDialog();
+    showToast('Recharge reminder set successfully');
+  });
+  
+  reminderDialog.addEventListener('click', (e) => {
+    if (e.target === reminderDialog) {
+      hideReminderDialog();
+    }
+  });
+
+  // Toast notification
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-primary/90 text-white px-4 py-2 rounded-lg text-sm z-50 opacity-0 transition-opacity duration-300';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Fade in
+    setTimeout(() => {
+      toast.classList.remove('opacity-0');
+    }, 50);
+    
+    // Fade out and remove
+    setTimeout(() => {
+      toast.classList.add('opacity-0');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // Initialize
+  // Select first operator by default
+  operatorCards[1].click();
+  
+  // Select first payment method by default
+  paymentMethods[3].click();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill Manager</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#5046e5',secondary:'#8a7bff'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #1a1a3a;
+color: #fff;
+font-family: 'Inter', sans-serif;
+}
+.gradient-card {
+background: linear-gradient(135deg, #2a2a5a 0%, #1a1a3a 100%);
+}
+.nav-gradient {
+background: linear-gradient(180deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+.tab-gradient {
+background: linear-gradient(0deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+</style>
+</head>
+<body class="bg-[#1a1a3a] text-white">
+<!-- Nav Bar -->
+<nav class="nav-gradient fixed w-full top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+<div class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center rounded-full bg-opacity-20 bg-white mr-2">
+<i class="ri-user-line text-white"></i>
+</div>
+<div>
+<p class="text-xs text-gray-300">Hi,</p>
+<p class="text-sm font-semibold">Abhishek</p>
+</div>
+</div>
+<div class="flex space-x-3">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+<i class="ri-message-2-line text-white"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+<i class="ri-notification-3-line text-white"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+<i class="ri-settings-3-line text-white"></i>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-20 pb-20 px-4">
+<!-- Balance Card -->
+<div class="gradient-card rounded-xl p-4 mb-6 shadow-lg">
+<div class="flex justify-between items-center mb-1">
+<p class="text-sm text-gray-300">Total Upcoming Dues</p>
+<span class="bg-yellow-500 text-xs px-2 py-0.5 rounded-full text-black font-medium">Premium</span>
+</div>
+<div class="flex items-baseline mb-1">
+<span class="text-2xl font-bold">₹12,458.90</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-xs text-gray-400">Due within next 30 days</p>
+<button class="text-xs text-primary flex items-center">
+View Details <i class="ri-arrow-right-s-line ml-1"></i>
+</button>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mb-1">
+<i class="ri-add-line text-primary ri-lg"></i>
+</div>
+<p class="text-xs">Add Bill</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mb-1">
+<i class="ri-money-dollar-circle-line text-primary ri-lg"></i>
+</div>
+<p class="text-xs">Pay Now</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary bg-opacity-20 mb-1">
+<i class="ri-exchange-line text-primary ri-lg"></i>
+</div>
+<p class="text-xs">Transfer</p>
+</div>
+</div>
+<!-- Upcoming Payments -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-3">
+<h2 class="text-lg font-semibold">Upcoming Payments</h2>
+<button class="text-xs text-primary">View All</button>
+</div>
+<div class="space-y-3">
+<div class="gradient-card rounded-xl p-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 bg-opacity-20 mr-3">
+<i class="ri-bank-card-line text-blue-400"></i>
+</div>
+<div>
+<p class="text-sm font-medium">HDFC Credit Card</p>
+<p class="text-xs text-gray-400">Due in 3 days</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-semibold">₹4,250.00</p>
+<button class="text-xs text-primary">Pay</button>
+</div>
+</div>
+<div class="gradient-card rounded-xl p-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mr-3">
+<i class="ri-netflix-line text-green-400"></i>
+</div>
+<div>
+<p class="text-sm font-medium">Netflix Subscription</p>
+<p class="text-xs text-gray-400">Due in 5 days</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-semibold">₹649.00</p>
+<button class="text-xs text-primary">Pay</button>
+</div>
+</div>
+<div class="gradient-card rounded-xl p-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-purple-500 bg-opacity-20 mr-3">
+<i class="ri-home-wifi-line text-purple-400"></i>
+</div>
+<div>
+<p class="text-sm font-medium">Airtel Broadband</p>
+<p class="text-xs text-gray-400">Due in 7 days</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-semibold">₹1,199.00</p>
+<button class="text-xs text-primary">Pay</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Spending Summary -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-3">
+<h2 class="text-lg font-semibold">Spending Summary</h2>
+<button class="text-xs text-primary">June 2025</button>
+</div>
+<div class="gradient-card rounded-xl p-4">
+<div id="spendingChart" class="w-full h-48"></div>
+</div>
+</div>
+<!-- Category Management -->
+<div class="mb-6">
+<h2 class="text-lg font-semibold mb-3">Manage Payments</h2>
+<div class="grid grid-cols-3 gap-3">
+<div class="gradient-card rounded-xl p-3 flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 bg-opacity-20 mb-1">
+<i class="ri-bank-card-line text-red-400 ri-lg"></i>
+</div>
+<p class="text-xs text-center">Credit Cards</p>
+<p class="text-xs text-primary">3 Active</p>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/5730e1fc-c09a-470e-8b23-2bc30f16d486" data-readdy="true" class="gradient-card rounded-xl p-3 flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 bg-opacity-20 mb-1">
+<i class="ri-money-dollar-circle-line text-blue-400 ri-lg"></i>
+</div>
+<p class="text-xs text-center">EMIs</p>
+<p class="text-xs text-primary">2 Active</p>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/819c3d11-9bcb-4420-be67-27167d719eb7" data-readdy="true" class="gradient-card rounded-xl p-3 flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mb-1">
+<i class="ri-repeat-line text-green-400 ri-lg"></i>
+</div>
+<p class="text-xs text-center">Subscriptions</p>
+<p class="text-xs text-primary">5 Active</p>
+</a>
+<div class="gradient-card rounded-xl p-3 flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-500 bg-opacity-20 mb-1">
+<i class="ri-shield-check-line text-yellow-400 ri-lg"></i>
+</div>
+<p class="text-xs text-center">Insurance</p>
+<p class="text-xs text-primary">2 Active</p>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/2b5a1726-454c-4050-b8fa-b71f92c55d83" data-readdy="true" class="gradient-card rounded-xl p-3 flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-purple-500 bg-opacity-20 mb-1">
+<i class="ri-lightbulb-line text-purple-400 ri-lg"></i>
+</div>
+<p class="text-xs text-center">Utilities</p>
+<p class="text-xs text-primary">4 Active</p>
+</a>
+<div class="gradient-card rounded-xl p-3 flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-pink-500 bg-opacity-20 mb-1">
+<i class="ri-pie-chart-2-line text-pink-400 ri-lg"></i>
+</div>
+<p class="text-xs text-center">Analytics</p>
+<p class="text-xs text-primary">View</p>
+</div>
+</div>
+</div>
+<!-- Smart Features -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-3">
+<h2 class="text-lg font-semibold">Smart Features</h2>
+</div>
+<div class="space-y-3">
+<div class="gradient-card rounded-xl p-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 bg-opacity-20 mr-3">
+<i class="ri-robot-line text-blue-400"></i>
+</div>
+<div>
+<p class="text-sm font-medium">AI Payment Insights</p>
+<p class="text-xs text-gray-400">Get spending recommendations</p>
+</div>
+</div>
+<div class="relative inline-block w-12 h-6 cursor-pointer">
+<input type="checkbox" id="ai-toggle" class="opacity-0 w-0 h-0">
+<span class="absolute top-0 left-0 right-0 bottom-0 bg-gray-600 rounded-full"></span>
+<span class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform"></span>
+</div>
+</div>
+<div class="gradient-card rounded-xl p-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mr-3">
+<i class="ri-calendar-check-line text-green-400"></i>
+</div>
+<div>
+<p class="text-sm font-medium">Calendar Sync</p>
+<p class="text-xs text-gray-400">Sync payment dates with calendar</p>
+</div>
+</div>
+<div class="relative inline-block w-12 h-6 cursor-pointer">
+<input type="checkbox" id="calendar-toggle" class="opacity-0 w-0 h-0" checked>
+<span class="absolute top-0 left-0 right-0 bottom-0 bg-primary rounded-full"></span>
+<span class="absolute top-1 left-7 bg-white w-4 h-4 rounded-full transition-transform"></span>
+</div>
+</div>
+<div class="gradient-card rounded-xl p-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-purple-500 bg-opacity-20 mr-3">
+<i class="ri-mail-line text-purple-400"></i>
+</div>
+<div>
+<p class="text-sm font-medium">Email Bill Fetch</p>
+<p class="text-xs text-gray-400">Auto-detect bills from email</p>
+</div>
+</div>
+<div class="relative inline-block w-12 h-6 cursor-pointer">
+<input type="checkbox" id="email-toggle" class="opacity-0 w-0 h-0" checked>
+<span class="absolute top-0 left-0 right-0 bottom-0 bg-primary rounded-full"></span>
+<span class="absolute top-1 left-7 bg-white w-4 h-4 rounded-full transition-transform"></span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-24 right-4 z-40">
+<button id="fabButton" class="w-14 h-14 flex items-center justify-center rounded-full bg-primary shadow-lg">
+<i class="ri-add-line text-white ri-xl"></i>
+</button>
+</div>
+<!-- Add Modal -->
+<div id="addModal" class="fixed inset-0 z-50 hidden">
+<div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+<div class="absolute bottom-0 left-0 right-0 gradient-card rounded-t-xl p-6 transform transition-transform duration-300 translate-y-full">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-semibold">Add New</h3>
+<button id="closeModal" class="w-8 h-8 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+<i class="ri-close-line text-white"></i>
+</button>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/e5aab9fe-efad-492d-8af2-88e4e5b4d530" data-readdy="true" class="flex items-center p-4 gradient-card rounded-xl">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 bg-opacity-20 mr-4">
+<i class="ri-bill-line text-blue-400 ri-lg"></i>
+</div>
+<div class="flex-1 text-left">
+<p class="font-medium">Add Bill</p>
+<p class="text-xs text-gray-400">Add regular or one-time bills</p>
+</div>
+<i class="ri-arrow-right-s-line text-gray-400"></i>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/819c3d11-9bcb-4420-be67-27167d719eb7" data-readdy="true" class="flex items-center p-4 gradient-card rounded-xl">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mr-4">
+<i class="ri-repeat-line text-green-400 ri-lg"></i>
+</div>
+<div class="flex-1 text-left">
+<p class="font-medium">Add Subscription</p>
+<p class="text-xs text-gray-400">Add recurring subscriptions</p>
+</div>
+<i class="ri-arrow-right-s-line text-gray-400"></i>
+</a>
+<button class="flex items-center p-4 gradient-card rounded-xl">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 bg-opacity-20 mr-4">
+<i class="ri-bank-card-line text-red-400 ri-lg"></i>
+</div>
+<div class="flex-1 text-left">
+<p class="font-medium">Add Credit Card</p>
+<p class="text-xs text-gray-400">Add credit card details</p>
+</div>
+<i class="ri-arrow-right-s-line text-gray-400"></i>
+</button>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/5730e1fc-c09a-470e-8b23-2bc30f16d486" data-readdy="true" class="flex items-center p-4 gradient-card rounded-xl">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-purple-500 bg-opacity-20 mr-4">
+<i class="ri-money-dollar-circle-line text-purple-400 ri-lg"></i>
+</div>
+<div class="flex-1 text-left">
+<p class="font-medium">Add EMI</p>
+<p class="text-xs text-gray-400">Add EMI payment details</p>
+</div>
+<i class="ri-arrow-right-s-line text-gray-400"></i>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/2b5a1726-454c-4050-b8fa-b71f92c55d83" data-readdy="true" class="flex items-center p-4 gradient-card rounded-xl">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-500 bg-opacity-20 mr-4">
+<i class="ri-lightbulb-line text-yellow-400 ri-lg"></i>
+</div>
+<div class="flex-1 text-left">
+<p class="font-medium">Add Utility</p>
+<p class="text-xs text-gray-400">Add utility bill details</p>
+</div>
+<i class="ri-arrow-right-s-line text-gray-400"></i>
+</a>
+</div>
+</div>
+</div>
+<!-- Tab Bar -->
+<div class="tab-gradient fixed w-full bottom-0 z-50 px-2 py-2 shadow-lg">
+<div class="grid grid-cols-5 gap-1">
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-home-5-line text-gray-400"></i>
+</div>
+<span class="text-xs text-gray-400">Home</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-file-list-3-line text-primary"></i>
+</div>
+<span class="text-xs text-primary">Bills</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center -mt-5">
+<i class="ri-bank-card-line text-white ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400 -mt-1">Pay</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-bank-card-line text-gray-400"></i>
+</div>
+<span class="text-xs text-gray-400">Cards</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-gift-line text-gray-400"></i>
+</div>
+<span class="text-xs text-gray-400">Rewards</span>
+</div>
+</div>
+</div>
+<!-- Scripts -->
+<script id="toggle-script">
+document.addEventListener('DOMContentLoaded', function() {
+const toggles = document.querySelectorAll('input[type="checkbox"]');
+toggles.forEach(toggle => {
+toggle.addEventListener('change', function() {
+const span = this.nextElementSibling.nextElementSibling;
+if (this.checked) {
+this.nextElementSibling.classList.remove('bg-gray-600');
+this.nextElementSibling.classList.add('bg-primary');
+span.style.transform = 'translateX(24px)';
+} else {
+this.nextElementSibling.classList.remove('bg-primary');
+this.nextElementSibling.classList.add('bg-gray-600');
+span.style.transform = 'translateX(0)';
+}
+});
+// Initialize toggle positions
+if (toggle.checked) {
+toggle.nextElementSibling.classList.add('bg-primary');
+toggle.nextElementSibling.nextElementSibling.style.transform = 'translateX(24px)';
+}
+});
+});
+</script>
+<script id="modal-script">
+document.addEventListener('DOMContentLoaded', function() {
+const fabButton = document.getElementById('fabButton');
+const addModal = document.getElementById('addModal');
+const closeModal = document.getElementById('closeModal');
+const modalContent = addModal.querySelector('.gradient-card');
+function showModal() {
+addModal.classList.remove('hidden');
+setTimeout(() => {
+modalContent.classList.remove('translate-y-full');
+}, 10);
+}
+function hideModal() {
+modalContent.classList.add('translate-y-full');
+setTimeout(() => {
+addModal.classList.add('hidden');
+}, 300);
+}
+fabButton.addEventListener('click', showModal);
+closeModal.addEventListener('click', hideModal);
+addModal.addEventListener('click', (e) => {
+if (e.target === addModal) {
+hideModal();
+}
+});
+});
+</script>
+<script id="chart-script">
+document.addEventListener('DOMContentLoaded', function() {
+const chartDom = document.getElementById('spendingChart');
+const myChart = echarts.init(chartDom);
+const option = {
+tooltip: {
+trigger: 'item'
+},
+legend: {
+top: '5%',
+left: 'center',
+textStyle: {
+color: '#fff'
+}
+},
+series: [
+{
+name: 'Spending',
+type: 'pie',
+radius: ['40%', '70%'],
+avoidLabelOverlap: false,
+itemStyle: {
+borderRadius: 10,
+borderColor: '#1a1a3a',
+borderWidth: 2
+},
+label: {
+show: false,
+position: 'center'
+},
+emphasis: {
+label: {
+show: true,
+fontSize: '14',
+fontWeight: 'bold',
+color: '#fff'
+}
+},
+labelLine: {
+show: false
+},
+data: [
+{ value: 4250, name: 'Credit Cards', itemStyle: { color: '#ff6384' } },
+{ value: 2500, name: 'EMIs', itemStyle: { color: '#36a2eb' } },
+{ value: 1800, name: 'Subscriptions', itemStyle: { color: '#4bc0c0' } },
+{ value: 2100, name: 'Insurance', itemStyle: { color: '#ffcd56' } },
+{ value: 1600, name: 'Utilities', itemStyle: { color: '#9966ff' } }
+]
+}
+]
+};
+myChart.setOption(option);
+// Resize chart when window resizes
+window.addEventListener('resize', function() {
+myChart.resize();
+});
+});
+</script>
+</body>
+</html>

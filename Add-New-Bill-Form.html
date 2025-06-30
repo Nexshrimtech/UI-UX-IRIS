@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Bill</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#5046e5',secondary:'#8a7bff'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  background-color: #1a1a3a;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+.gradient-card {
+  background: linear-gradient(135deg, #2a2a5a 0%, #1a1a3a 100%);
+}
+.nav-gradient {
+  background: linear-gradient(180deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+.tab-gradient {
+  background: linear-gradient(0deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
+</head>
+<body class="bg-[#1a1a3a] text-white">
+<!-- Nav Bar -->
+<nav class="nav-gradient fixed w-full top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+  <div class="flex items-center">
+    <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="w-8 h-8 flex items-center justify-center rounded-full bg-opacity-20 bg-white mr-2 cursor-pointer">
+      <i class="ri-arrow-left-s-line text-white"></i>
+    </a>
+    <h1 class="text-lg font-semibold">Add Bill</h1>
+  </div>
+  <div class="flex space-x-3">
+    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+      <i class="ri-question-line text-white"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-20 px-4">
+  <form id="addBillForm" class="space-y-6">
+    <!-- Bill Name -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <label for="billName" class="block text-sm font-medium text-gray-300 mb-1">Bill Name <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="ri-file-list-line text-gray-400"></i>
+        </div>
+        <input type="text" id="billName" name="billName" required class="w-full bg-[#2a2a5a] rounded-lg border-none pl-10 pr-3 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Enter bill name">
+      </div>
+    </div>
+
+    <!-- Amount -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <label for="amount" class="block text-sm font-medium text-gray-300 mb-1">Amount <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <span class="text-gray-400">₹</span>
+        </div>
+        <input type="number" id="amount" name="amount" required class="w-full bg-[#2a2a5a] rounded-lg border-none pl-10 pr-3 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="0.00" step="0.01" min="0">
+      </div>
+    </div>
+
+    <!-- Due Date -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <label for="dueDate" class="block text-sm font-medium text-gray-300 mb-1">Due Date <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="ri-calendar-line text-gray-400"></i>
+        </div>
+        <input type="date" id="dueDate" name="dueDate" required class="w-full bg-[#2a2a5a] rounded-lg border-none pl-10 pr-3 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none">
+      </div>
+    </div>
+
+    <!-- Category Selection -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <label class="block text-sm font-medium text-gray-300 mb-3">Category <span class="text-red-500">*</span></label>
+      <div class="grid grid-cols-3 gap-3" id="categoryGrid">
+        <div class="category-item cursor-pointer flex flex-col items-center p-3 rounded-xl bg-[#2a2a5a] bg-opacity-60" data-category="utilities">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 bg-opacity-20 mb-2">
+            <i class="ri-lightbulb-line text-blue-400 ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Utilities</p>
+        </div>
+        
+        <div class="category-item cursor-pointer flex flex-col items-center p-3 rounded-xl bg-[#2a2a5a] bg-opacity-60" data-category="creditcard">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 bg-opacity-20 mb-2">
+            <i class="ri-bank-card-line text-red-400 ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Credit Card</p>
+        </div>
+        
+        <div class="category-item cursor-pointer flex flex-col items-center p-3 rounded-xl bg-[#2a2a5a] bg-opacity-60" data-category="subscription">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mb-2">
+            <i class="ri-repeat-line text-green-400 ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Subscription</p>
+        </div>
+        
+        <div class="category-item cursor-pointer flex flex-col items-center p-3 rounded-xl bg-[#2a2a5a] bg-opacity-60" data-category="insurance">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-500 bg-opacity-20 mb-2">
+            <i class="ri-shield-check-line text-yellow-400 ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Insurance</p>
+        </div>
+        
+        <div class="category-item cursor-pointer flex flex-col items-center p-3 rounded-xl bg-[#2a2a5a] bg-opacity-60" data-category="rent">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-purple-500 bg-opacity-20 mb-2">
+            <i class="ri-home-line text-purple-400 ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Rent</p>
+        </div>
+        
+        <div class="category-item cursor-pointer flex flex-col items-center p-3 rounded-xl bg-[#2a2a5a] bg-opacity-60" data-category="other">
+          <div class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-500 bg-opacity-20 mb-2">
+            <i class="ri-more-2-fill text-gray-400 ri-lg"></i>
+          </div>
+          <p class="text-xs text-center">Other</p>
+        </div>
+      </div>
+      <input type="hidden" id="selectedCategory" name="category" required>
+    </div>
+
+    <!-- Payment Frequency -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <label class="block text-sm font-medium text-gray-300 mb-3">Payment Frequency</label>
+      <div class="bg-[#2a2a5a] rounded-full p-1 flex">
+        <button type="button" id="oneTimeBtn" class="flex-1 py-2 px-4 rounded-full bg-primary text-white text-sm font-medium">One-time</button>
+        <button type="button" id="recurringBtn" class="flex-1 py-2 px-4 rounded-full text-white text-sm font-medium">Recurring</button>
+      </div>
+      <input type="hidden" id="paymentFrequency" name="paymentFrequency" value="one-time">
+      
+      <!-- Recurring Options (Hidden by default) -->
+      <div id="recurringOptions" class="mt-4 hidden">
+        <label class="block text-sm font-medium text-gray-300 mb-2">Repeat Every</label>
+        <div class="flex space-x-3 mb-4">
+          <button type="button" class="frequency-option flex-1 py-2 px-3 bg-[#2a2a5a] rounded-lg text-sm" data-value="weekly">Weekly</button>
+          <button type="button" class="frequency-option flex-1 py-2 px-3 bg-primary rounded-lg text-sm" data-value="monthly">Monthly</button>
+          <button type="button" class="frequency-option flex-1 py-2 px-3 bg-[#2a2a5a] rounded-lg text-sm" data-value="yearly">Yearly</button>
+        </div>
+        <input type="hidden" id="repeatFrequency" name="repeatFrequency" value="monthly">
+        
+        <label for="endDate" class="block text-sm font-medium text-gray-300 mb-1">End Date (Optional)</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <i class="ri-calendar-line text-gray-400"></i>
+          </div>
+          <input type="date" id="endDate" name="endDate" class="w-full bg-[#2a2a5a] rounded-lg border-none pl-10 pr-3 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Reminder Settings -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <div class="flex justify-between items-center mb-3">
+        <label class="text-sm font-medium text-gray-300">Set Reminder</label>
+        <div class="relative inline-block w-12 h-6 cursor-pointer">
+          <input type="checkbox" id="reminder-toggle" class="opacity-0 w-0 h-0" checked>
+          <span class="absolute top-0 left-0 right-0 bottom-0 bg-primary rounded-full"></span>
+          <span class="absolute top-1 left-7 bg-white w-4 h-4 rounded-full transition-transform"></span>
+        </div>
+      </div>
+      
+      <div id="reminderOptions">
+        <label class="block text-sm font-medium text-gray-300 mb-1">Remind Me</label>
+        <div class="flex space-x-3 mb-4">
+          <button type="button" class="reminder-option flex-1 py-2 px-3 bg-[#2a2a5a] rounded-lg text-sm" data-value="same-day">Same day</button>
+          <button type="button" class="reminder-option flex-1 py-2 px-3 bg-primary rounded-lg text-sm" data-value="1-day">1 day before</button>
+          <button type="button" class="reminder-option flex-1 py-2 px-3 bg-[#2a2a5a] rounded-lg text-sm" data-value="3-days">3 days before</button>
+        </div>
+        <input type="hidden" id="reminderTime" name="reminderTime" value="1-day">
+        
+        <label for="reminderMessage" class="block text-sm font-medium text-gray-300 mb-1">Custom Message (Optional)</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <i class="ri-message-2-line text-gray-400"></i>
+          </div>
+          <input type="text" id="reminderMessage" name="reminderMessage" class="w-full bg-[#2a2a5a] rounded-lg border-none pl-10 pr-3 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Time to pay your bill!">
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="gradient-card rounded-xl p-4 shadow-lg">
+      <label for="notes" class="block text-sm font-medium text-gray-300 mb-1">Notes (Optional)</label>
+      <textarea id="notes" name="notes" rows="3" class="w-full bg-[#2a2a5a] rounded-lg border-none p-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Add any additional details here..."></textarea>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex space-x-4 pt-4">
+      <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex-1 py-3 px-4 bg-transparent border border-gray-500 rounded-button text-white text-center font-medium cursor-pointer">Cancel</a>
+      <button type="submit" class="flex-1 py-3 px-4 bg-primary rounded-button text-white text-center font-medium cursor-pointer">Save Bill</button>
+    </div>
+  </form>
+</main>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+  <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gradient-card rounded-xl p-6 w-5/6 max-w-md">
+    <div class="flex flex-col items-center text-center">
+      <div class="w-20 h-20 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mb-4">
+        <i class="ri-check-line text-green-400 ri-2x"></i>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">Bill Added Successfully!</h3>
+      <p class="text-gray-300 mb-6">Your bill has been added to your payment schedule.</p>
+      <div class="flex space-x-4 w-full">
+        <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex-1 py-3 px-4 bg-transparent border border-gray-500 rounded-button text-white text-center font-medium cursor-pointer">Go to Home</a>
+        <button id="addAnotherBtn" class="flex-1 py-3 px-4 bg-primary rounded-button text-white text-center font-medium cursor-pointer">Add Another</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-gradient fixed w-full bottom-0 z-50 px-2 py-2 shadow-lg">
+  <div class="grid grid-cols-5 gap-1">
+    <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-home-5-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Home</span>
+    </a>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-file-list-3-line text-primary"></i>
+      </div>
+      <span class="text-xs text-primary">Bills</span>
+    </div>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center -mt-5">
+        <i class="ri-bank-card-line text-white ri-lg"></i>
+      </div>
+      <span class="text-xs text-gray-400 -mt-1">Pay</span>
+    </div>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-bank-card-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Cards</span>
+    </div>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-gift-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Rewards</span>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script id="toggle-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const reminderToggle = document.getElementById('reminder-toggle');
+  const reminderOptions = document.getElementById('reminderOptions');
+  
+  reminderToggle.addEventListener('change', function() {
+    const span = this.nextElementSibling.nextElementSibling;
+    if (this.checked) {
+      this.nextElementSibling.classList.remove('bg-gray-600');
+      this.nextElementSibling.classList.add('bg-primary');
+      span.style.transform = 'translateX(24px)';
+      reminderOptions.classList.remove('hidden');
+    } else {
+      this.nextElementSibling.classList.remove('bg-primary');
+      this.nextElementSibling.classList.add('bg-gray-600');
+      span.style.transform = 'translateX(0)';
+      reminderOptions.classList.add('hidden');
+    }
+  });
+  
+  // Initialize toggle position
+  if (reminderToggle.checked) {
+    reminderToggle.nextElementSibling.classList.add('bg-primary');
+    reminderToggle.nextElementSibling.nextElementSibling.style.transform = 'translateX(24px)';
+  }
+});
+</script>
+
+<script id="category-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const categoryItems = document.querySelectorAll('.category-item');
+  const selectedCategoryInput = document.getElementById('selectedCategory');
+  
+  categoryItems.forEach(item => {
+    item.addEventListener('click', function() {
+      // Remove active class from all items
+      categoryItems.forEach(cat => {
+        cat.classList.remove('bg-primary', 'bg-opacity-20');
+        cat.classList.add('bg-[#2a2a5a]', 'bg-opacity-60');
+      });
+      
+      // Add active class to selected item
+      this.classList.remove('bg-[#2a2a5a]', 'bg-opacity-60');
+      this.classList.add('bg-primary', 'bg-opacity-20');
+      
+      // Update hidden input value
+      selectedCategoryInput.value = this.getAttribute('data-category');
+    });
+  });
+  
+  // Set default category
+  categoryItems[0].click();
+});
+</script>
+
+<script id="payment-frequency-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const oneTimeBtn = document.getElementById('oneTimeBtn');
+  const recurringBtn = document.getElementById('recurringBtn');
+  const paymentFrequencyInput = document.getElementById('paymentFrequency');
+  const recurringOptions = document.getElementById('recurringOptions');
+  const frequencyOptions = document.querySelectorAll('.frequency-option');
+  const repeatFrequencyInput = document.getElementById('repeatFrequency');
+  
+  oneTimeBtn.addEventListener('click', function() {
+    oneTimeBtn.classList.add('bg-primary');
+    recurringBtn.classList.remove('bg-primary');
+    paymentFrequencyInput.value = 'one-time';
+    recurringOptions.classList.add('hidden');
+  });
+  
+  recurringBtn.addEventListener('click', function() {
+    recurringBtn.classList.add('bg-primary');
+    oneTimeBtn.classList.remove('bg-primary');
+    paymentFrequencyInput.value = 'recurring';
+    recurringOptions.classList.remove('hidden');
+  });
+  
+  frequencyOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      frequencyOptions.forEach(opt => {
+        opt.classList.remove('bg-primary');
+        opt.classList.add('bg-[#2a2a5a]');
+      });
+      
+      this.classList.remove('bg-[#2a2a5a]');
+      this.classList.add('bg-primary');
+      
+      repeatFrequencyInput.value = this.getAttribute('data-value');
+    });
+  });
+});
+</script>
+
+<script id="reminder-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const reminderOptions = document.querySelectorAll('.reminder-option');
+  const reminderTimeInput = document.getElementById('reminderTime');
+  
+  reminderOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      reminderOptions.forEach(opt => {
+        opt.classList.remove('bg-primary');
+        opt.classList.add('bg-[#2a2a5a]');
+      });
+      
+      this.classList.remove('bg-[#2a2a5a]');
+      this.classList.add('bg-primary');
+      
+      reminderTimeInput.value = this.getAttribute('data-value');
+    });
+  });
+});
+</script>
+
+<script id="form-submission-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const addBillForm = document.getElementById('addBillForm');
+  const successModal = document.getElementById('successModal');
+  const addAnotherBtn = document.getElementById('addAnotherBtn');
+  
+  addBillForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Form validation
+    const billName = document.getElementById('billName').value;
+    const amount = document.getElementById('amount').value;
+    const dueDate = document.getElementById('dueDate').value;
+    const category = document.getElementById('selectedCategory').value;
+    
+    if (!billName || !amount || !dueDate || !category) {
+      // Show validation errors
+      if (!billName) highlightError('billName');
+      if (!amount) highlightError('amount');
+      if (!dueDate) highlightError('dueDate');
+      if (!category) {
+        document.querySelector('.category-item').classList.add('border', 'border-red-500');
+      }
+      return;
+    }
+    
+    // Show success modal
+    successModal.classList.remove('hidden');
+  });
+  
+  addAnotherBtn.addEventListener('click', function() {
+    // Reset form
+    addBillForm.reset();
+    
+    // Reset category selection
+    document.querySelectorAll('.category-item').forEach(item => {
+      item.classList.remove('bg-primary', 'bg-opacity-20');
+      item.classList.add('bg-[#2a2a5a]', 'bg-opacity-60');
+    });
+    document.querySelector('.category-item').classList.add('bg-primary', 'bg-opacity-20');
+    document.querySelector('.category-item').classList.remove('bg-[#2a2a5a]', 'bg-opacity-60');
+    document.getElementById('selectedCategory').value = document.querySelector('.category-item').getAttribute('data-category');
+    
+    // Reset payment frequency
+    document.getElementById('oneTimeBtn').classList.add('bg-primary');
+    document.getElementById('recurringBtn').classList.remove('bg-primary');
+    document.getElementById('paymentFrequency').value = 'one-time';
+    document.getElementById('recurringOptions').classList.add('hidden');
+    
+    // Reset reminder options
+    document.querySelectorAll('.reminder-option').forEach((opt, index) => {
+      if (index === 1) {
+        opt.classList.add('bg-primary');
+        opt.classList.remove('bg-[#2a2a5a]');
+      } else {
+        opt.classList.remove('bg-primary');
+        opt.classList.add('bg-[#2a2a5a]');
+      }
+    });
+    
+    // Hide success modal
+    successModal.classList.add('hidden');
+  });
+  
+  function highlightError(fieldId) {
+    const field = document.getElementById(fieldId);
+    field.classList.add('ring-2', 'ring-red-500');
+    
+    field.addEventListener('input', function() {
+      field.classList.remove('ring-2', 'ring-red-500');
+    }, { once: true });
+  }
+  
+  // Set today's date as the default due date
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1;
+  let dd = today.getDate();
+  
+  if (dd < 10) dd = '0' + dd;
+  if (mm < 10) mm = '0' + mm;
+  
+  const formattedToday = yyyy + '-' + mm + '-' + dd;
+  document.getElementById('dueDate').value = formattedToday;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Utility</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#5046e5',secondary:'#8a7bff'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  background-color: #1a1a3a;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+.gradient-card {
+  background: linear-gradient(135deg, #2a2a5a 0%, #1a1a3a 100%);
+}
+.nav-gradient {
+  background: linear-gradient(180deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+.tab-gradient {
+  background: linear-gradient(0deg, #1a1a3a 0%, #1a1a3a 100%);
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
+</head>
+<body class="bg-[#1a1a3a] text-white">
+<!-- Nav Bar -->
+<nav class="nav-gradient fixed w-full top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+  <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex items-center">
+    <div class="w-8 h-8 flex items-center justify-center rounded-full bg-opacity-20 bg-white mr-2">
+      <i class="ri-arrow-left-s-line text-white"></i>
+    </div>
+    <span class="text-sm font-medium">Back</span>
+  </a>
+  <div class="flex space-x-3">
+    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#2a2a5a]">
+      <i class="ri-question-line text-white"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-20 px-4">
+  <h1 class="text-2xl font-bold mb-6">Add Utility</h1>
+  
+  <form id="utilityForm" class="space-y-5">
+    <!-- Utility Type -->
+    <div class="space-y-2">
+      <label for="utilityType" class="block text-sm font-medium text-gray-300">Utility Type <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <select id="utilityType" name="utilityType" required class="gradient-card w-full px-4 py-3 rounded-lg text-white bg-transparent appearance-none border-none focus:outline-none focus:ring-2 focus:ring-primary">
+          <option value="" disabled selected class="bg-[#1a1a3a]">Select utility type</option>
+          <option value="electricity" class="bg-[#1a1a3a]">Electricity</option>
+          <option value="water" class="bg-[#1a1a3a]">Water</option>
+          <option value="gas" class="bg-[#1a1a3a]">Gas</option>
+          <option value="internet" class="bg-[#1a1a3a]">Internet</option>
+          <option value="cable" class="bg-[#1a1a3a]">Cable TV</option>
+          <option value="phone" class="bg-[#1a1a3a]">Phone</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+          <i class="ri-arrow-down-s-line text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Provider Name -->
+    <div class="space-y-2">
+      <label for="providerName" class="block text-sm font-medium text-gray-300">Provider Name <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="ri-building-line text-gray-400"></i>
+        </div>
+        <input type="text" id="providerName" name="providerName" required placeholder="Enter provider name" class="gradient-card w-full pl-10 pr-4 py-3 rounded-lg text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary">
+      </div>
+    </div>
+    
+    <!-- Account Number -->
+    <div class="space-y-2">
+      <label for="accountNumber" class="block text-sm font-medium text-gray-300">Account Number <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="ri-file-list-3-line text-gray-400"></i>
+        </div>
+        <input type="text" id="accountNumber" name="accountNumber" required placeholder="Enter account number" class="gradient-card w-full pl-10 pr-4 py-3 rounded-lg text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary">
+      </div>
+    </div>
+    
+    <!-- Billing Amount -->
+    <div class="space-y-2">
+      <label for="billingAmount" class="block text-sm font-medium text-gray-300">Billing Amount <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="ri-money-rupee-circle-line text-gray-400"></i>
+        </div>
+        <input type="number" id="billingAmount" name="billingAmount" required placeholder="0.00" step="0.01" min="0" class="gradient-card w-full pl-10 pr-4 py-3 rounded-lg text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary">
+      </div>
+      <p class="text-xs text-gray-400">Enter the amount in Indian Rupees (₹)</p>
+    </div>
+    
+    <!-- Due Date -->
+    <div class="space-y-2">
+      <label for="dueDate" class="block text-sm font-medium text-gray-300">Due Date <span class="text-red-500">*</span></label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="ri-calendar-line text-gray-400"></i>
+        </div>
+        <input type="date" id="dueDate" name="dueDate" required class="gradient-card w-full pl-10 pr-4 py-3 rounded-lg text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary">
+      </div>
+    </div>
+    
+    <!-- Payment Frequency -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Payment Frequency <span class="text-red-500">*</span></label>
+      <div class="flex space-x-4">
+        <div class="flex items-center">
+          <input type="radio" id="monthly" name="frequency" value="monthly" checked class="opacity-0 absolute h-6 w-6">
+          <div class="gradient-card w-6 h-6 flex items-center justify-center rounded-full mr-2 border border-gray-500">
+            <div id="monthlyDot" class="w-3 h-3 rounded-full bg-primary"></div>
+          </div>
+          <label for="monthly" class="text-sm cursor-pointer">Monthly</label>
+        </div>
+        <div class="flex items-center">
+          <input type="radio" id="quarterly" name="frequency" value="quarterly" class="opacity-0 absolute h-6 w-6">
+          <div class="gradient-card w-6 h-6 flex items-center justify-center rounded-full mr-2 border border-gray-500">
+            <div id="quarterlyDot" class="w-3 h-3 rounded-full bg-primary hidden"></div>
+          </div>
+          <label for="quarterly" class="text-sm cursor-pointer">Quarterly</label>
+        </div>
+        <div class="flex items-center">
+          <input type="radio" id="yearly" name="frequency" value="yearly" class="opacity-0 absolute h-6 w-6">
+          <div class="gradient-card w-6 h-6 flex items-center justify-center rounded-full mr-2 border border-gray-500">
+            <div id="yearlyDot" class="w-3 h-3 rounded-full bg-primary hidden"></div>
+          </div>
+          <label for="yearly" class="text-sm cursor-pointer">Yearly</label>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Reminder Settings -->
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <label class="text-sm font-medium text-gray-300">Enable Reminders</label>
+        <div class="relative inline-block w-12 h-6 cursor-pointer">
+          <input type="checkbox" id="reminder-toggle" class="opacity-0 w-0 h-0" checked>
+          <span class="absolute top-0 left-0 right-0 bottom-0 bg-primary rounded-full"></span>
+          <span class="absolute top-1 left-7 bg-white w-4 h-4 rounded-full transition-transform"></span>
+        </div>
+      </div>
+      
+      <div id="reminderOptions" class="pl-4 border-l-2 border-primary space-y-3">
+        <div class="space-y-2">
+          <label for="reminderDays" class="block text-sm font-medium text-gray-300">Remind me before</label>
+          <div class="relative">
+            <select id="reminderDays" name="reminderDays" class="gradient-card w-full px-4 py-3 rounded-lg text-white bg-transparent appearance-none border-none focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="1" class="bg-[#1a1a3a]">1 day before</option>
+              <option value="3" selected class="bg-[#1a1a3a]">3 days before</option>
+              <option value="5" class="bg-[#1a1a3a]">5 days before</option>
+              <option value="7" class="bg-[#1a1a3a]">7 days before</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+              <i class="ri-arrow-down-s-line text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-300">Notification Method</label>
+          <div class="flex flex-wrap gap-3">
+            <div class="flex items-center">
+              <input type="checkbox" id="notifyApp" name="notifyApp" checked class="opacity-0 absolute h-5 w-5">
+              <div class="gradient-card w-5 h-5 flex items-center justify-center rounded-sm mr-2 border border-gray-500">
+                <i id="notifyAppCheck" class="ri-check-line text-primary text-xs"></i>
+              </div>
+              <label for="notifyApp" class="text-sm cursor-pointer">App</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="notifyEmail" name="notifyEmail" checked class="opacity-0 absolute h-5 w-5">
+              <div class="gradient-card w-5 h-5 flex items-center justify-center rounded-sm mr-2 border border-gray-500">
+                <i id="notifyEmailCheck" class="ri-check-line text-primary text-xs"></i>
+              </div>
+              <label for="notifyEmail" class="text-sm cursor-pointer">Email</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="notifySMS" name="notifySMS" class="opacity-0 absolute h-5 w-5">
+              <div class="gradient-card w-5 h-5 flex items-center justify-center rounded-sm mr-2 border border-gray-500">
+                <i id="notifySMSCheck" class="ri-check-line text-primary text-xs hidden"></i>
+              </div>
+              <label for="notifySMS" class="text-sm cursor-pointer">SMS</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Auto-pay Option -->
+    <div class="space-y-2">
+      <div class="flex justify-between items-center">
+        <div>
+          <label class="text-sm font-medium text-gray-300">Enable Auto-pay</label>
+          <p class="text-xs text-gray-400">Automatically pay this bill when due</p>
+        </div>
+        <div class="relative inline-block w-12 h-6 cursor-pointer">
+          <input type="checkbox" id="autopay-toggle" class="opacity-0 w-0 h-0">
+          <span class="absolute top-0 left-0 right-0 bottom-0 bg-gray-600 rounded-full"></span>
+          <span class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform"></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Notes -->
+    <div class="space-y-2">
+      <label for="notes" class="block text-sm font-medium text-gray-300">Notes (Optional)</label>
+      <textarea id="notes" name="notes" rows="3" placeholder="Add any additional information" class="gradient-card w-full px-4 py-3 rounded-lg text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex space-x-4 pt-4">
+      <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex-1 py-3 px-6 rounded-button border border-gray-500 text-white font-medium text-center cursor-pointer">Cancel</a>
+      <button type="submit" class="flex-1 py-3 px-6 bg-primary rounded-button text-white font-medium cursor-pointer !rounded-button">Save</button>
+    </div>
+  </form>
+</main>
+
+<!-- Tab Bar -->
+<div class="tab-gradient fixed w-full bottom-0 z-50 px-2 py-2 shadow-lg">
+  <div class="grid grid-cols-5 gap-1">
+    <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-home-5-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Home</span>
+    </a>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-file-list-3-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Bills</span>
+    </div>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center -mt-5">
+        <i class="ri-bank-card-line text-white ri-lg"></i>
+      </div>
+      <span class="text-xs text-gray-400 -mt-1">Pay</span>
+    </div>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-bank-card-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Cards</span>
+    </div>
+    <div class="flex flex-col items-center cursor-pointer">
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-gift-line text-gray-400"></i>
+      </div>
+      <span class="text-xs text-gray-400">Rewards</span>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+  <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gradient-card rounded-xl p-6 w-[90%] max-w-md">
+    <div class="flex flex-col items-center text-center">
+      <div class="w-20 h-20 flex items-center justify-center rounded-full bg-green-500 bg-opacity-20 mb-4">
+        <i class="ri-check-line text-green-400 ri-2x"></i>
+      </div>
+      <h3 class="text-xl font-bold mb-2">Utility Added Successfully</h3>
+      <p class="text-gray-300 mb-6">Your utility bill has been added to your account.</p>
+      <div class="flex space-x-4 w-full">
+        <a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/03510234-8d76-434b-9813-f91ca3b315fc" data-readdy="true" class="flex-1 py-3 px-6 bg-primary rounded-button text-white font-medium text-center cursor-pointer !rounded-button">Go to Home</a>
+        <button id="addAnother" class="flex-1 py-3 px-6 border border-gray-500 rounded-button text-white font-medium cursor-pointer !rounded-button">Add Another</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script id="toggle-script">
+document.addEventListener('DOMContentLoaded', function() {
+  // Reminder toggle
+  const reminderToggle = document.getElementById('reminder-toggle');
+  const reminderOptions = document.getElementById('reminderOptions');
+  
+  reminderToggle.addEventListener('change', function() {
+    const span = this.nextElementSibling.nextElementSibling;
+    if (this.checked) {
+      this.nextElementSibling.classList.remove('bg-gray-600');
+      this.nextElementSibling.classList.add('bg-primary');
+      span.style.transform = 'translateX(24px)';
+      reminderOptions.classList.remove('hidden');
+    } else {
+      this.nextElementSibling.classList.remove('bg-primary');
+      this.nextElementSibling.classList.add('bg-gray-600');
+      span.style.transform = 'translateX(0)';
+      reminderOptions.classList.add('hidden');
+    }
+  });
+  
+  // Auto-pay toggle
+  const autopayToggle = document.getElementById('autopay-toggle');
+  autopayToggle.addEventListener('change', function() {
+    const span = this.nextElementSibling.nextElementSibling;
+    if (this.checked) {
+      this.nextElementSibling.classList.remove('bg-gray-600');
+      this.nextElementSibling.classList.add('bg-primary');
+      span.style.transform = 'translateX(24px)';
+    } else {
+      this.nextElementSibling.classList.remove('bg-primary');
+      this.nextElementSibling.classList.add('bg-gray-600');
+      span.style.transform = 'translateX(0)';
+    }
+  });
+});
+</script>
+
+<script id="checkbox-script">
+document.addEventListener('DOMContentLoaded', function() {
+  // App notification checkbox
+  const notifyApp = document.getElementById('notifyApp');
+  const notifyAppCheck = document.getElementById('notifyAppCheck');
+  
+  notifyApp.addEventListener('change', function() {
+    if (this.checked) {
+      notifyAppCheck.classList.remove('hidden');
+    } else {
+      notifyAppCheck.classList.add('hidden');
+    }
+  });
+  
+  // Email notification checkbox
+  const notifyEmail = document.getElementById('notifyEmail');
+  const notifyEmailCheck = document.getElementById('notifyEmailCheck');
+  
+  notifyEmail.addEventListener('change', function() {
+    if (this.checked) {
+      notifyEmailCheck.classList.remove('hidden');
+    } else {
+      notifyEmailCheck.classList.add('hidden');
+    }
+  });
+  
+  // SMS notification checkbox
+  const notifySMS = document.getElementById('notifySMS');
+  const notifySMSCheck = document.getElementById('notifySMSCheck');
+  
+  notifySMS.addEventListener('change', function() {
+    if (this.checked) {
+      notifySMSCheck.classList.remove('hidden');
+    } else {
+      notifySMSCheck.classList.add('hidden');
+    }
+  });
+});
+</script>
+
+<script id="radio-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const monthly = document.getElementById('monthly');
+  const quarterly = document.getElementById('quarterly');
+  const yearly = document.getElementById('yearly');
+  
+  const monthlyDot = document.getElementById('monthlyDot');
+  const quarterlyDot = document.getElementById('quarterlyDot');
+  const yearlyDot = document.getElementById('yearlyDot');
+  
+  monthly.addEventListener('change', function() {
+    if (this.checked) {
+      monthlyDot.classList.remove('hidden');
+      quarterlyDot.classList.add('hidden');
+      yearlyDot.classList.add('hidden');
+    }
+  });
+  
+  quarterly.addEventListener('change', function() {
+    if (this.checked) {
+      monthlyDot.classList.add('hidden');
+      quarterlyDot.classList.remove('hidden');
+      yearlyDot.classList.add('hidden');
+    }
+  });
+  
+  yearly.addEventListener('change', function() {
+    if (this.checked) {
+      monthlyDot.classList.add('hidden');
+      quarterlyDot.classList.add('hidden');
+      yearlyDot.classList.remove('hidden');
+    }
+  });
+});
+</script>
+
+<script id="form-script">
+document.addEventListener('DOMContentLoaded', function() {
+  const utilityForm = document.getElementById('utilityForm');
+  const successModal = document.getElementById('successModal');
+  const addAnother = document.getElementById('addAnother');
+  
+  // Set default due date to today
+  const today = new Date();
+  const formattedDate = today.toISOString().substring(0, 10);
+  document.getElementById('dueDate').value = formattedDate;
+  
+  utilityForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Form validation
+    const utilityType = document.getElementById('utilityType').value;
+    const providerName = document.getElementById('providerName').value;
+    const accountNumber = document.getElementById('accountNumber').value;
+    const billingAmount = document.getElementById('billingAmount').value;
+    const dueDate = document.getElementById('dueDate').value;
+    
+    if (!utilityType || !providerName || !accountNumber || !billingAmount || !dueDate) {
+      // Show validation error
+      return;
+    }
+    
+    // Show success modal
+    successModal.classList.remove('hidden');
+  });
+  
+  addAnother.addEventListener('click', function() {
+    // Hide success modal
+    successModal.classList.add('hidden');
+    
+    // Reset form
+    utilityForm.reset();
+    
+    // Set default values
+    document.getElementById('dueDate').value = formattedDate;
+    document.getElementById('monthlyDot').classList.remove('hidden');
+    document.getElementById('quarterlyDot').classList.add('hidden');
+    document.getElementById('yearlyDot').classList.add('hidden');
+    
+    // Reset toggles
+    document.getElementById('reminder-toggle').checked = true;
+    document.getElementById('reminder-toggle').nextElementSibling.classList.add('bg-primary');
+    document.getElementById('reminder-toggle').nextElementSibling.classList.remove('bg-gray-600');
+    document.getElementById('reminder-toggle').nextElementSibling.nextElementSibling.style.transform = 'translateX(24px)';
+    
+    document.getElementById('autopay-toggle').checked = false;
+    document.getElementById('autopay-toggle').nextElementSibling.classList.remove('bg-primary');
+    document.getElementById('autopay-toggle').nextElementSibling.classList.add('bg-gray-600');
+    document.getElementById('autopay-toggle').nextElementSibling.nextElementSibling.style.transform = 'translateX(0)';
+    
+    // Reset checkboxes
+    document.getElementById('notifyApp').checked = true;
+    document.getElementById('notifyAppCheck').classList.remove('hidden');
+    
+    document.getElementById('notifyEmail').checked = true;
+    document.getElementById('notifyEmailCheck').classList.remove('hidden');
+    
+    document.getElementById('notifySMS').checked = false;
+    document.getElementById('notifySMSCheck').classList.add('hidden');
+  });
+});
+</script>
+</body>
+</html>

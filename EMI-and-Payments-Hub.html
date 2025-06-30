@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMI & Payments</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#9333EA'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #1e1b4b 0%, #0f0f1a 100%);
+min-height: 100vh;
+color: white;
+}
+.glow {
+box-shadow: 0 0 15px rgba(79, 70, 229, 0.6);
+transition: all 0.3s ease;
+}
+.glow-gold {
+box-shadow: 0 0 15px rgba(234, 179, 8, 0.6);
+}
+.glow-button {
+transition: all 0.2s ease;
+}
+.glow-button:active {
+transform: scale(0.97);
+}
+.action-button {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(5px);
+transition: all 0.3s ease;
+}
+.action-button:hover {
+background: rgba(255, 255, 255, 0.15);
+transform: translateY(-2px);
+}
+.action-button:active {
+transform: translateY(0);
+}
+.carousel-card {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(5px);
+transition: all 0.3s ease;
+}
+.carousel-card:hover {
+transform: translateY(-2px);
+}
+.nav-item {
+transition: all 0.3s ease;
+}
+.nav-item.active {
+color: #4F46E5;
+text-shadow: 0 0 10px rgba(79, 70, 229, 0.6);
+}
+.nav-item.active i {
+filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.6));
+}
+.particles {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: -1;
+}
+.particle {
+position: absolute;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.1);
+animation: float 15s infinite ease-in-out;
+}
+@keyframes float {
+0%, 100% {
+transform: translateY(0) translateX(0);
+}
+25% {
+transform: translateY(-20px) translateX(10px);
+}
+50% {
+transform: translateY(-10px) translateX(-15px);
+}
+75% {
+transform: translateY(15px) translateX(5px);
+}
+}
+.iris-wave {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 300px;
+height: 300px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0) 70%);
+z-index: -1;
+animation: pulse 8s infinite ease-in-out;
+}
+@keyframes pulse {
+0%, 100% {
+transform: translate(-50%, -50%) scale(1);
+opacity: 0.3;
+}
+50% {
+transform: translate(-50%, -50%) scale(1.5);
+opacity: 0.1;
+}
+}
+.animate-shake {
+animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes shake {
+10%, 90% { transform: translate3d(-1px, 0, 0); }
+20%, 80% { transform: translate3d(2px, 0, 0); }
+30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+</style>
+</head>
+<body class="relative">
+<!-- Background Effects -->
+<div class="particles" id="particles"></div>
+<div class="iris-wave"></div>
+<div class="iris-wave" style="animation-delay: 2s; width: 400px; height: 400px;"></div>
+<div class="iris-wave" style="animation-delay: 4s; width: 500px; height: 500px;"></div>
+<!-- Main Content -->
+<div class="min-h-screen pb-20">
+<!-- Header -->
+<header class="fixed w-full top-0 z-10 bg-gradient-to-b from-[#1e1b4b] to-transparent pt-4 pb-2 px-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<button id="backButton" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 mr-2">
+<i class="ri-arrow-left-line"></i>
+</button>
+<div>
+<div class="text-lg font-medium">EMI & Payments</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<div id="notificationButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-notification-3-line ri-lg"></i>
+</div>
+<div id="settingsButton" class="w-10 h-10 flex items-center justify-center bg-opacity-20 bg-white rounded-full cursor-pointer">
+<i class="ri-settings-3-line ri-lg"></i>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-20 px-4 pb-20">
+<!-- Quick Services Grid -->
+<div class="grid grid-cols-4 gap-3 mb-6">
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-smartphone-line ri-lg text-blue-400"></i>
+</div>
+<span class="text-[10px] text-center">Mobile Recharge</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-tv-2-line ri-lg text-purple-400"></i>
+</div>
+<span class="text-[10px] text-center">DTH</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-lightbulb-line ri-lg text-yellow-400"></i>
+</div>
+<span class="text-[10px] text-center">Electricity</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-wifi-line ri-lg text-green-400"></i>
+</div>
+<span class="text-[10px] text-center">Broadband</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-train-line ri-lg text-orange-400"></i>
+</div>
+<span class="text-[10px] text-center">Train Tickets</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-plane-line ri-lg text-sky-400"></i>
+</div>
+<span class="text-[10px] text-center">Flights</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-bus-line ri-lg text-teal-400"></i>
+</div>
+<span class="text-[10px] text-center">Bus</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-movie-2-line ri-lg text-pink-400"></i>
+</div>
+<span class="text-[10px] text-center">Movies</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-gas-station-line ri-lg text-red-400"></i>
+</div>
+<span class="text-[10px] text-center">FASTag</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-water-flash-line ri-lg text-cyan-400"></i>
+</div>
+<span class="text-[10px] text-center">Water Bill</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-bank-line ri-lg text-indigo-400"></i>
+</div>
+<span class="text-[10px] text-center">Education</span>
+</div>
+<div class="flex flex-col items-center cursor-pointer">
+<div class="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center mb-1">
+<i class="ri-subway-line ri-lg text-violet-400"></i>
+</div>
+<span class="text-[10px] text-center">Metro Card</span>
+</div>
+</div>
+<!-- Tab Navigation -->
+<div class="flex space-x-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4">
+<button class="tab-button active whitespace-nowrap px-4 py-2 rounded-full bg-indigo-600 text-sm" data-tab="emi">
+EMI Management
+</button>
+<button class="tab-button whitespace-nowrap px-4 py-2 rounded-full bg-white/5 text-sm" data-tab="subscriptions">
+Subscriptions
+</button>
+<button class="tab-button whitespace-nowrap px-4 py-2 rounded-full bg-white/5 text-sm" data-tab="insurance">
+Insurance
+</button>
+<button class="tab-button whitespace-nowrap px-4 py-2 rounded-full bg-white/5 text-sm" data-tab="wallet">
+Wallet
+</button>
+</div>
+<!-- Tab Content -->
+<div class="tab-content">
+<!-- EMI Management Section -->
+<section id="emi-tab" class="tab-pane active">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">EMI Management</h2>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<!-- EMI Overview Card -->
+<div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4 mb-4 border border-indigo-500/20">
+<div class="flex justify-between items-center mb-3">
+<div>
+<div class="text-sm text-gray-300">Total EMI Amount</div>
+<div class="text-2xl font-bold">₹27,850</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-sm text-gray-300">Due This Month</div>
+<div class="text-xl font-bold text-yellow-400">₹8,450</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 mb-2">
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">Paid</div>
+<div class="text-sm font-medium text-green-400">₹12,400</div>
+</div>
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">Upcoming</div>
+<div class="text-sm font-medium text-yellow-400">₹8,450</div>
+</div>
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">Missed</div>
+<div class="text-sm font-medium text-red-400">₹7,000</div>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-calculator-line mr-1"></i>Calculate Early Payment
+</button>
+</div>
+</div>
+<!-- Active EMIs -->
+<div class="space-y-4">
+<!-- EMI Card 1 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="text-sm font-medium">iPhone 15 Pro</div>
+<div class="text-xs text-gray-400">HDFC Bank</div>
+</div>
+<div class="px-2 py-1 bg-yellow-500/20 rounded-full">
+<span class="text-xs text-yellow-400">Upcoming</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2 text-xs text-gray-400">
+<div>EMI Amount: <span class="text-white">₹5,499/mo</span></div>
+<div>Interest: <span class="text-white">9.5%</span></div>
+</div>
+<div class="flex justify-between items-center mb-3 text-xs text-gray-400">
+<div>Tenure: <span class="text-white">12 of 24 months</span></div>
+<div>Due on: <span class="text-yellow-400">July 05, 2025</span></div>
+</div>
+<div class="bg-white/10 rounded-lg h-2 mb-3">
+<div class="bg-indigo-600 h-full rounded-lg" style="width: 50%"></div>
+</div>
+<div class="flex justify-between">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-list-3-line mr-1"></i>Statement
+</button>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+Pay EMI
+</button>
+</div>
+</div>
+<!-- EMI Card 2 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="text-sm font-medium">Home Loan</div>
+<div class="text-xs text-gray-400">SBI Bank</div>
+</div>
+<div class="px-2 py-1 bg-red-500/20 rounded-full">
+<span class="text-xs text-red-400">Missed</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2 text-xs text-gray-400">
+<div>EMI Amount: <span class="text-white">₹18,750/mo</span></div>
+<div>Interest: <span class="text-white">7.2%</span></div>
+</div>
+<div class="flex justify-between items-center mb-3 text-xs text-gray-400">
+<div>Tenure: <span class="text-white">24 of 180 months</span></div>
+<div>Due on: <span class="text-red-400">June 25, 2025</span></div>
+</div>
+<div class="bg-white/10 rounded-lg h-2 mb-3">
+<div class="bg-indigo-600 h-full rounded-lg" style="width: 13%"></div>
+</div>
+<div class="flex justify-between">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-list-3-line mr-1"></i>Statement
+</button>
+<button class="bg-red-600 hover:bg-red-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+Pay Now + Penalty
+</button>
+</div>
+</div>
+<!-- EMI Card 3 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="text-sm font-medium">Laptop</div>
+<div class="text-xs text-gray-400">ICICI Bank</div>
+</div>
+<div class="px-2 py-1 bg-green-500/20 rounded-full">
+<span class="text-xs text-green-400">Paid</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2 text-xs text-gray-400">
+<div>EMI Amount: <span class="text-white">₹3,599/mo</span></div>
+<div>Interest: <span class="text-white">8.5%</span></div>
+</div>
+<div class="flex justify-between items-center mb-3 text-xs text-gray-400">
+<div>Tenure: <span class="text-white">6 of 12 months</span></div>
+<div>Next due: <span class="text-green-400">July 15, 2025</span></div>
+</div>
+<div class="bg-white/10 rounded-lg h-2 mb-3">
+<div class="bg-indigo-600 h-full rounded-lg" style="width: 50%"></div>
+</div>
+<div class="flex justify-between">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-list-3-line mr-1"></i>Statement
+</button>
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-calendar-line mr-1"></i>Next Payment
+</button>
+</div>
+</div>
+</div>
+<!-- Smart EMI Advisor -->
+<div class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-xl p-4 mt-4 border border-blue-500/20">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-lightbulb-flash-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Smart Prepay Advisor</div>
+<div class="text-xs text-gray-400">Save on interest payments</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3 mb-3">
+<div class="text-sm mb-2">Prepaying your Home Loan could save you <span class="text-green-400 font-medium">₹3.2 Lakhs</span> in interest</div>
+<div class="text-xs text-gray-400">Based on current interest rates and your payment history</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button cursor-pointer">
+View Prepayment Options
+</button>
+</div>
+<!-- Risk Alert -->
+<div class="bg-gradient-to-r from-red-900/30 to-orange-900/30 rounded-xl p-4 mt-4 border border-red-500/20">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-alert-line text-red-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Risk Alert</div>
+<div class="text-xs text-gray-400">Potential cash shortage detected</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-sm mb-2">3 EMIs totaling <span class="text-red-400 font-medium">₹27,848</span> due in the next 10 days</div>
+<div class="text-xs text-gray-400">Your current account balance may not be sufficient</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Subscription Manager Section -->
+<section id="subscriptions-tab" class="tab-pane hidden">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Subscription Manager</h2>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<!-- Subscription Overview Card -->
+<div class="bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl p-4 mb-4 border border-purple-500/20">
+<div class="flex justify-between items-center mb-3">
+<div>
+<div class="text-sm text-gray-300">Monthly Subscriptions</div>
+<div class="text-2xl font-bold">₹2,845</div>
+</div>
+<div class="w-16 h-16 flex items-center justify-center">
+<div id="subscriptionChart" class="w-full h-full"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">OTT</div>
+<div class="text-sm font-medium text-purple-400">₹1,199</div>
+</div>
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">SaaS</div>
+<div class="text-sm font-medium text-blue-400">₹899</div>
+</div>
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">Others</div>
+<div class="text-sm font-medium text-green-400">₹747</div>
+</div>
+</div>
+</div>
+<!-- Active Subscriptions -->
+<div class="space-y-3">
+<!-- Subscription Card 1 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+<i class="ri-netflix-fill text-red-500"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Netflix</div>
+<div class="text-xs text-gray-400">Premium Plan</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹649/mo</div>
+<div class="text-xs text-yellow-400">Renews in 5 days</div>
+</div>
+</div>
+<div class="flex justify-between mt-3">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-pause-mini-line mr-1"></i>Pause
+</button>
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-calendar-line mr-1"></i>Reschedule
+</button>
+<button class="bg-red-600/80 hover:bg-red-600 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-close-line mr-1"></i>Cancel
+</button>
+</div>
+</div>
+<!-- Subscription Card 2 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-spotify-fill text-green-500"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Spotify</div>
+<div class="text-xs text-gray-400">Family Plan</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹299/mo</div>
+<div class="text-xs text-green-400">Renews in 18 days</div>
+</div>
+</div>
+<div class="flex justify-between mt-3">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-pause-mini-line mr-1"></i>Pause
+</button>
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-calendar-line mr-1"></i>Reschedule
+</button>
+<button class="bg-red-600/80 hover:bg-red-600 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-close-line mr-1"></i>Cancel
+</button>
+</div>
+</div>
+<!-- Subscription Card 3 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-microsoft-fill text-blue-500"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Microsoft 365</div>
+<div class="text-xs text-gray-400">Family Plan</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹549/mo</div>
+<div class="text-xs text-red-400">Renews tomorrow</div>
+</div>
+</div>
+<div class="flex justify-between mt-3">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-pause-mini-line mr-1"></i>Pause
+</button>
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-calendar-line mr-1"></i>Reschedule
+</button>
+<button class="bg-red-600/80 hover:bg-red-600 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-close-line mr-1"></i>Cancel
+</button>
+</div>
+</div>
+</div>
+<!-- Subscription Insights -->
+<div class="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-xl p-4 mt-4 border border-indigo-500/20">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-line-chart-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Subscription Insights</div>
+<div class="text-xs text-gray-400">Optimize your subscriptions</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="bg-white/10 rounded-lg p-3">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-2">
+<i class="ri-error-warning-line text-yellow-400"></i>
+</div>
+<div class="text-sm">Duplicate YouTube Premium & YouTube Music subscriptions detected</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mr-2">
+<i class="ri-time-line text-red-400"></i>
+</div>
+<div class="text-sm">Adobe Creative Cloud unused for 45 days</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Insurance Tracker Section -->
+<section id="insurance-tab" class="tab-pane hidden">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Insurance Tracker</h2>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<!-- Insurance Cards -->
+<div class="space-y-4">
+<!-- Insurance Card 1 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-heart-pulse-line text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Health Insurance</div>
+<div class="text-xs text-gray-400">Family Floater Plan</div>
+</div>
+</div>
+<div class="px-2 py-1 bg-green-500/20 rounded-full">
+<span class="text-xs text-green-400">Active</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2 text-xs text-gray-400">
+<div>Premium: <span class="text-white">₹24,500/year</span></div>
+<div>Coverage: <span class="text-white">₹10,00,000</span></div>
+</div>
+<div class="flex justify-between items-center mb-3 text-xs text-gray-400">
+<div>Provider: <span class="text-white">Star Health</span></div>
+<div>Expires: <span class="text-yellow-400">Sep 15, 2025</span></div>
+</div>
+<div class="flex justify-between">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-list-3-line mr-1"></i>View Policy
+</button>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-upload-line mr-1"></i>Upload Documents
+</button>
+</div>
+</div>
+<!-- Insurance Card 2 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mr-3">
+<i class="ri-car-line text-orange-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Car Insurance</div>
+<div class="text-xs text-gray-400">Comprehensive Cover</div>
+</div>
+</div>
+<div class="px-2 py-1 bg-green-500/20 rounded-full">
+<span class="text-xs text-green-400">Active</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2 text-xs text-gray-400">
+<div>Premium: <span class="text-white">₹12,850/year</span></div>
+<div>IDV: <span class="text-white">₹6,50,000</span></div>
+</div>
+<div class="flex justify-between items-center mb-3 text-xs text-gray-400">
+<div>Provider: <span class="text-white">HDFC ERGO</span></div>
+<div>Expires: <span class="text-red-400">July 10, 2025</span></div>
+</div>
+<div class="flex justify-between">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-list-3-line mr-1"></i>View Policy
+</button>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-upload-line mr-1"></i>Upload Documents
+</button>
+</div>
+</div>
+<!-- Insurance Card 3 -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-user-heart-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Life Insurance</div>
+<div class="text-xs text-gray-400">Term Plan</div>
+</div>
+</div>
+<div class="px-2 py-1 bg-green-500/20 rounded-full">
+<span class="text-xs text-green-400">Active</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-2 text-xs text-gray-400">
+<div>Premium: <span class="text-white">₹18,500/year</span></div>
+<div>Coverage: <span class="text-white">₹1,00,00,000</span></div>
+</div>
+<div class="flex justify-between items-center mb-3 text-xs text-gray-400">
+<div>Provider: <span class="text-white">ICICI Prudential</span></div>
+<div>Expires: <span class="text-green-400">Dec 05, 2025</span></div>
+</div>
+<div class="flex justify-between">
+<button class="bg-white/10 hover:bg-white/15 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-list-3-line mr-1"></i>View Policy
+</button>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-file-upload-line mr-1"></i>Upload Documents
+</button>
+</div>
+</div>
+</div>
+<!-- Claim Status Tracker -->
+<div class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-xl p-4 mt-4 border border-blue-500/20">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-file-search-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Claim Status Tracker</div>
+<div class="text-xs text-gray-400">Track your insurance claims</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3 mb-3">
+<div class="flex justify-between items-center mb-2">
+<div class="text-sm font-medium">Health Insurance Claim</div>
+<div class="text-xs text-yellow-400">In Progress</div>
+</div>
+<div class="text-xs text-gray-400 mb-3">Claim ID: STAR/H/2025/06/12345</div>
+<div class="relative">
+<div class="h-1 bg-white/20 rounded-full mb-2">
+<div class="h-full bg-yellow-400 rounded-full" style="width: 60%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span>Submitted</span>
+<span>Processing</span>
+<span class="text-gray-500">Approved</span>
+<span class="text-gray-500">Paid</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-sm py-2 rounded-button cursor-pointer">
+View All Claims
+</button>
+</div>
+</section>
+<!-- Marketplace Section -->
+<section id="services-tab" class="tab-pane hidden">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Quick Services</h2>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<!-- More Services Button -->
+<div class="flex justify-center mb-4">
+<button class="bg-white/5 hover:bg-white/10 text-xs px-4 py-2 rounded-full">
+<i class="ri-apps-line mr-1"></i>More Services
+</button>
+</div>
+<!-- Recent Payments -->
+<div class="bg-white/5 rounded-xl p-4 mb-4">
+<div class="flex justify-between items-center mb-3">
+<div class="text-sm font-medium">Recent Payments</div>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-smartphone-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Mobile Recharge</div>
+<div class="text-xs text-gray-400">9876543210</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹499</div>
+<div class="text-xs text-gray-400">June 28, 2025</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+<i class="ri-lightbulb-line text-yellow-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Electricity Bill</div>
+<div class="text-xs text-gray-400">MSEB 102458963</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-medium">₹1,850</div>
+<div class="text-xs text-gray-400">June 25, 2025</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Saved Payment Templates -->
+<div class="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-xl p-4 border border-indigo-500/20">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-save-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Saved Templates</div>
+<div class="text-xs text-gray-400">Quick access to frequent payments</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white/10 rounded-lg p-3 cursor-pointer">
+<div class="flex items-center mb-1">
+<i class="ri-smartphone-line text-blue-400 mr-2"></i>
+<div class="text-sm">Mobile Recharge</div>
+</div>
+<div class="text-xs text-gray-400">9876543210</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3 cursor-pointer">
+<div class="flex items-center mb-1">
+<i class="ri-tv-2-line text-purple-400 mr-2"></i>
+<div class="text-sm">DTH Recharge</div>
+</div>
+<div class="text-xs text-gray-400">Tata Sky 78965412</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Unified Wallet Section -->
+<section id="wallet-tab" class="tab-pane hidden">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Unified Wallet</h2>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">Manage</a>
+</div>
+<!-- Wallet Balance Card -->
+<div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4 mb-4 border border-indigo-500/20">
+<div class="flex justify-between items-center mb-3">
+<div>
+<div class="text-sm text-gray-300">Wallet Balance</div>
+<div class="text-2xl font-bold">₹4,580</div>
+</div>
+<div class="flex space-x-2">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-xs px-3 py-1.5 rounded-button cursor-pointer">
+<i class="ri-add-line mr-1"></i>Add Money
+</button>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">UPI</div>
+<div class="text-sm font-medium">Linked</div>
+</div>
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">Cards</div>
+<div class="text-sm font-medium">3 Cards</div>
+</div>
+<div class="bg-white/10 rounded-lg p-2 text-center">
+<div class="text-xs text-gray-300">Bank</div>
+<div class="text-sm font-medium">2 Accounts</div>
+</div>
+</div>
+</div>
+<!-- Payment Methods -->
+<div class="bg-white/5 rounded-xl p-4">
+<div class="text-sm font-medium mb-3">Payment Methods</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-card-line text-indigo-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">HDFC Credit Card</div>
+<div class="text-xs text-gray-400">•••• 4582</div>
+</div>
+</div>
+<div class="px-2 py-1 bg-green-500/20 rounded-full">
+<span class="text-xs text-green-400">Default</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-qr-code-line text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Google Pay UPI</div>
+<div class="text-xs text-gray-400">user@okicici</div>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/15 cursor-pointer">
+<i class="ri-more-2-line"></i>
+</button>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-bank-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">HDFC Bank</div>
+<div class="text-xs text-gray-400">•••• 7845</div>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/15 cursor-pointer">
+<i class="ri-more-2-line"></i>
+</button>
+</div>
+</div>
+<button class="w-full bg-white/10 hover:bg-white/15 text-sm py-2 rounded-button mt-3 cursor-pointer">
+<i class="ri-add-line mr-1"></i>Add Payment Method
+</button>
+</div>
+</section>
+<!-- Cashback & Offers Section -->
+<section class="mt-4">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Cashback & Offers</h2>
+<a href="#" class="text-xs text-indigo-300 cursor-pointer">View All</a>
+</div>
+<!-- Cashback Summary -->
+<div class="bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-xl p-4 mb-4 border border-yellow-500/20">
+<div class="flex justify-between items-center mb-3">
+<div>
+<div class="text-sm text-gray-300">Total Cashback Earned</div>
+<div class="text-2xl font-bold">₹1,250</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center">
+<i class="ri-coin-line text-yellow-400"></i>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="flex justify-between items-center">
+<div class="text-sm">Available Cashback</div>
+<div class="text-sm font-medium">₹450</div>
+</div>
+</div>
+</div>
+<!-- Offers Carousel -->
+<div class="overflow-x-auto pb-2">
+<div class="flex space-x-4 w-max">
+<div class="bg-white/5 rounded-xl p-4 w-64 cursor-pointer">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+<i class="ri-percent-line text-green-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">10% Cashback</div>
+<div class="text-xs text-indigo-300">on Mobile Recharges</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-xs mb-1">Valid until</div>
+<div class="text-sm font-medium">July 15, 2025</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 w-64 cursor-pointer">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+<i class="ri-coupon-3-line text-purple-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">Flat ₹100 Off</div>
+<div class="text-xs text-indigo-300">on Electricity Bills</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-xs mb-1">Valid until</div>
+<div class="text-sm font-medium">July 10, 2025</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 w-64 cursor-pointer">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+<i class="ri-gift-line text-blue-400"></i>
+</div>
+<div>
+<div class="text-sm font-medium">5% Cashback</div>
+<div class="text-xs text-indigo-300">on Flight Bookings</div>
+</div>
+</div>
+<div class="bg-white/10 rounded-lg p-3">
+<div class="text-xs mb-1">Valid until</div>
+<div class="text-sm font-medium">July 30, 2025</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-[#1C1B3B]/90 backdrop-blur-md px-2 py-2 z-10">
+<div class="grid grid-cols-5 gap-1">
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/38dd8703-bf56-4de2-b480-1332f0c36989" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-home-5-line ri-lg mb-1"></i>
+<span class="text-[10px]">Home</span>
+</a>
+<div class="nav-item active flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-file-list-3-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">EMI & Payments</span>
+</div>
+<div class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-[#4E43DA] flex items-center justify-center -mt-7 mb-1 shadow-lg shadow-[#4E43DA]/30">
+<i class="ri-qr-scan-line ri-xl"></i>
+</div>
+<span class="text-[10px]">Pay</span>
+</div>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/46ae2a96-3400-4e95-8162-9462cca66ddf" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-bank-card-line ri-lg mb-1"></i>
+<span class="text-[10px] text-center whitespace-nowrap">Accounts</span>
+</a>
+<a href="https://readdy.ai/home/1afc38fd-e9a6-4a52-9a79-c7f253c4fc62/260ece7a-39c0-4fdf-b6f8-f37579ca4cb8" data-readdy="true" class="nav-item flex flex-col items-center py-1 cursor-pointer">
+<i class="ri-gift-line ri-lg mb-1"></i>
+<span class="text-[10px]">Rewards</span>
+</a>
+</div>
+</nav>
+<!-- Early Payment Calculator Dialog -->
+<div id="earlyPaymentDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#1e1b4b] rounded-xl w-[320px] p-5 opacity-0 translate-y-4 transition-all duration-300" id="earlyPaymentContent">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-semibold">Early Payment Calculator</h3>
+<button id="closeEarlyPayment" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<div class="text-sm font-medium mb-2">Select Loan</div>
+<select id="loanSelect" class="w-full bg-white/5 rounded-lg p-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500">
+<option value="home">Home Loan - ₹18,750/mo</option>
+<option value="iphone">iPhone 15 Pro - ₹5,499/mo</option>
+<option value="laptop">Laptop - ₹3,599/mo</option>
+</select>
+</div>
+<div>
+<div class="text-sm font-medium mb-2">Prepayment Amount</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">₹</span>
+<input type="text" id="prepaymentAmount" class="w-full bg-white/5 rounded-lg pl-8 pr-3 py-3 text-sm border border-indigo-500/20 focus:outline-none focus:border-indigo-500" placeholder="Enter amount">
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-4">
+<div class="text-sm font-medium mb-3">Savings Calculation</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<div class="text-xs text-gray-400">Interest Saved</div>
+<div class="text-sm font-medium text-green-400" id="interestSaved">₹0</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="text-xs text-gray-400">Tenure Reduced</div>
+<div class="text-sm font-medium" id="tenureReduced">0 months</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="text-xs text-gray-400">New Monthly EMI</div>
+<div class="text-sm font-medium text-indigo-300" id="newEmi">₹0</div>
+</div>
+</div>
+</div>
+<div class="flex space-x-2">
+<button id="reduceEmi" class="flex-1 bg-white/10 hover:bg-white/15 text-xs py-2.5 rounded-button">
+Reduce EMI
+</button>
+<button id="reduceTenure" class="flex-1 bg-white/10 hover:bg-white/15 text-xs py-2.5 rounded-button">
+Reduce Tenure
+</button>
+</div>
+</div>
+<div class="flex space-x-3 mt-6">
+<button id="cancelEarlyPayment" class="flex-1 bg-white/10 hover:bg-white/15 text-sm py-2.5 rounded-button">Cancel</button>
+<button id="confirmEarlyPayment" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-sm py-2.5 rounded-button">Make Payment</button>
+</div>
+</div>
+</div>
+<!-- Scripts -->
+<script id="particles-animation">
+document.addEventListener('DOMContentLoaded', function() {
+const particlesContainer = document.getElementById('particles');
+const particleCount = 15;
+for (let i = 0; i < particleCount; i++) {
+const particle = document.createElement('div');
+particle.classList.add('particle');
+// Random size between 3px and 8px
+const size = Math.random() * 5 + 3;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+// Random position
+particle.style.top = `${Math.random() * 100}%`;
+particle.style.left = `${Math.random() * 100}%`;
+// Random opacity
+particle.style.opacity = Math.random() * 0.3 + 0.1;
+// Random animation delay
+particle.style.animationDelay = `${Math.random() * 10}s`;
+particlesContainer.appendChild(particle);
+}
+});
+</script>
+<script id="subscription-chart">
+document.addEventListener('DOMContentLoaded', function() {
+const subscriptionChart = echarts.init(document.getElementById('subscriptionChart'));
+const option = {
+series: [
+{
+type: 'pie',
+radius: ['60%', '90%'],
+avoidLabelOverlap: false,
+silent: true,
+label: {
+show: false
+},
+emphasis: {
+scale: false
+},
+data: [
+{ value: 1199, name: 'OTT', itemStyle: { color: '#9333EA' } },
+{ value: 899, name: 'SaaS', itemStyle: { color: '#4F46E5' } },
+{ value: 747, name: 'Others', itemStyle: { color: '#10B981' } }
+]
+}
+]
+};
+subscriptionChart.setOption(option);
+window.addEventListener('resize', function() {
+subscriptionChart.resize();
+});
+});
+</script>
+<script id="early-payment-calculator">
+document.addEventListener('DOMContentLoaded', function() {
+const earlyPaymentDialog = document.getElementById('earlyPaymentDialog');
+const earlyPaymentContent = document.getElementById('earlyPaymentContent');
+const closeEarlyPayment = document.getElementById('closeEarlyPayment');
+const cancelEarlyPayment = document.getElementById('cancelEarlyPayment');
+const confirmEarlyPayment = document.getElementById('confirmEarlyPayment');
+const prepaymentAmount = document.getElementById('prepaymentAmount');
+const interestSaved = document.getElementById('interestSaved');
+const tenureReduced = document.getElementById('tenureReduced');
+const newEmi = document.getElementById('newEmi');
+const loanSelect = document.getElementById('loanSelect');
+const reduceEmi = document.getElementById('reduceEmi');
+const reduceTenure = document.getElementById('reduceTenure');
+// Loan details
+const loans = {
+home: { emi: 18750, interest: 7.2, tenure: 180, remaining: 156 },
+iphone: { emi: 5499, interest: 9.5, tenure: 24, remaining: 12 },
+laptop: { emi: 3599, interest: 8.5, tenure: 12, remaining: 6 }
+};
+let selectedOption = 'reduceTenure';
+function showEarlyPaymentDialog() {
+earlyPaymentDialog.classList.remove('hidden');
+setTimeout(() => {
+earlyPaymentContent.classList.remove('opacity-0', 'translate-y-4');
+}, 50);
+}
+function hideEarlyPaymentDialog() {
+earlyPaymentContent.classList.add('opacity-0', 'translate-y-4');
+setTimeout(() => {
+earlyPaymentDialog.classList.add('hidden');
+prepaymentAmount.value = '';
+updateCalculation();
+}, 300);
+}
+function updateCalculation() {
+const loanType = loanSelect.value;
+const loan = loans[loanType];
+const amount = parseFloat(prepaymentAmount.value) || 0;
+// Simple calculation for demo purposes
+if (amount > 0) {
+const monthsReduced = Math.floor(amount / loan.emi);
+const interestSavingAmount = Math.round(amount * (loan.interest / 100) * (loan.remaining / 12));
+const newEmiAmount = selectedOption === 'reduceEmi' ?
+Math.round(loan.emi - (amount / loan.remaining)) :
+loan.emi;
+interestSaved.textContent = `₹${interestSavingAmount.toLocaleString()}`;
+tenureReduced.textContent = `${monthsReduced} months`;
+newEmi.textContent = `₹${newEmiAmount.toLocaleString()}`;
+} else {
+interestSaved.textContent = '₹0';
+tenureReduced.textContent = '0 months';
+newEmi.textContent = `₹${loan.emi.toLocaleString()}`;
+}
+}
+// Add event listeners for the calculator buttons
+document.querySelectorAll('.bg-indigo-600.hover\\:bg-indigo-700.text-xs').forEach(button => {
+if (button.textContent.includes('Calculate Early Payment')) {
+button.addEventListener('click', showEarlyPaymentDialog);
+}
+});
+closeEarlyPayment.addEventListener('click', hideEarlyPaymentDialog);
+cancelEarlyPayment.addEventListener('click', hideEarlyPaymentDialog);
+earlyPaymentDialog.addEventListener('click', (e) => {
+if (e.target === earlyPaymentDialog) {
+hideEarlyPaymentDialog();
+}
+});
+prepaymentAmount.addEventListener('input', (e) => {
+let value = e.target.value.replace(/[^\d]/g, '');
+e.target.value = value ? `${value}` : '';
+updateCalculation();
+});
+loanSelect.addEventListener('change', updateCalculation);
+reduceEmi.addEventListener('click', () => {
+selectedOption = 'reduceEmi';
+reduceEmi.classList.remove('bg-white/10');
+reduceEmi.classList.add('bg-indigo-600');
+reduceTenure.classList.remove('bg-indigo-600');
+reduceTenure.classList.add('bg-white/10');
+updateCalculation();
+});
+reduceTenure.addEventListener('click', () => {
+selectedOption = 'reduceTenure';
+reduceTenure.classList.remove('bg-white/10');
+reduceTenure.classList.add('bg-indigo-600');
+reduceEmi.classList.remove('bg-indigo-600');
+reduceEmi.classList.add('bg-white/10');
+updateCalculation();
+});
+confirmEarlyPayment.addEventListener('click', () => {
+const amount = parseFloat(prepaymentAmount.value);
+if (!amount || amount <= 0) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'text-red-400 text-xs mt-1';
+errorDiv.textContent = 'Please enter a valid amount';
+prepaymentAmount.parentElement.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+return;
+}
+hideEarlyPaymentDialog();
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Early payment of ₹${amount.toLocaleString()} processed successfully`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+});
+</script>
+<script id="tab-navigation">
+document.addEventListener('DOMContentLoaded', function() {
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabPanes = document.querySelectorAll('.tab-pane');
+function switchTab(tabId) {
+tabButtons.forEach(button => {
+if (button.dataset.tab === tabId) {
+button.classList.add('bg-indigo-600');
+button.classList.remove('bg-white/5');
+} else {
+button.classList.remove('bg-indigo-600');
+button.classList.add('bg-white/5');
+}
+});
+tabPanes.forEach(pane => {
+if (pane.id === `${tabId}-tab`) {
+pane.classList.remove('hidden');
+} else {
+pane.classList.add('hidden');
+}
+});
+}
+tabButtons.forEach(button => {
+button.addEventListener('click', () => {
+switchTab(button.dataset.tab);
+});
+});
+});
+</script>
+<script id="navigation-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const navItems = document.querySelectorAll('.nav-item');
+const backButton = document.getElementById('backButton');
+navItems.forEach(item => {
+item.addEventListener('click', function() {
+navItems.forEach(navItem => {
+navItem.classList.remove('active');
+});
+this.classList.add('active');
+});
+});
+backButton.addEventListener('click', function() {
+window.history.back();
+});
+// Handle EMI payment buttons
+document.querySelectorAll('button').forEach(button => {
+if (button.textContent.includes('Pay EMI') || button.textContent.includes('Pay Now')) {
+button.addEventListener('click', function() {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = 'Payment initiated successfully';
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+}
+});
+// Handle subscription actions
+document.querySelectorAll('button').forEach(button => {
+if (button.textContent.includes('Pause') || button.textContent.includes('Reschedule') || button.textContent.includes('Cancel')) {
+button.addEventListener('click', function(e) {
+e.stopPropagation();
+const action = button.textContent.trim();
+const subscriptionName = button.closest('.bg-white\\/5').querySelector('.text-sm.font-medium').textContent;
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `${subscriptionName} ${action.toLowerCase()}d successfully`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+}
+});
+// Handle view policy and upload documents buttons
+document.querySelectorAll('button').forEach(button => {
+if (button.textContent.includes('View Policy') || button.textContent.includes('Upload Documents')) {
+button.addEventListener('click', function() {
+const action = button.textContent.trim();
+const policyName = button.closest('.bg-white\\/5').querySelector('.text-sm.font-medium').textContent;
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+if (action === 'View Policy') {
+successDiv.textContent = `Opening ${policyName} policy details`;
+} else {
+successDiv.textContent = `Upload documents for ${policyName}`;
+}
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+}
+});
+// Handle quick service buttons
+document.querySelectorAll('.flex.flex-col.items-center.cursor-pointer').forEach(service => {
+service.addEventListener('click', function() {
+const serviceName = service.querySelector('span').textContent;
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-green-500/90 text-white px-4 py-2 rounded-lg text-sm z-50';
+successDiv.textContent = `Opening ${serviceName} service`;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+});
+});
+});
+</script>
+<script id="carousel-scroll">
+document.addEventListener('DOMContentLoaded', function() {
+const carousels = document.querySelectorAll('.overflow-x-auto');
+carousels.forEach(carousel => {
+let isDown = false;
+let startX;
+let scrollLeft;
+carousel.addEventListener('mousedown', (e) => {
+isDown = true;
+startX = e.pageX - carousel.offsetLeft;
+scrollLeft = carousel.scrollLeft;
+});
+carousel.addEventListener('mouseleave', () => {
+isDown = false;
+});
+carousel.addEventListener('mouseup', () => {
+isDown = false;
+});
+carousel.addEventListener('mousemove', (e) => {
+if (!isDown) return;
+e.preventDefault();
+const x = e.pageX - carousel.offsetLeft;
+const walk = (x - startX) * 2;
+carousel.scrollLeft = scrollLeft - walk;
+});
+// Touch events for mobile
+carousel.addEventListener('touchstart', (e) => {
+isDown = true;
+startX = e.touches[0].pageX - carousel.offsetLeft;
+scrollLeft = carousel.scrollLeft;
+});
+carousel.addEventListener('touchend', () => {
+isDown = false;
+});
+carousel.addEventListener('touchmove', (e) => {
+if (!isDown) return;
+const x = e.touches[0].pageX - carousel.offsetLeft;
+const walk = (x - startX) * 2;
+carousel.scrollLeft = scrollLeft - walk;
+});
+});
+});
+</script>
+</body>
+</html>
