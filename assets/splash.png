@@ -1,0 +1,8 @@
+<!-- This is a placeholder file. In a real project, you would replace this with an actual PNG image -->
+<!-- Creating a minimal SVG that can serve as a temporary splash screen -->
+<svg width="1284" height="2778" viewBox="0 0 1284 2778" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1284" height="2778" fill="#1a1a3a"/>
+  <circle cx="642" cy="1389" r="200" fill="#4f46e5"/>
+  <text x="642" y="1420" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">Finance</text>
+  <text x="642" y="1520" font-family="Arial, sans-serif" font-size="60" fill="#9ca3af" text-anchor="middle">Manager</text>
+</svg>

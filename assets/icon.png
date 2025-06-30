@@ -1,0 +1,7 @@
+<!-- This is a placeholder file. In a real project, you would replace this with an actual PNG image -->
+<!-- Creating a minimal SVG that can serve as a temporary icon -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#1a1a3a"/>
+  <circle cx="512" cy="512" r="300" fill="#4f46e5"/>
+  <text x="512" y="550" font-family="Arial, sans-serif" font-size="200" fill="white" text-anchor="middle">F</text>
+</svg>
