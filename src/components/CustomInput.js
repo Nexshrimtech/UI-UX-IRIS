@@ -21,6 +21,7 @@ const CustomInput = ({
         <Text style={styles.label}>
           {label}
           {required && <Text style={styles.required}> *</Text>}
+          }
         </Text>
       )}
       <View style={styles.inputContainer}>
