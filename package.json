@@ -30,7 +30,8 @@
     "react-native-modal": "^13.0.1",
     "react-native-date-picker": "^4.3.3",
     "react-native-picker-select": "^9.1.3",
-    "axios": "^1.6.2"
+    "axios": "^1.6.2",
+    "expo-router": "~3.4.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
